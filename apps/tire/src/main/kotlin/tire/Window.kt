@@ -2,9 +2,10 @@ package tire
 
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.opengl.GL.createCapabilities
+import org.lwjgl.opengl.GL46.*
+import org.lwjgl.system.Configuration
 import org.lwjgl.system.MemoryUtil.*
-
-import org.lwjgl.system.Configuration;
 
 class Window {
     private var allocator: GLFWAllocator? = null
@@ -32,7 +33,6 @@ class Window {
             println("Unable to initialize glfw")
         }
 
-        // glfwDefaultWindowHints()
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -42,9 +42,14 @@ class Window {
         val HEIGHT = 600
 
         window = glfwCreateWindow(WIDTH, HEIGHT, "ktire", NULL, NULL)
+
         if (window == NULL) {
             throw RuntimeException("Failed to create the GLFW window")
         }
+
+        glfwMakeContextCurrent(window);
+
+        createCapabilities();
 
         glfwSetWindowSizeLimits(window, WIDTH, HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE)
 
@@ -71,11 +76,14 @@ class Window {
 
     fun loop() {
 
+        glViewport(0, 0, 800, 600)
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
+
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents()
-        }
 
-        destroy()
+            glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+        }
     }
 
     fun destroy() {

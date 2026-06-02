@@ -26,6 +26,7 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-glfw", classifier = lwjglNatives)
 
     implementation("org.lwjgl", "lwjgl-opengl")
+    implementation("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
 
     implementation(project(":modules"))
 }

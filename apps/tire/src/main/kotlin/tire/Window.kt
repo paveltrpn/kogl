@@ -34,7 +34,9 @@ class Window {
 
         // glfwDefaultWindowHints()
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         val WIDTH = 800
         val HEIGHT = 600
@@ -72,7 +74,6 @@ class Window {
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents()
         }
-
 
         destroy()
     }

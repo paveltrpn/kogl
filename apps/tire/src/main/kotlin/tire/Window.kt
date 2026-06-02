@@ -39,7 +39,7 @@ class Window {
         val WIDTH = 800
         val HEIGHT = 600
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "another tire", NULL, NULL)
+        window = glfwCreateWindow(WIDTH, HEIGHT, "ktire", NULL, NULL)
         if (window == NULL) {
             throw RuntimeException("Failed to create the GLFW window")
         }
@@ -83,12 +83,5 @@ class Window {
         }
 
         glfwTerminate()
-
-//        Objects.requireNonNull<T?>(glfwSetErrorCallback(null)).free()
-
-//        allocator!!.deallocate().free()
-//        allocator!!.reallocate().free()
-//        allocator!!.allocate().free()
-//        allocator!!.free()
     }
 }

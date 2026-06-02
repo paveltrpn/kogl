@@ -4,17 +4,11 @@ import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.system.MemoryUtil.*
 
-import context.*
-import render.*
-
 import org.lwjgl.system.Configuration;
 
 class Window {
     private var allocator: GLFWAllocator? = null
     private var window: Long = 0
-
-    private val context: Context
-    private val render: Render
 
     init {
         // NOTE: set default stack size - 128 kb!!!
@@ -50,9 +44,6 @@ class Window {
             throw RuntimeException("Failed to create the GLFW window")
         }
 
-        context = Context(window)
-        render = Render()
-
         glfwSetWindowSizeLimits(window, WIDTH, HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE)
 
         //glfwSetWindowAspectRatio(window, 1, 1);
@@ -77,25 +68,16 @@ class Window {
     }
 
     fun loop() {
-        render.preLoop()
 
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents()
-            render.frame()
         }
 
-        render.postLoop()
 
         destroy()
     }
 
     fun destroy() {
-        // Free structures, allocated in render.
-        render.free()
-
-        // Free structures, allocated in context.
-        context.free()
-
         if (window != NULL) {
             glfwDestroyWindow(window)
         }

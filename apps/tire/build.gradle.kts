@@ -25,16 +25,7 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-glfw")
     implementation("org.lwjgl", "lwjgl-glfw", classifier = lwjglNatives)
 
-    implementation("org.lwjgl", "lwjgl-vulkan")
-
-    implementation("org.lwjgl", "lwjgl-vma")
-    implementation("org.lwjgl", "lwjgl-vma", classifier = lwjglNatives)
-
-    implementation("org.lwjgl", "lwjgl-shaderc")
-    implementation("org.lwjgl", "lwjgl-shaderc", classifier = lwjglNatives)
-
-    implementation("org.lwjgl", "lwjgl-spvc")
-    implementation("org.lwjgl", "lwjgl-spvc", classifier = lwjglNatives)
+    implementation("org.lwjgl", "lwjgl-opengl")
 
     implementation(project(":modules"))
 }

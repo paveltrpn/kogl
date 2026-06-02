@@ -83,6 +83,8 @@ class Window {
             glfwPollEvents()
 
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+
+            glfwSwapBuffers(window)
         }
     }
 

@@ -1,5 +1,6 @@
 package tire
 
+import config.Config
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
@@ -18,6 +19,9 @@ class Window {
     private val _render: Render
 
     init {
+        Config.init("")
+        GlobalEventEmitter.init()
+
         _render = Render()
 
         initGLFW()

@@ -14,8 +14,25 @@ interface EventEmitter {
 // ============== GlobalEventEmitter ==========================================
 // ============================================================================
 
-class GlobalEventEmitter : EventEmitter {
+class GlobalEventEmitter private constructor() : EventEmitter {
     private val _observers = mutableListOf<EventObserver>()
+
+    companion object {
+        @Volatile
+        private var instance: GlobalEventEmitter? = null
+
+        fun init(): GlobalEventEmitter {
+            return instance ?: synchronized(this) {
+                instance ?: GlobalEventEmitter().also { instance = it }
+            }
+        }
+
+        fun instance(): GlobalEventEmitter {
+            return instance ?: throw IllegalStateException(
+                "GlobalEventEmitter must be initialized by calling initialize() first."
+            )
+        }
+    }
 
     override fun attach(observer: EventObserver): Unit {
         _observers.add(observer)

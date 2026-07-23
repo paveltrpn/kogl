@@ -31,6 +31,14 @@ class Render : EventObserver {
     }
 
     override fun handleEvent(event: EventBase) {
-        // TODO
+        if (event is EventKey) {
+            if (event.keyAction == KeyAction.PRESS) {
+                when (event.key) {
+                    256 -> {
+                        run = false
+                    }
+                }
+            }
+        }
     }
 }

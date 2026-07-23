@@ -18,8 +18,3 @@ project(":modules").projectDir = file("modules")
 include(":encode", ":modules")
 project(":modules").projectDir = file("modules")
 
-include("server")
-project(":server").projectDir = file("apps/server")
-
-include(":server", ":modules")
-project(":modules").projectDir = file("modules")

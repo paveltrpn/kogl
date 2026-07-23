@@ -2,7 +2,7 @@ package tire
 
 import org.lwjgl.opengl.GL46.*
 
-class Render {
+class Render : EventObserver {
     private var _run: Boolean
 
     init {
@@ -13,7 +13,6 @@ class Render {
         get(): Boolean {
             return _run
         }
-
         set(value) {
             _run = value
         }
@@ -29,5 +28,9 @@ class Render {
 
     fun postLoop(): Unit {
 
+    }
+
+    override fun handleEvent(event: EventBase) {
+        // TODO
     }
 }

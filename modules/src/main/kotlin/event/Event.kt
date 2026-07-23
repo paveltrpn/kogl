@@ -1,11 +1,14 @@
 package tire
 
+enum class KeyAction {
+    PRESS, RELEASE
+}
+
 interface EventBase {
 
 }
 
-class EventKey : EventBase {
-
+data class EventKey(val keyAction: KeyAction, val key: Int) : EventBase {
 }
 
 class EventMouse : EventBase {

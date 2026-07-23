@@ -1,12 +1,15 @@
 package tire
 
-import config.Config
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.Configuration
 import org.lwjgl.system.MemoryUtil.*
+
+import config.Config
+import render.Render
+import event.*
 
 class Window {
     private var allocator: GLFWAllocator? = null

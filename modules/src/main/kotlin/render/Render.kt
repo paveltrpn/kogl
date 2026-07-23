@@ -1,6 +1,7 @@
-package tire
+package render
 
 import org.lwjgl.opengl.GL46.*
+import event.*
 
 class Render : EventObserver {
     private var _run: Boolean

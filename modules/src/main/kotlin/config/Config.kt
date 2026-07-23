@@ -1,6 +1,5 @@
 package config
 
-import tire.GlobalEventEmitter
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
 

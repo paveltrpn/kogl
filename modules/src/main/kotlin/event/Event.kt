@@ -1,4 +1,4 @@
-package tire
+package event
 
 enum class KeyAction {
     PRESS, RELEASE

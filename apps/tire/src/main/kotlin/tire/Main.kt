@@ -5,7 +5,7 @@ fun main(args: Array<String>) {
 
     val window: Window = Window()
 
-    window.loop()
+    window.run()
 
     window.destroy()
 }

@@ -9,9 +9,43 @@ import org.lwjgl.system.MemoryUtil.*
 
 class Window {
     private var allocator: GLFWAllocator? = null
-    private var window: Long = 0
+
+    private var _window: Long = 0
+
+    private val _width: Int = 1200
+    private val _height: Int = 800
+
+    private val _render: Render
 
     init {
+        _render = Render()
+
+        initGLFW()
+    }
+
+    fun run() {
+        _render.preLoop()
+
+        while (_render.run) {
+            glfwPollEvents()
+
+            _render.frame()
+
+            glfwSwapBuffers(_window)
+        }
+
+        _render.postLoop()
+    }
+
+    fun destroy() {
+        if (_window != NULL) {
+            glfwDestroyWindow(_window)
+        }
+
+        glfwTerminate()
+    }
+
+    private fun initGLFW() {
         // NOTE: set default stack size - 128 kb!!!
         Configuration.STACK_SIZE.set(128 * 1024)
 
@@ -38,20 +72,17 @@ class Window {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        val WIDTH = 800
-        val HEIGHT = 600
+        _window = glfwCreateWindow(_width, _height, "kogl", NULL, NULL)
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "ktire", NULL, NULL)
-
-        if (window == NULL) {
+        if (_window == NULL) {
             throw RuntimeException("Failed to create the GLFW window")
         }
 
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(_window);
 
         createCapabilities();
 
-        glfwSetWindowSizeLimits(window, WIDTH, HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE)
+        glfwSetWindowSizeLimits(_window, _width, _height, GLFW_DONT_CARE, GLFW_DONT_CARE)
 
         //glfwSetWindowAspectRatio(window, 1, 1);
         val monitor = glfwGetPrimaryMonitor()
@@ -59,40 +90,18 @@ class Window {
         val vidmode: GLFWVidMode? = glfwGetVideoMode(monitor)
 
         glfwSetWindowPos(
-            window,
-            (vidmode!!.width() - WIDTH) / 2,
-            (vidmode.height() - HEIGHT) / 2
+            _window,
+            (vidmode!!.width() - _width) / 2,
+            (vidmode.height() - _height) / 2
         )
 
-        glfwSetKeyCallback(window, { window, key, scancode, action, mods ->
+        glfwSetKeyCallback(_window, { window, key, scancode, action, mods ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(
                 window,
                 true
             ) // We will detect this in the rendering loop
         })
 
-        glfwShowWindow(window)
-    }
-
-    fun loop() {
-
-        glViewport(0, 0, 800, 600)
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
-
-        while (!glfwWindowShouldClose(window)) {
-            glfwPollEvents()
-
-            glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
-
-            glfwSwapBuffers(window)
-        }
-    }
-
-    fun destroy() {
-        if (window != NULL) {
-            glfwDestroyWindow(window)
-        }
-
-        glfwTerminate()
+        glfwShowWindow(_window)
     }
 }

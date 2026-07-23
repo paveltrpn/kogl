@@ -1,11 +1,6 @@
 package tire
 
-import org.lwjgl.glfw.*
-import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
-import org.lwjgl.system.Configuration
-import org.lwjgl.system.MemoryUtil.*
 
 class Render {
     private var _run: Boolean
@@ -14,15 +9,25 @@ class Render {
         _run = true
     }
 
-    fun preLoop() -> Unit {
+    var run: Boolean
+        get(): Boolean {
+            return _run
+        }
 
+        set(value) {
+            _run = value
+        }
+
+    fun preLoop(): Unit {
+        glViewport(0, 0, 1200, 800)
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
     }
 
-    fun loop() -> Unit {
-
+    fun frame(): Unit {
+        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
     }
 
-    fun postLoop() -> Unit {
+    fun postLoop(): Unit {
 
     }
 }

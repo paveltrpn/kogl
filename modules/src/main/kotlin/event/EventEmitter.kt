@@ -29,7 +29,7 @@ class GlobalEventEmitter private constructor() : EventEmitter {
 
         fun instance(): GlobalEventEmitter {
             return instance ?: throw IllegalStateException(
-                "GlobalEventEmitter must be initialized by calling initialize() first."
+                "GlobalEventEmitter must be initialized by calling init() first."
             )
         }
     }

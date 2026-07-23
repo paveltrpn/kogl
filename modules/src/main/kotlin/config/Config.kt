@@ -18,7 +18,7 @@ class Config private constructor(path: String) {
 
         fun instance(): Config {
             return instance ?: throw IllegalStateException(
-                "Config must be initialized by calling initialize() first."
+                "Config must be initialized by calling init() first."
             )
         }
     }

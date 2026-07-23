@@ -1,14 +1,14 @@
 package tire
 
-open class EventBase {
+interface EventBase {
 
 }
 
-class EventKey : EventBase() {
+class EventKey : EventBase {
 
 }
 
-class EventMouse : EventBase() {
+class EventMouse : EventBase {
 
 }
 

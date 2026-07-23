@@ -23,6 +23,7 @@ class Window {
         GlobalEventEmitter.init()
 
         _render = Render()
+        GlobalEventEmitter.instance().attach(_render)
 
         initGLFW()
     }
@@ -100,10 +101,15 @@ class Window {
         )
 
         glfwSetKeyCallback(_window, { window, key, scancode, action, mods ->
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(
-                window,
-                true
-            ) // We will detect this in the rendering loop
+            if (key == GLFW_KEY_ESCAPE) {
+                val event = EventKey(KeyAction.PRESS, key)
+                GlobalEventEmitter.instance().notify(event)
+            }
+
+            if (key == GLFW_RELEASE) {
+                val event = EventKey(KeyAction.RELEASE, key)
+                GlobalEventEmitter.instance().notify(event)
+            }
         })
 
         glfwShowWindow(_window)

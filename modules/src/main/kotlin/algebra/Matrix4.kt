@@ -3,6 +3,10 @@ package algebra
 class Matrix4 {
     private var data = FloatArray(16) { it -> 0.0f }
 
+    constructor() {
+
+    }
+
     constructor(other: Matrix4) {
         data = other.data
     }
@@ -96,4 +100,8 @@ class Matrix4 {
             data[11] = value.z
             data[14] = value.w
         }
+
+    fun multiply(other: Matrix4): Matrix4 {
+        return Matrix4()
+    }
 }

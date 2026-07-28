@@ -1,7 +1,12 @@
 package scene
 
+import algebra.*
+
 class Scene {
     var _graph: MutableList<StateGroup> = mutableListOf()
+
+    private var value = 0
+    private var _transformAccumulator = Matrix4()
 
     // Traverse over all available state groups and
     // attached nodes.
@@ -38,6 +43,9 @@ class Scene {
                 }
 
                 is Transform -> {
+                    // Reset this Transforms branch state.
+                    _transformAccumulator = Matrix4()
+
                     // Recursive traverse over transforms list until
                     // reach some Drawable.
                     digIntoTransform(current)
@@ -46,21 +54,20 @@ class Scene {
         }
     }
 
-    private fun digIntoTransform(root: Node): Unit {
-        when (root) {
+    private fun digIntoTransform(root: Transform): Unit {
+        println("found Transform")
+
+        _transformAccumulator = _transformAccumulator.multiply(root.transform)
+
+        when (val next = root.child!!) {
             is Transform -> {
-                println("found Transform")
+                // Recursive dig into Transform chain.
+                digIntoTransform(next)
+            }
 
-                when (val next = root._child!!) {
-                    is Transform -> {
-                        // Recursive dig in into Transform chain.
-                        digIntoTransform(next)
-                    }
-
-                    is Drawable -> {
-                        println("found Drawable")
-                    }
-                }
+            is Drawable -> {
+                next.applyTransform(_transformAccumulator)
+                next.drawCall()
             }
 
             else -> {

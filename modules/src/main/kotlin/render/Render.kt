@@ -20,8 +20,12 @@ class Render : EventObserver {
         var trOne = Transform()
         var trTwo = Transform()
 
+        var trThree = Transform()
+
+        trTwo.addChild(trThree)
+
         trOne.addChild(daOne)
-        trTwo.addChild(daTwo)
+        trThree.addChild(daTwo)
 
         sgOne.addChild(trOne)
         sgOne.addChild(trTwo)

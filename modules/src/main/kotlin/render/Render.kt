@@ -13,6 +13,7 @@ class Render : EventObserver {
 
         // TEST
         var sgOne = StateGroup()
+        var sgTwo = StateGroup()
 
         var daOne = Drawable()
         var daTwo = Drawable()
@@ -30,7 +31,11 @@ class Render : EventObserver {
         sgOne.addChild(trOne)
         sgOne.addChild(trTwo)
 
+        sgTwo.addChild(trOne)
+        sgTwo.addChild(trTwo)
+
         _scene.addStateGroup(sgOne)
+        _scene.addStateGroup(sgTwo)
 
         _scene.walk()
     }

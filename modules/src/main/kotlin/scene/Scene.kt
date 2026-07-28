@@ -3,42 +3,30 @@ package scene
 import algebra.*
 
 class Scene {
-    var _graph: MutableList<StateGroup> = mutableListOf()
+    private var _graph: MutableList<StateGroup> = mutableListOf()
 
-    private var value = 0
     private var _transformAccumulator = Matrix4()
 
-    // Traverse over all available state groups and
-    // attached nodes.
+    // Iterative traverse over all available state groups and
+    // attached nodes. Must be depth-first traversal.
     fun walk(): Unit {
-        for (node in _graph) {
-            iterativeDfs(node)
-        }
-    }
-
-    fun addStateGroup(stateGroup: StateGroup): Unit {
-        _graph.addLast(stateGroup)
-    }
-
-    // Must be depth-first traversal.
-    private fun iterativeDfs(root: Node): Unit {
         val stack = ArrayDeque<Node>()
 
-        // Push root to the top of the stack.
-        stack.addLast(root)
+        // Push all state groups to the stack.
+        for (node in _graph) {
+            stack.addLast(node)
+        }
 
         while (stack.isNotEmpty()) {
             // Pop from the top.
             when (val current = stack.removeLast()) {
                 is StateGroup -> {
-                    // visit(current.value)
+                    current.traverse()
 
-                    println("found StateGroup")
-
-                    for (i in current._children.indices.reversed()) {
+                    for (i in current.children.indices.reversed()) {
                         // Push children to the stack.
                         // We iterate in reverse so the left-most child is processed first.
-                        stack.addLast(current._children[i])
+                        stack.addLast(current.children[i])
                     }
                 }
 
@@ -54,9 +42,13 @@ class Scene {
         }
     }
 
+    // Recursive descend through Transforms list until
+    // Drawable leaf node reached.
     private fun digIntoTransform(root: Transform): Unit {
-        println("found Transform")
+        root.traverse()
 
+        // Accumulate transformations from every Transform
+        // on the path.
         _transformAccumulator = _transformAccumulator.multiply(root.transform)
 
         when (val next = root.child!!) {
@@ -66,6 +58,10 @@ class Scene {
             }
 
             is Drawable -> {
+                next.traverse()
+
+                // Reach Drawable leaf node, perform transformation
+                // applying and draw call.
                 next.applyTransform(_transformAccumulator)
                 next.drawCall()
             }
@@ -74,5 +70,9 @@ class Scene {
                 println("nothing attached to this transform")
             }
         }
+    }
+
+    fun addStateGroup(stateGroup: StateGroup): Unit {
+        _graph.addLast(stateGroup)
     }
 }

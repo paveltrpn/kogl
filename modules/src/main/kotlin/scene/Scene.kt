@@ -44,14 +44,14 @@ class Scene {
 
     // Recursive descend through Transforms list until
     // Drawable leaf node reached.
-    private fun digIntoTransform(root: Transform): Unit {
-        root.traverse()
+    private fun digIntoTransform(node: Transform): Unit {
+        node.traverse()
 
         // Accumulate transformations from every Transform
         // on the path.
-        _transformAccumulator = _transformAccumulator.multiply(root.transform)
+        _transformAccumulator = _transformAccumulator.multiply(node.transform)
 
-        when (val next = root.child!!) {
+        when (val next = node.child!!) {
             is Transform -> {
                 // Recursive dig into Transform chain.
                 digIntoTransform(next)

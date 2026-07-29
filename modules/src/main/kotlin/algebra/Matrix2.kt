@@ -3,6 +3,10 @@ package algebra
 class Matrix2 {
     private var data = FloatArray(4) { it -> 0.0f }
 
+    constructor() {
+
+    }
+    
     constructor(other: Matrix2) {
         data = other.data
     }
@@ -47,4 +51,16 @@ class Matrix2 {
             data[1] = value.x
             data[3] = value.y
         }
+
+    fun multiply(other: Matrix2): Matrix2 {
+        val result = Matrix2()
+        for (i in 0..1) {
+            for (j in 0..1) {
+                for (k in 0..1) {
+                    result.data[i * 2 + j] += data[i * 2 + k] * other.data[k * 2 + j]
+                }
+            }
+        }
+        return result
+    }
 }

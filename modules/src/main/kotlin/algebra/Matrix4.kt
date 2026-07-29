@@ -102,6 +102,14 @@ class Matrix4 {
         }
 
     fun multiply(other: Matrix4): Matrix4 {
-        return Matrix4()
+        val result = Matrix4()
+        for (i in 0..3) {
+            for (j in 0..3) {
+                for (k in 0..3) {
+                    result.data[i * 4 + j] += data[i * 4 + k] * other.data[k * 4 + j]
+                }
+            }
+        }
+        return result
     }
 }

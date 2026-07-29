@@ -6,9 +6,9 @@ import config.Config
 import java.nio.CharBuffer
 import kotlin.io.path.Path
 import kotlin.io.path.exists
-import kotlin.io.path.readText
 
 enum class ShaderStageType {
+    UNKNOWN,
     VERTEX,
     FRAGMENT,
     TESSELATION_EVAL,
@@ -19,66 +19,66 @@ enum class ShaderStageType {
 }
 
 class Program {
-    private var programHandle: GLuint = 0
+    private var _programHandle: Int = 0
     private var name: String = ""
-    private val uniforms: MutableMap<String, GLint> = mutableMapOf()
-
-    fun init(name: String) {
-        if (programHandle != 0u) {
-            println("warning: reinitialize already linked program!")
-            clean()
-        }
-
-        this.name = name
-
-        val stageUnits = mutableListOf<GLuint>()
-
-        val availableShaderFiles = scanForShaderFiles(name)
-
-        for ((stage, type) in availableShaderFiles) {
-            val source = readSource(stage)
-            val unit = compile(type, source)
-            stageUnits.add(unit)
-        }
-
-        programHandle = glCreateProgram()
-
-        for (handle in stageUnits) {
-            glAttachShader(programHandle, handle)
-        }
-
-        glLinkProgram(programHandle)
-
-        val success = glGetProgrami(programHandle, GL_LINK_STATUS)
-
-        if (success == GL_FALSE) {
-            val logLength = glGetProgrami(programHandle, GL_INFO_LOG_LENGTH)
-            val log = String(CharBuffer(logLength))
-            glGetProgramInfoLog(programHandle, logLength, null)
-            throw RuntimeException("gl::Program === can't link program with trace:\n$log")
-        }
-    }
-
-    fun use() {
-        glUseProgram(programHandle)
-    }
-
-    fun clean() {
-        if (programHandle != 0u) {
-            glDeleteProgram(programHandle)
-            programHandle = 0u
-        }
-    }
-
-    fun addUniform(id: String) {
-        if (uniforms.containsKey(id)) {
-            println("warning: program \"$name\" already contains uniform $id")
-            return
-        }
-
-        val location = glGetUniformLocation(programHandle, id)
-        uniforms[id] = location
-    }
+//    private val uniforms: MutableMap<String, GLint> = mutableMapOf()
+//
+//    fun init(name: String) {
+//        if (_programHandle != -1) {
+//            println("warning: reinitialize already linked program!")
+//            clean()
+//        }
+//
+//        this.name = name
+//
+//        val stageUnits = mutableListOf<GLuint>()
+//
+//        val availableShaderFiles = scanForShaderFiles(name)
+//
+//        for ((stage, type) in availableShaderFiles) {
+//            val source = readSource(stage)
+//            val unit = compile(type, source)
+//            stageUnits.add(unit)
+//        }
+//
+//        _programHandle = glCreateProgram()
+//
+//        for (handle in stageUnits) {
+//            glAttachShader(_programHandle, handle)
+//        }
+//
+//        glLinkProgram(_programHandle)
+//
+//        val success = glGetProgrami(_programHandle, GL_LINK_STATUS)
+//
+//        if (success == GL_FALSE) {
+//            val logLength = glGetProgrami(_programHandle, GL_INFO_LOG_LENGTH)
+//            val log = String(CharBuffer(logLength))
+//            glGetProgramInfoLog(_programHandle, logLength, null)
+//            throw RuntimeException("gl::Program === can't link program with trace:\n$log")
+//        }
+//    }
+//
+//    fun use() {
+//        glUseProgram(_programHandle)
+//    }
+//
+//    fun clean() {
+//        if (_programHandle != 0u) {
+//            glDeleteProgram(_programHandle)
+//            _programHandle = 0u
+//        }
+//    }
+//
+//    fun addUniform(id: String) {
+//        if (uniforms.containsKey(id)) {
+//            println("warning: program \"$name\" already contains uniform $id")
+//            return
+//        }
+//
+//        val location = glGetUniformLocation(_programHandle, id)
+//        uniforms[id] = location
+//    }
 
 //    fun addUniform(ids: List<String>) {
 //        for (id in ids) {
@@ -144,75 +144,73 @@ class Program {
 //        return uniforms[id]!!
 //    }
 
-    private fun scanForShaderFiles(name: String): List<Pair<String, GLenum>> {
-        val configHandle = Config.instance()
-        val basePath = configHandle.workPath()
-        val shaderFilesPath = Path("$basePath/assets/shaders/")
-
-        if (!exists(shaderFilesPath)) {
-            throw RuntimeException("gl::Program === shaders directory not found: $shaderFilesPath")
-        }
-
-        val retItem = mutableListOf<Pair<String, GLenum>>()
-        val shaderStageMap = mapOf(
-            "VERTEX" to GL_VERTEX_SHADER,
-            "FRAGMENT" to GL_FRAGMENT_SHADER,
-            "TESSEVAL" to GL_TESS_EVALUATION_SHADER,
-            "TESSCTRL" to GL_TESS_CONTROL_SHADER,
-            "GEOMETRY" to GL_GEOMETRY_SHADER,
-            "COMPUTE" to GL_COMPUTE_SHADER
-        )
-
-        val shaderFiles = shaderFilesPath.toFile().listFiles { file ->
-            file.name.contains("gl_${name}_") && file.extension == "glsl"
-        } ?: emptyArray()
-
-        for (entry in shaderFiles) {
-            val fileName = entry.nameWithoutExtension
-            val parts = fileName.split("_")
-            val suffix = parts.lastOrNull()
-
-            if (suffix != null) {
-                val type = shaderStageMap[suffix]
-                if (type == null) {
-                    throw RuntimeException("gl::Program === shader stage type $suffix not exist!")
-                }
-                retItem.add(Pair("$fileName.glsl", type))
-            }
-        }
-
-        if (retItem.isEmpty()) {
-            throw RuntimeException("gl::Program === shaders directory not contain files for shader $name")
-        }
-
-        return retItem
-    }
-
-    private fun readSource(name: String): String {
-        val configHandle = Config.instance()
-        val basePath = configHandle.workPath()
-        val path = Path("$basePath/assets/shaders/$name")
-
-        if (!exists(path)) {
-            throw RuntimeException("gl::Program === file not found: ${path.fileName}")
-        }
-
-        return path.toFile().readText()
-    }
-
-    private fun compile(stage: GLenum, source: String): GLuint {
-        val shHandle = glCreateShader(stage)
-        glShaderSource(shHandle, source)
-        glCompileShader(shHandle)
-
-        val success = glGetShaderi(shHandle, GL_COMPILE_STATUS)
-
-        if (success == GL_FALSE) {
-            val logLength = glGetShaderi(shHandle, GL_INFO_LOG_LENGTH)
-            val log = glGetShaderInfoLog(shHandle, logLength)
-            throw RuntimeException("gl::Program === can't compile program with trace:\n$log")
-        }
-
-        return shHandle
-    }
+//    private fun scanForShaderFiles(name: String): List<Pair<String, GLenum>> {
+//        val configHandle = Config.instance()
+//        val basePath = configHandle.workPath()
+//        val shaderFilesPath = Path("$basePath/assets/shaders/")
+//
+//        if (!exists(shaderFilesPath)) {
+//            throw RuntimeException("gl::Program === shaders directory not found: $shaderFilesPath")
+//        }
+//
+//        val retItem = mutableListOf<Pair<String, GLenum>>()
+//        val shaderStageMap = mapOf(
+//            "VERTEX" to GL_VERTEX_SHADER,
+//            "FRAGMENT" to GL_FRAGMENT_SHADER,
+//            "TESSEVAL" to GL_TESS_EVALUATION_SHADER,
+//            "TESSCTRL" to GL_TESS_CONTROL_SHADER,
+//            "GEOMETRY" to GL_GEOMETRY_SHADER,
+//            "COMPUTE" to GL_COMPUTE_SHADER
+//        )
+//
+//        val shaderFiles = shaderFilesPath.toFile().listFiles { file ->
+//            file.name.contains("gl_${name}_") && file.extension == "glsl"
+//        } ?: emptyArray()
+//
+//        for (entry in shaderFiles) {
+//            val fileName = entry.nameWithoutExtension
+//            val parts = fileName.split("_")
+//            val suffix = parts.lastOrNull()
+//
+//            if (suffix != null) {
+//                val type = shaderStageMap[suffix]
+//                if (type == null) {
+//                    throw RuntimeException("gl::Program === shader stage type $suffix not exist!")
+//                }
+//                retItem.add(Pair("$fileName.glsl", type))
+//            }
+//        }
+//
+//        if (retItem.isEmpty()) {
+//            throw RuntimeException("gl::Program === shaders directory not contain files for shader $name")
+//        }
+//
+//        return retItem
+//    }
+//
+//    private fun readSource(filePath: String): String {
+//        val path = Path(filePath)
+//
+//        if (!path.exists()) {
+//            throw RuntimeException("gl::Program === file not found: ${path.fileName}")
+//        }
+//
+//        return path.toFile().readText()
+//    }
+//
+//    private fun compile(stage: GLenum, source: String): GLuint {
+//        val shHandle = glCreateShader(stage)
+//        glShaderSource(shHandle, source)
+//        glCompileShader(shHandle)
+//
+//        val success = glGetShaderi(shHandle, GL_COMPILE_STATUS)
+//
+//        if (success == GL_FALSE) {
+//            val logLength = glGetShaderi(shHandle, GL_INFO_LOG_LENGTH)
+//            val log = glGetShaderInfoLog(shHandle, logLength)
+//            throw RuntimeException("gl::Program === can't compile program with trace:\n$log")
+//        }
+//
+//        return shHandle
+//    }
 }

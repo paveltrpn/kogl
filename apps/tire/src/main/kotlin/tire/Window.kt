@@ -29,7 +29,7 @@ class Window {
         _render = Render()
         GlobalEventEmitter.instance().attach(_render)
 
-        val testSource = ShaderSource("")
+        val testSource = ShaderSource("color")
 
         initGLFW()
     }

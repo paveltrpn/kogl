@@ -25,6 +25,8 @@ class Window {
         Config.init("")
         GlobalEventEmitter.init()
 
+        println(" === ${Config.instance().basePath} ====")
+
         _render = Render()
         GlobalEventEmitter.instance().attach(_render)
 

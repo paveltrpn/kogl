@@ -1,0 +1,16 @@
+{
+  "application_name": "kogl",
+  "engine_name": "kogl",
+  "fullscreen": false,
+  "resizeable": false,
+  "window_width": 1200,
+  "window_height": 800,
+  "window_pos_x": 300,
+  "window_pos_y": 300,
+  "background_color": "#0c0c1c",
+  "doublebuffer": true,
+  "frame_count": 3,
+  "enable_vsync": true,
+  "enable_debug_output": false,
+  "ui_font": "DejaVu-Sans-Mono-1024-512-32-64-alpha.tga"
+}

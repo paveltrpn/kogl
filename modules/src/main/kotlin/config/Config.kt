@@ -4,7 +4,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.pathString
 
 class Config private constructor(path: String) {
-    private val workPath: String
+    val _basePath: String
 
     companion object {
         @Volatile
@@ -25,11 +25,14 @@ class Config private constructor(path: String) {
 
     init {
         val pathString = System.getProperty("user.dir")
+
         val path = Path(pathString)
-        workPath = path.pathString
+
+        _basePath = path.pathString
     }
 
-    fun workPath(): String {
-        return workPath
-    }
+    val basePath: String
+        get(): String {
+            return _basePath
+        }
 }

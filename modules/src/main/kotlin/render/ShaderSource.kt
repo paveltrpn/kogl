@@ -7,7 +7,7 @@ import config.Config
 class ShaderSource(val programName: String) {
     // Shader files list with corresponding stage types.
     private var _shadersList: MutableList<Pair<String, Int>> = mutableListOf()
-    private var _basePath: String = Config.instance().workPath()
+    private var _basePath: String = Config.instance().basePath
 
     init {
         val shaderStageMap = mapOf(
@@ -20,8 +20,13 @@ class ShaderSource(val programName: String) {
         )
     }
 
-    var shadersList: MutableList<Pair<String, Int>> = mutableListOf()
-    fun get(): MutableList<Pair<String, Int>> {
-        return _shadersList
+    val shadersList: MutableList<Pair<String, Int>>
+        get(): MutableList<Pair<String, Int>> {
+            return _shadersList
+        }
+
+    private fun parseDirectory(path: String): Unit {
+
     }
+
 }

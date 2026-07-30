@@ -10,6 +10,7 @@ import org.lwjgl.system.MemoryUtil.*
 import config.Config
 import render.Render
 import render.ShaderSource
+import render.Program
 import event.*
 
 class Window {
@@ -26,12 +27,13 @@ class Window {
         Config.init("")
         GlobalEventEmitter.init()
 
+        initGLFW()
+
         _render = Render()
         GlobalEventEmitter.instance().attach(_render)
 
-        val testSource = ShaderSource("color")
-
-        initGLFW()
+        val colorShader = ShaderSource("color")
+        val colorProgram = Program(colorShader)
     }
 
     fun run() {

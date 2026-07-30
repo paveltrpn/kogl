@@ -31,9 +31,6 @@ class Window {
 
         _render = Render()
         GlobalEventEmitter.instance().attach(_render)
-
-        val colorShader = ShaderSource("color")
-        val colorProgram = Program(colorShader)
     }
 
     fun run() {

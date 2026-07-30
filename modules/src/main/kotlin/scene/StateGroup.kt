@@ -4,7 +4,6 @@ import render.Program
 
 open class StateGroup : Node {
     private var _children: MutableList<Node> = mutableListOf()
-
     private var _program: Program? = null
 
     var children: MutableList<Node>

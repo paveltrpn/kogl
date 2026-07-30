@@ -2,17 +2,35 @@ package scene
 
 import algebra.*
 
-open class Drawable : Node {
+interface Drawable : Node {
+    abstract fun applyTransform(tr: Matrix4): Unit
+    abstract fun drawCall(): Unit
+}
+
+class StaticDrawable : Drawable {
     override fun traverse(): Unit {
-        println("Traverse over Drawable")
+        println("Traverse over StaticDrawable")
     }
 
-    fun applyTransform(tr: Matrix4): Unit {
-        println("perform Drawable applyTransform")
+    override fun applyTransform(tr: Matrix4): Unit {
+        println("perform StaticDrawable applyTransform")
     }
 
-    fun drawCall(): Unit {
-        println("perform Drawable drawCall")
+    override fun drawCall(): Unit {
+        println("perform StaticDrawable drawCall")
     }
 }
 
+class SpinableDrawable : Drawable {
+    override fun traverse(): Unit {
+        println("Traverse over SpinableDrawable")
+    }
+
+    override fun applyTransform(tr: Matrix4): Unit {
+        println("perform SpinableDrawable applyTransform")
+    }
+
+    override fun drawCall(): Unit {
+        println("perform SpinableDrawable drawCall")
+    }
+}

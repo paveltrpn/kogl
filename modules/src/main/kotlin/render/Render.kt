@@ -11,31 +11,9 @@ class Render : EventObserver {
     init {
         _run = true
 
-        // TEST
-        var sgOne = StateGroup()
-        var sgTwo = StateGroup()
+        val testCubes = testCubesGraph()
 
-        var daOne = Drawable()
-        var daTwo = Drawable()
-
-        var trOne = Transform()
-        var trTwo = Transform()
-
-        var trThree = Transform()
-
-        trTwo.addChild(trThree)
-
-        trOne.addChild(daOne)
-        trThree.addChild(daTwo)
-
-        sgOne.addChild(trOne)
-        sgOne.addChild(trTwo)
-
-        sgTwo.addChild(trOne)
-        sgTwo.addChild(trTwo)
-
-        _scene.addStateGroup(sgOne)
-        _scene.addStateGroup(sgTwo)
+        _scene.addStateGroup(testCubes)
 
         _scene.walk()
     }
@@ -73,5 +51,27 @@ class Render : EventObserver {
                 }
             }
         }
+    }
+
+    private fun testCubesGraph(): StateGroup {
+        val colorShader = ShaderSource("color")
+        val colorProgram = Program(colorShader)
+
+        val colorStateGroup = StateGroup()
+        colorStateGroup.setProgram(colorProgram)
+        
+        val cubeStatic = StaticDrawable()
+        val cubeSpin = SpinableDrawable()
+
+        val offsetOne = Transform()
+        val offsetTwo = Transform()
+
+        offsetOne.addChild(cubeStatic)
+        offsetTwo.addChild(cubeSpin)
+
+        colorStateGroup.addChild(offsetOne)
+        colorStateGroup.addChild(offsetTwo)
+
+        return colorStateGroup
     }
 }

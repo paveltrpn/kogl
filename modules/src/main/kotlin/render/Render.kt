@@ -59,9 +59,36 @@ class Render : EventObserver {
 
         val colorStateGroup = StateGroup()
         colorStateGroup.setProgram(colorProgram)
-        
-        val cubeStatic = StaticDrawable()
-        val cubeSpin = SpinableDrawable()
+
+        val vertices = floatArrayOf(
+            // 8 cube vertices
+            -0.5f, -0.5f, -0.5f,
+            0.5f, -0.5f, -0.5f,
+            0.5f, 0.5f, -0.5f,
+            -0.5f, 0.5f, -0.5f,
+            -0.5f, -0.5f, 0.5f,
+            0.5f, -0.5f, 0.5f,
+            0.5f, 0.5f, 0.5f,
+            -0.5f, 0.5f, 0.5f
+        )
+
+        val indices = intArrayOf(
+            // Front face (z = 0.5) - vertices 4,5,6,7
+            4, 6, 5, 4, 7, 6,
+            // Back face (z = -0.5) - vertices 0,1,2,3
+            0, 2, 1, 0, 3, 2,
+            // Top face (y = 0.5) - vertices 3,2,6,7
+            3, 6, 7, 3, 2, 6,
+            // Bottom face (y = -0.5) - vertices 0,1,5,4
+            0, 5, 4, 0, 1, 5,
+            // Right face (x = 0.5) - vertices 1,2,6,5
+            1, 6, 5, 1, 2, 6,
+            // Left face (x = -0.5) - vertices 0,3,7,4
+            0, 7, 4, 0, 3, 7
+        )
+
+        val cubeStatic = StaticDrawable(vertices, indices)
+        val cubeSpin = SpinableDrawable(vertices, indices)
 
         val offsetOne = Transform()
         val offsetTwo = Transform()

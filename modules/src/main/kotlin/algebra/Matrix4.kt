@@ -122,6 +122,13 @@ class Matrix4 {
         )
     }
 
+    fun vecMultiply3(other: Vector3): Vector3 {
+        val x = data[0] * other.x + data[1] * other.y + data[2] * other.z + data[3]
+        val y = data[4] * other.x + data[5] * other.y + data[6] * other.z + data[7]
+        val z = data[8] * other.x + data[9] * other.y + data[10] * other.z + data[11]
+        return Vector3(x, y, z)
+    }
+
     fun perspective(fov: Float, aspect: Float, near: Float, far: Float): Matrix4 {
         val result = Matrix4()
         val tanHalfFov = kotlin.math.tan(toRadians(fov) / 2.0f)

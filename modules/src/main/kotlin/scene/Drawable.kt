@@ -3,8 +3,8 @@ package scene
 import algebra.*
 
 abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
-    private val _vertices: FloatArray = vertices
-    private val _indices: IntArray = indices
+    protected val _vertices: FloatArray = vertices
+    protected val _indices: IntArray = indices
 
     override fun traverse(): Unit {
         println("Traverse over Drawable")
@@ -24,7 +24,35 @@ class StaticDrawable(vertices: FloatArray, indices: IntArray) : Drawable(vertice
 }
 
 class SpinableDrawable(vertices: FloatArray, indices: IntArray) : Drawable(vertices, indices) {
+    private var _spin = Matrix4()
+
+    var spin: Matrix4
+        get(): Matrix4 {
+            return _spin
+        }
+        set(value: Matrix4) {
+            _spin = value
+        }
+
     override fun applyTransform(tr: Matrix4): Unit {
-        println("perform SpinableDrawable applyTransform")
+        val combinedTransform = tr.multiply(_spin)
+
+        // TODO
+        val transformedVertices = FloatArray(_vertices.size)
+
+        var i: Int = 0
+
+        while (i < _vertices.size) {
+            val vertex = Vector3(_vertices[i], _vertices[i + 1], _vertices[i + 2])
+
+            val transformed = combinedTransform.vecMultiply3(vertex)
+
+            transformedVertices[i] = transformed.x
+            transformedVertices[i + 1] = transformed.y
+            transformedVertices[i + 2] = transformed.z
+
+            i += 3
+        }
     }
+
 }

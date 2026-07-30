@@ -112,4 +112,40 @@ class Matrix4 {
         }
         return result
     }
+
+    fun vecMultiply(other: Vector4): Vector4 {
+        return Vector4(
+            data[0] * other.x + data[1] * other.y + data[2] * other.z + data[3] * other.w,
+            data[4] * other.x + data[5] * other.y + data[6] * other.z + data[7] * other.w,
+            data[8] * other.x + data[9] * other.y + data[10] * other.z + data[11] * other.w,
+            data[12] * other.x + data[13] * other.y + data[14] * other.z + data[15] * other.w
+        )
+    }
+
+    fun perspective(fov: Float, aspect: Float, near: Float, far: Float): Matrix4 {
+        val result = Matrix4()
+        val tanHalfFov = kotlin.math.tan(toRadians(fov) / 2.0f)
+
+        result.data[0] = 1.0f / (aspect * tanHalfFov)
+        result.data[5] = 1.0f / tanHalfFov
+        result.data[10] = -(far + near) / (far - near)
+        result.data[11] = -1.0f
+        result.data[14] = -(2.0f * far * near) / (far - near)
+
+        return result
+    }
+
+    fun ortho(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float): Matrix4 {
+        val result = Matrix4()
+
+        result.data[0] = 2.0f / (right - left)
+        result.data[5] = 2.0f / (top - bottom)
+        result.data[10] = -2.0f / (far - near)
+
+        result.data[12] = -(right + left) / (right - left)
+        result.data[13] = -(top + bottom) / (top - bottom)
+        result.data[14] = -(far + near) / (far - near)
+
+        return result
+    }
 }

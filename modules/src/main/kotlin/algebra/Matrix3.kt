@@ -84,4 +84,12 @@ class Matrix3 {
         }
         return result
     }
+
+    fun vecMultiply(other: Vector3): Vector3 {
+        return Vector3(
+            data[0] * other.x + data[1] * other.y + data[2] * other.z,
+            data[3] * other.x + data[4] * other.y + data[5] * other.z,
+            data[6] * other.x + data[7] * other.y + data[8] * other.z
+        )
+    }
 }

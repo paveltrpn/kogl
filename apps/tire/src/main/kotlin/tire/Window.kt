@@ -9,6 +9,7 @@ import org.lwjgl.system.MemoryUtil.*
 
 import config.Config
 import render.Render
+import render.ShaderSource
 import event.*
 
 class Window {
@@ -25,10 +26,10 @@ class Window {
         Config.init("")
         GlobalEventEmitter.init()
 
-        println(" === ${Config.instance().basePath} ====")
-
         _render = Render()
         GlobalEventEmitter.instance().attach(_render)
+
+        val testSource = ShaderSource("")
 
         initGLFW()
     }

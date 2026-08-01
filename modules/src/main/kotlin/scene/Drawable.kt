@@ -1,10 +1,16 @@
 package scene
 
 import algebra.*
+import render.VertexBuffer
 
 abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
     protected val _vertices: FloatArray = vertices
     protected val _indices: IntArray = indices
+    protected val _buffer = VertexBuffer()
+
+    init {
+        _buffer.bindVertexData(_vertices)
+    }
 
     override fun traverse(): Unit {
         println("Traverse over Drawable")

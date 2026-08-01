@@ -31,10 +31,6 @@ class VertexBuffer {
         glGenBuffers(_buffers);
     }
 
-    fun generate() {
-
-    }
-
     fun clean() {
         glDeleteVertexArrays(_array);
         glDeleteBuffers(_buffers);
@@ -46,8 +42,8 @@ class VertexBuffer {
         glBindVertexArray(_array);
     }
 
-    fun bindVertexData(verteciesCount: Int, data: FloatArray) {
-        _verteciesCount = verteciesCount
+    fun bindVertexData(data: FloatArray) {
+        _verteciesCount = data.size
 
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal]);

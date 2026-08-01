@@ -35,7 +35,7 @@ class SpinableDrawable(vertices: FloatArray, indices: IntArray) : Drawable(verti
         }
 
     override fun applyTransform(tr: Matrix4): Unit {
-        val combinedTransform = tr.multiply(_spin)
+        val combinedTransform = tr.multiply(spin)
 
         // TODO
         val transformedVertices = FloatArray(_vertices.size)
@@ -45,7 +45,7 @@ class SpinableDrawable(vertices: FloatArray, indices: IntArray) : Drawable(verti
         while (i < _vertices.size) {
             val vertex = Vector3(_vertices[i], _vertices[i + 1], _vertices[i + 2])
 
-            val transformed = combinedTransform.vecMultiply3(vertex)
+            val transformed = combinedTransform.vecMultiply(vertex)
 
             transformedVertices[i] = transformed.x
             transformedVertices[i + 1] = transformed.y

@@ -1,6 +1,8 @@
 package render
 
 import org.lwjgl.opengl.GL46.*
+
+import algebra.Matrix4
 import event.*
 import scene.*
 
@@ -89,6 +91,7 @@ class Render : EventObserver {
 
         val cubeStatic = StaticDrawable(vertices, indices)
         val cubeSpin = SpinableDrawable(vertices, indices)
+        cubeSpin.spin = Matrix4()
 
         val offsetOne = Transform()
         val offsetTwo = Transform()

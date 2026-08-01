@@ -19,6 +19,7 @@ class VertexBuffer {
     private val _array: Int
     private val _buffers: IntBuffer
     private var _verteciesCount: Int = 0
+    private var _indexCount: Int = 0
 
     init {
         _stack = MemoryStack.stackPush()
@@ -26,7 +27,7 @@ class VertexBuffer {
         // _buffers = _stack.mallocInt(3)
         _buffers = MemoryUtil.memAllocInt(3)
 
-        _array = glGenVertexArrays()
+        _array = glCreateVertexArrays()
 
         glGenBuffers(_buffers);
     }
@@ -51,6 +52,14 @@ class VertexBuffer {
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L);
     }
 
+    fun bindIndexData(data: IntArray) {
+        _indexCount = data.size
+        // glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffers[VertexBuffersEnum.INDICIES.ordinal]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_STATIC_DRAW);
+        // glVertexAttribPointer(1, 3, GL_UNSIGNED_INT, false, 0, 0L);
+    }
+
 //    fun bindNormalData( long verteciesCount, const void *data ) {
 //        const auto bufferSize = verteciesCount * 3 * sizeof( float );
 //        glEnableVertexAttribArray( 1 );
@@ -67,7 +76,7 @@ class VertexBuffer {
 //        glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 //    }
 
-    fun updateVertexData(size: Long, data: FloatArray) {
+    fun updateVertexData(data: FloatArray) {
         glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal]);
 
         // GL_WRITE_ONLY means we only intend to write data to the buffer.
@@ -90,6 +99,22 @@ class VertexBuffer {
         glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 
+    fun updateIndexData(data: IntArray) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffers[VertexBuffersEnum.INDICIES.ordinal]);
+
+        val byteBuffer: ByteBuffer? = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY)
+
+        if (byteBuffer != null) {
+            val intBuffer = byteBuffer.asIntBuffer()
+
+            intBuffer.put(data)
+
+            glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER)
+        }
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
+    }
+
 //    fun updateNormalsData( long size, const void *data ) {
 //        glBindBuffer( GL_ARRAY_BUFFER, buffers_[NORMAL_BUFFER] );
 //        void *ptr = glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
@@ -104,5 +129,11 @@ class VertexBuffer {
     fun draw() {
         glBindVertexArray(_array);
         glDrawArrays(GL_TRIANGLES, 0, _verteciesCount);
+    }
+
+    fun drawIndexed() {
+        glBindVertexArray(_array);
+        //glDrawElements(GL_TRIANGLES, _indexCount / 3, GL_UNSIGNED_INT, 0L);
+        glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, 0L);
     }
 }

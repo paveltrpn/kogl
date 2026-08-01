@@ -8,7 +8,6 @@ open class Transform : Node {
     private var _matrix = Matrix4()
 
     override fun traverse(): Unit {
-        println("Traverse over Transform")
     }
 
     var child: Node?

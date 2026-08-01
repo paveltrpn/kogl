@@ -10,14 +10,18 @@ abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
 
     init {
         _buffer.bindVertexData(_vertices)
+        _buffer.bindIndexData(_indices)
     }
 
     override fun traverse(): Unit {
-        println("Traverse over Drawable")
-    }
+        applyTransform(Matrix4())
 
-    fun drawCall(): Unit {
-        println("perform Drawable drawCall")
+        _buffer.updateVertexData(_vertices)
+        // _buffer.updateIndexData(_indices)
+
+        _buffer.drawIndexed()
+
+        // _buffer.draw()
     }
 
     abstract fun applyTransform(tr: Matrix4): Unit
@@ -25,7 +29,6 @@ abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
 
 class StaticDrawable(vertices: FloatArray, indices: IntArray) : Drawable(vertices, indices) {
     override fun applyTransform(tr: Matrix4): Unit {
-        println("perform StaticDrawable applyTransform")
     }
 }
 

@@ -58,12 +58,9 @@ class Scene {
             }
 
             is Drawable -> {
-                next.traverse()
-
                 // Reach Drawable leaf node, perform transformation
                 // applying and draw call.
-                next.applyTransform(_transformAccumulator)
-                next.drawCall()
+                next.traverse()
             }
 
             else -> {

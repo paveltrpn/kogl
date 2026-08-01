@@ -16,8 +16,6 @@ class Render : EventObserver {
         val testCubes = testCubesGraph()
 
         _scene.addStateGroup(testCubes)
-
-        _scene.walk()
     }
 
     var run: Boolean
@@ -31,12 +29,17 @@ class Render : EventObserver {
     fun preLoop(): Unit {
         glViewport(0, 0, 1200, 800)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
+
+
     }
 
     fun frame(): Unit {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-        // _scene.walk()
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+
+        _scene.walk()
     }
 
     fun postLoop(): Unit {

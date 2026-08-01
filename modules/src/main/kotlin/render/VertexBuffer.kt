@@ -2,6 +2,7 @@ package render
 
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.MemoryUtil
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
 
@@ -15,25 +16,26 @@ enum class VertexBuffersEnum {
 
 class VertexBuffer {
     private val _vao: Int
-    private val _vbo: Int
-    private val _ebo: Int
+    private val _buffers: IntBuffer
     private var _vertexCount: Int = 0
     private var _indexCount: Int = 0
 
     init {
+        _buffers = MemoryUtil.memAllocInt(VertexBuffersEnum.entries.size)
+
         _vao = glGenVertexArrays()
         glBindVertexArray(_vao)
 
-        _vbo = glGenBuffers()
-        _ebo = glGenBuffers()
+        glGenBuffers(_buffers);
 
         glBindVertexArray(0)
     }
 
     fun clean() {
-        glDeleteBuffers(_ebo)
-        glDeleteBuffers(_vbo)
+        glDeleteBuffers(_buffers)
         glDeleteVertexArrays(_vao)
+
+        MemoryUtil.memFree(_buffers)
     }
 
     fun bind() {
@@ -48,7 +50,7 @@ class VertexBuffer {
         _vertexCount = data.size / 3
 
         glBindVertexArray(_vao)
-        glBindBuffer(GL_ARRAY_BUFFER, _vbo)
+        glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal])
 
         MemoryStack.stackPush().use { stack ->
             val buffer: FloatBuffer = stack.callocFloat(data.size)
@@ -66,7 +68,7 @@ class VertexBuffer {
         _indexCount = data.size
 
         glBindVertexArray(_vao)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffers[VertexBuffersEnum.INDICIES.ordinal])
 
         MemoryStack.stackPush().use { stack ->
             val buffer: IntBuffer = stack.callocInt(data.size)
@@ -79,7 +81,7 @@ class VertexBuffer {
     }
 
     fun updateVertexData(data: FloatArray) {
-        glBindBuffer(GL_ARRAY_BUFFER, _vbo)
+        glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal])
 
         MemoryStack.stackPush().use { stack ->
             val buffer: FloatBuffer = stack.callocFloat(data.size)
@@ -91,7 +93,7 @@ class VertexBuffer {
 
 //    NOTE: Unused!
 //    fun updateIndexData(data: IntArray) {
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo)
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VertexBuffersEnum.INDICIES.ordinal)
 //
 //        MemoryStack.stackPush().use { stack ->
 //            val buffer: IntBuffer = stack.callocInt(data.size)

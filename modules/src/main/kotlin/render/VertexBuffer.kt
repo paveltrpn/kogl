@@ -89,22 +89,17 @@ class VertexBuffer {
         }
     }
 
-    fun updateIndexData(data: IntArray) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo)
-
-        MemoryStack.stackPush().use { stack ->
-            val buffer: IntBuffer = stack.callocInt(data.size)
-            buffer.put(data)
-            buffer.flip()
-            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, buffer)
-        }
-    }
-
-    fun draw() {
-        glBindVertexArray(_vao)
-        glDrawArrays(GL_TRIANGLES, 0, _vertexCount)
-        glBindVertexArray(0)
-    }
+//    NOTE: Unused!
+//    fun updateIndexData(data: IntArray) {
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo)
+//
+//        MemoryStack.stackPush().use { stack ->
+//            val buffer: IntBuffer = stack.callocInt(data.size)
+//            buffer.put(data)
+//            buffer.flip()
+//            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, buffer)
+//        }
+//    }
 
     fun drawIndexed() {
         glBindVertexArray(_vao)

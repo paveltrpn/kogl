@@ -17,11 +17,8 @@ abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
         applyTransform(Matrix4())
 
         _buffer.updateVertexData(_vertices)
-        // _buffer.updateIndexData(_indices)
 
         _buffer.drawIndexed()
-
-        // _buffer.draw()
     }
 
     abstract fun applyTransform(tr: Matrix4): Unit

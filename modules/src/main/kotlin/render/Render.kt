@@ -97,7 +97,9 @@ class Render : EventObserver {
         cubeSpin.spin = Matrix4()
 
         val offsetOne = Transform()
+        offsetOne.transform = algebra.offset(0.5f, 0.0f, 0.0f);
         val offsetTwo = Transform()
+        offsetTwo.transform = algebra.offset(-0.5f, 0.0f, 0.0f);
 
         offsetOne.addChild(cubeStatic)
         offsetTwo.addChild(cubeSpin)

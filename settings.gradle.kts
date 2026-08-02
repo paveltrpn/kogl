@@ -6,13 +6,13 @@
  */
 
 rootProject.name = "kogl"
-include("tire")
-project(":tire").projectDir = file("apps/tire")
+include("kogl")
+project(":kogl").projectDir = file("apps/kogl")
 
 include("encode")
 project(":encode").projectDir = file("apps/encode")
 
-include(":tire", ":modules")
+include(":kogl", ":modules")
 project(":modules").projectDir = file("modules")
 
 include(":encode", ":modules")

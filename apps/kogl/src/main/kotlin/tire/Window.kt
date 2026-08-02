@@ -1,4 +1,4 @@
-package tire
+package kogl
 
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*

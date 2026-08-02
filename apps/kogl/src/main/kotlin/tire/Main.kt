@@ -1,7 +1,7 @@
-package tire
+package kogl
 
 fun main(args: Array<String>) {
-    println("tire start...")
+    println("kogl start...")
 
     val window: Window = Window()
 

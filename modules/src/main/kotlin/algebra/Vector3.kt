@@ -86,4 +86,16 @@ class Vector3 {
         return data[0] * other[0] + data[1] * other[1] +
                 data[2] * other[2]
     }
+
+    fun cross(other: Vector3): Vector3 {
+        return Vector3(
+            data[1] * other.z - data[2] * other.y,
+            data[2] * other.x - data[0] * other.z,
+            data[0] * other.y - data[1] * other.x
+        )
+    }
+
+    fun scale(s: Float): Vector3 {
+        return Vector3(data[0] * s, data[1] * s, data[2] * s)
+    }
 }

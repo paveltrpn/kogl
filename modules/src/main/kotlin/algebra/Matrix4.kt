@@ -277,5 +277,68 @@ class Matrix4 {
     fun scale(v: Vector3): Matrix4 {
         return scale(v.x, v.y, v.z)
     }
+
+    fun transpose() {
+        val tmp = _data[1]
+        _data[1] = _data[4]
+        _data[4] = tmp
+
+        _data[2] = _data[8].also { _data[8] = _data[2] }
+        _data[3] = _data[12].also { _data[12] = _data[3] }
+
+        _data[6] = _data[9].also { _data[9] = _data[6] }
+        _data[7] = _data[13].also { _data[13] = _data[7] }
+
+        _data[11] = _data[14].also { _data[14] = _data[11] }
+    }
+
+    fun translate(x: Float, y: Float, z: Float): Matrix4 {
+        _data[0] = 1.0f
+        _data[1] = 0.0f
+        _data[2] = 0.0f
+        _data[3] = 0.0f
+
+        _data[4] = 0.0f
+        _data[5] = 1.0f
+        _data[6] = 0.0f
+        _data[7] = 0.0f
+
+        _data[8] = 0.0f
+        _data[9] = 0.0f
+        _data[10] = 1.0f
+        _data[11] = 0.0f
+
+        _data[12] = x
+        _data[13] = y
+        _data[14] = z
+        _data[15] = 1.0f
+
+        return this
+    }
+
+    fun translate(v: Vector3): Matrix4 {
+        return translate(v.x, v.y, v.z)
+    }
+
+    fun rotate(axis: Vector3, angle: Float): Matrix4 {
+        return fromAxisAngle(axis, angle)
+    }
+
+    fun rotate(axis: Vector3, angle: Double): Matrix4 {
+        return fromAxisAngle(axis, angle.toFloat())
+    }
+
+    fun perspective(fov: Double, aspect: Double, near: Double, far: Double): Matrix4 {
+        val result = Matrix4()
+        val tanHalfFov = kotlin.math.tan(toRadians(fov) / 2.0)
+
+        result._data[0] = 1.0f / (aspect.toFloat() * tanHalfFov.toFloat())
+        result._data[5] = 1.0f / tanHalfFov.toFloat()
+        result._data[10] = -(far.toFloat() + near.toFloat()) / (far.toFloat() - near.toFloat())
+        result._data[11] = -1.0f
+        result._data[14] = -(2.0f * far.toFloat() * near.toFloat()) / (far.toFloat() - near.toFloat())
+
+        return result
+    }
 }
 

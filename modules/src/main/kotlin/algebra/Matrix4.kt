@@ -217,5 +217,65 @@ class Matrix4 {
 
         return this
     }
+
+    fun offset(x: Float, y: Float, z: Float): Matrix4 {
+        _data[0] = 1.0f
+        _data[1] = 0.0f
+        _data[2] = 0.0f
+        _data[3] = 0.0f
+
+        _data[4] = 0.0f
+        _data[5] = 1.0f
+        _data[6] = 0.0f
+        _data[7] = 0.0f
+
+        _data[8] = 0.0f
+        _data[9] = 0.0f
+        _data[10] = 1.0f
+        _data[11] = 0.0f
+
+        _data[12] = x
+        _data[13] = y
+        _data[14] = z
+        _data[15] = 1.0f
+
+        return this
+    }
+
+    fun offset(v: Vector3): Matrix4 {
+        return offset(v.x, v.y, v.z)
+    }
+
+    fun scale(x: Float, y: Float, z: Float): Matrix4 {
+        _data[0] = x
+        _data[1] = 0.0f
+        _data[2] = 0.0f
+        _data[3] = 0.0f
+
+        _data[4] = 0.0f
+        _data[5] = y
+        _data[6] = 0.0f
+        _data[7] = 0.0f
+
+        _data[8] = 0.0f
+        _data[9] = 0.0f
+        _data[10] = z
+        _data[11] = 0.0f
+
+        _data[12] = 0.0f
+        _data[13] = 0.0f
+        _data[14] = 0.0f
+        _data[15] = 1.0f
+
+        return this
+    }
+
+    fun scale(s: Float): Matrix4 {
+        return scale(s, s, s)
+    }
+
+    fun scale(v: Vector3): Matrix4 {
+        return scale(v.x, v.y, v.z)
+    }
 }
 

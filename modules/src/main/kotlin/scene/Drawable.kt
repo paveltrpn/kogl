@@ -3,11 +3,14 @@ package scene
 import algebra.*
 import render.VertexBuffer
 
+// ============================================================================
+// ======================= Drawable ===========================================
+// ============================================================================
+
 abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
     protected val _vertices: FloatArray = vertices
     protected val _indices: IntArray = indices
 
-    
     protected val _buffer = VertexBuffer()
 
     init {
@@ -26,10 +29,18 @@ abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
     abstract fun applyTransform(tr: Matrix4): Unit
 }
 
+// ============================================================================
+// ======================= StaticDrawable =====================================
+// ============================================================================
+
 class StaticDrawable(vertices: FloatArray, indices: IntArray) : Drawable(vertices, indices) {
     override fun applyTransform(tr: Matrix4): Unit {
     }
 }
+
+// ============================================================================
+// ======================= SpinableDrawable ===================================
+// ============================================================================
 
 class SpinableDrawable(vertices: FloatArray, indices: IntArray) : Drawable(vertices, indices) {
     private var _spin = Matrix4()

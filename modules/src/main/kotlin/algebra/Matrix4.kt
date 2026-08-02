@@ -155,4 +155,67 @@ class Matrix4 {
 
         return result
     }
+
+    fun fromAxisAngle(axis: Vector3, angle: Float): Matrix4 {
+        val x = axis.x
+        val y = axis.y
+        val z = axis.z
+        val cos = kotlin.math.cos(toRadians(angle)).toFloat()
+        val sin = kotlin.math.sin(toRadians(angle)).toFloat()
+        val oneMinusCos = 1.0f - cos
+
+        _data[0] = cos + x * x * oneMinusCos
+        _data[1] = x * y * oneMinusCos - z * sin
+        _data[2] = x * z * oneMinusCos + y * sin
+        _data[3] = 0.0f
+
+        _data[4] = y * x * oneMinusCos + z * sin
+        _data[5] = cos + y * y * oneMinusCos
+        _data[6] = y * z * oneMinusCos - x * sin
+        _data[7] = 0.0f
+
+        _data[8] = z * x * oneMinusCos - y * sin
+        _data[9] = z * y * oneMinusCos + x * sin
+        _data[10] = cos + z * z * oneMinusCos
+        _data[11] = 0.0f
+
+        _data[12] = 0.0f
+        _data[13] = 0.0f
+        _data[14] = 0.0f
+        _data[15] = 1.0f
+
+        return this
+    }
+
+    fun fromEuler(x: Float, y: Float, z: Float): Matrix4 {
+        val cx = kotlin.math.cos(toRadians(x)).toFloat()
+        val sx = kotlin.math.sin(toRadians(x)).toFloat()
+        val cy = kotlin.math.cos(toRadians(y)).toFloat()
+        val sy = kotlin.math.sin(toRadians(y)).toFloat()
+        val cz = kotlin.math.cos(toRadians(z)).toFloat()
+        val sz = kotlin.math.sin(toRadians(z)).toFloat()
+
+        _data[0] = cy * cz
+        _data[1] = cy * sz
+        _data[2] = -sy
+        _data[3] = 0.0f
+
+        _data[4] = sx * sy * cz - cx * sz
+        _data[5] = sx * sy * sz + cx * cz
+        _data[6] = sx * cy
+        _data[7] = 0.0f
+
+        _data[8] = cx * sy * cz + sx * sz
+        _data[9] = cx * sy * sz - sx * cz
+        _data[10] = cx * cy
+        _data[11] = 0.0f
+
+        _data[12] = 0.0f
+        _data[13] = 0.0f
+        _data[14] = 0.0f
+        _data[15] = 1.0f
+
+        return this
+    }
 }
+

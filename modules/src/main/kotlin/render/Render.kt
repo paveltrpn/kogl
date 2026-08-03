@@ -101,10 +101,16 @@ class Render : EventObserver {
 
         val offsetOne = Transform()
         offsetOne.transform = algebra.offset(2.0f, 0.0f, 0.0f);
+
+        val scale = Transform()
+        scale.transform = algebra.scale(2.0f, 2.0f, 2.0f)
+
         val offsetTwo = Transform()
         offsetTwo.transform = algebra.offset(-2.0f, 0.0f, 0.0f);
 
-        offsetOne.addChild(cubeStatic)
+        offsetOne.addChild(scale)
+        scale.addChild(cubeStatic)
+
         offsetTwo.addChild(cubeSpin)
 
         colorStateGroup.addChild(offsetOne)

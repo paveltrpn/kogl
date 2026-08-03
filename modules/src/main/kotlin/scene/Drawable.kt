@@ -84,9 +84,9 @@ class SpinableDrawable(vertices: FloatArray, indices: IntArray) : Drawable(verti
         if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
 
         val spin = rotation(_axis, _angl)
-        //val spin = rotation(0.0f, _angl, 0.0f)
-        val combinedTransform = tr.multiply(spin)
 
-        transform(combinedTransform)
+        val combined = tr.multiply(spin)
+
+        transform(combined)
     }
 }

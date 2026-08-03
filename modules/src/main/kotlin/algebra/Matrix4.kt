@@ -105,26 +105,12 @@ class Matrix4 {
             _data[14] = value.w
         }
 
-    fun zero() {
-        _data[0] = 0.0f;
-        _data[1] = 0.0f;
-        _data[2] = 0.0f;
-        _data[3] = 0.0f;
-        _data[4] = 0.0f;
-        _data[5] = 0.0f
-        _data[6] = 0.0f;
-        _data[7] = 0.0f;
-        _data[8] = 0.0f;
-        _data[9] = 0.0f;
-        _data[10] = 0.0f
-        _data[11] = 0.0f;
-        _data[12] = 0.0f;
-        _data[13] = 0.0f;
-        _data[14] = 0.0f;
-        _data[15] = 0.0f
+    fun zero(): Matrix4 {
+        _data.fill(0.0f)
+        return this
     }
 
-    fun idtt() {
+    fun idtt(): Matrix4 {
         _data[0] = 1.0f;
         _data[1] = 0.0f;
         _data[2] = 0.0f;
@@ -141,11 +127,12 @@ class Matrix4 {
         _data[13] = 0.0f;
         _data[14] = 0.0f;
         _data[15] = 1.0f
+
+        return this
     }
 
     fun multiply(other: Matrix4): Matrix4 {
-        val result = Matrix4()
-        result.zero()
+        val result = Matrix4().zero()
 
         for (i in 0..3) {
             for (j in 0..3) {
@@ -154,6 +141,7 @@ class Matrix4 {
                 }
             }
         }
+
         return result
     }
 

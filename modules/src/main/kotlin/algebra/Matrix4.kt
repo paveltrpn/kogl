@@ -105,6 +105,25 @@ class Matrix4 {
             _data[14] = value.w
         }
 
+    fun zero() {
+        _data[0] = 0.0f;
+        _data[1] = 0.0f;
+        _data[2] = 0.0f;
+        _data[3] = 0.0f;
+        _data[4] = 0.0f;
+        _data[5] = 0.0f
+        _data[6] = 0.0f;
+        _data[7] = 0.0f;
+        _data[8] = 0.0f;
+        _data[9] = 0.0f;
+        _data[10] = 0.0f
+        _data[11] = 0.0f;
+        _data[12] = 0.0f;
+        _data[13] = 0.0f;
+        _data[14] = 0.0f;
+        _data[15] = 0.0f
+    }
+
     fun idtt() {
         _data[0] = 1.0f;
         _data[1] = 0.0f;
@@ -126,6 +145,8 @@ class Matrix4 {
 
     fun multiply(other: Matrix4): Matrix4 {
         val result = Matrix4()
+        result.zero()
+
         for (i in 0..3) {
             for (j in 0..3) {
                 for (k in 0..3) {
@@ -146,10 +167,20 @@ class Matrix4 {
     }
 
     fun vecMultiply(other: Vector3): Vector3 {
-        val x = _data[0] * other.x + _data[1] * other.y + _data[2] * other.z + _data[3]
-        val y = _data[4] * other.x + _data[5] * other.y + _data[6] * other.z + _data[7]
-        val z = _data[8] * other.x + _data[9] * other.y + _data[10] * other.z + _data[11]
-        return Vector3(x, y, z)
+        var rx = other.x * _data[0] + other.y * _data[1] + other.z * _data[2] + _data[3];
+        var ry = other.x * _data[4] + other.y * _data[5] + other.z * _data[6] + _data[7];
+        var rz = other.x * _data[8] + other.y * _data[9] + other.z * _data[10] + _data[11];
+        val w = other.x * _data[12] + other.y * _data[13] + other.z * _data[14] + _data[15];
+
+        // Normalize if w is different from 1.0 (convert from homogeneous to Cartesian
+        // coordinates).
+        if (w != 1.0f) {
+            rx /= w;
+            ry /= w;
+            rz /= w;
+        }
+
+        return Vector3(rx, ry, rz)
     }
 
     fun perspective(fov: Float, aspect: Float, near: Float, far: Float): Matrix4 {

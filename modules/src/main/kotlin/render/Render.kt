@@ -96,13 +96,13 @@ class Render : EventObserver {
 
         val cubeStatic = StaticDrawable(vertices, indices)
         val cubeSpin = SpinableDrawable(vertices, indices)
-        cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f).normalize()
-        cubeSpin.anglSpeed = 0.4f
+        cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f)
+        cubeSpin.anglSpeed = 0.8f
 
         val offsetOne = Transform()
         offsetOne.transform = algebra.offset(2.0f, 0.0f, 0.0f);
         val offsetTwo = Transform()
-        offsetTwo.transform = algebra.offset(-0.5f, 0.0f, 0.0f);
+        offsetTwo.transform = algebra.offset(-2.0f, 0.0f, 0.0f);
 
         offsetOne.addChild(cubeStatic)
         offsetTwo.addChild(cubeSpin)

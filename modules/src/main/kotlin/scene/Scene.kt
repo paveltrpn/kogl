@@ -13,7 +13,7 @@ class Scene {
         _camera.ncp = 0.1f
         _camera.fcp = 100.0f
 
-        _camera.eye = Vector3(0.0f, 0.0f, -18.0f)
+        _camera.eye = Vector3(0.0f, 0.0f, -4.0f)
     }
 
     // Iterative traverse over all available state groups and
@@ -43,7 +43,7 @@ class Scene {
 
                 is Transform -> {
                     // Reset this Transforms branch state.
-                    _transformAccumulator = algebra.offset(0.0f, 0.0f, 0.0f)
+                    _transformAccumulator = Matrix4()
 
                     // Recursive traverse over transforms list until
                     // reach some Drawable.

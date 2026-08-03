@@ -7,80 +7,104 @@ enum class FlycamMoveBits {
 }
 
 class Flycam {
-    private var _fov: Double = 45.0
-    private var _aspect: Double = 16.0 / 9.0
-    private var _ncp: Double = 0.1
-    private var _fcp: Double = 100.0
+    private var _fov: Float = 45.0f
+    private var _aspect: Float = 16.0f / 9.0f
+    private var _ncp: Float = 0.1f
+    private var _fcp: Float = 100.0f
 
     private var _eye: Vector3 = Vector3(0.0f, 0.0f, 0.0f)
     private var _zenith: Vector3 = Vector3(0.0f, 1.0f, 0.0f)
     private var _right: Vector3 = Vector3(1.0f, 0.0f, 0.0f)
     private var _look: Vector3 = Vector3(0.0f, 0.0f, 1.0f)
 
-    private var _azimuth: Double = 0.0
-    private var _elevation: Double = 0.0
-    private var _roll: Double = 0.0
+    private var _azimuth: Float = 0.0f
+    private var _elevation: Float = 0.0f
+    private var _roll: Float = 0.0f
 
     private var _moveMask: Int = 0
 
     private var _name: String = ""
 
-    var fov: Double
+    var fov: Float
         get() = _fov
-        set(value) { _fov = value }
+        set(value) {
+            _fov = value
+        }
 
-    var aspect: Double
+    var aspect: Float
         get() = _aspect
-        set(value) { _aspect = value }
+        set(value) {
+            _aspect = value
+        }
 
-    var ncp: Double
+    var ncp: Float
         get() = _ncp
-        set(value) { _ncp = value }
+        set(value) {
+            _ncp = value
+        }
 
-    var fcp: Double
+    var fcp: Float
         get() = _fcp
-        set(value) { _fcp = value }
+        set(value) {
+            _fcp = value
+        }
 
     var eye: Vector3
         get() = _eye
-        set(value) { _eye = value }
+        set(value) {
+            _eye = value
+        }
 
     var zenith: Vector3
         get() = _zenith
-        set(value) { _zenith = value }
+        set(value) {
+            _zenith = value
+        }
 
     var right: Vector3
         get() = _right
-        set(value) { _right = value }
+        set(value) {
+            _right = value
+        }
 
     var look: Vector3
         get() = _look
-        set(value) { _look = value }
+        set(value) {
+            _look = value
+        }
 
-    var azimuth: Double
+    var azimuth: Float
         get() = _azimuth
-        set(value) { _azimuth = value }
+        set(value) {
+            _azimuth = value
+        }
 
-    var elevation: Double
+    var elevation: Float
         get() = _elevation
-        set(value) { _elevation = value }
+        set(value) {
+            _elevation = value
+        }
 
-    var roll: Double
+    var roll: Float
         get() = _roll
-        set(value) { _roll = value }
+        set(value) {
+            _roll = value
+        }
 
     var name: String
         get() = _name
-        set(value) { _name = value }
+        set(value) {
+            _name = value
+        }
 
-    constructor(eye: Vector3, azimuth: Double, elevation: Double) {
+    constructor(eye: Vector3, azimuth: Float, elevation: Float) {
         this._eye = eye
         this._azimuth = azimuth
         this._elevation = elevation
-        this._roll = 0.0
+        this._roll = 0.0f
     }
 
-    constructor() : this(Vector3(0.0f, 0.0f, 0.0f), 0.0, 0.0)
+    constructor() : this(Vector3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f)
 
     fun setMoveBit(bit: FlycamMoveBits) {
         _moveMask = _moveMask or (1 shl bit.ordinal)
@@ -94,14 +118,14 @@ class Flycam {
         _moveMask = 0
     }
 
-    fun rotate(azimuthOffset: Double, elevationOffset: Double) {
+    fun rotate(azimuthOffset: Float, elevationOffset: Float) {
         _azimuth += azimuthOffset
 
-        if (_azimuth > 360.0 || _azimuth < -360.0) _azimuth = 0.0
+        if (_azimuth > 360.0f || _azimuth < -360.0f) _azimuth = 0.0f
 
         _elevation += elevationOffset
 
-        val elevationBound = 80.0
+        val elevationBound = 80.0f
         if (_elevation > elevationBound) _elevation = elevationBound
         if (_elevation < -elevationBound) _elevation = -elevationBound
     }
@@ -110,7 +134,7 @@ class Flycam {
         _eye = pos
     }
 
-    fun setAngles(azimuth: Double, elevation: Double, roll: Double) {
+    fun setAngles(azimuth: Float, elevation: Float, roll: Float) {
         this._azimuth = azimuth
         this._elevation = elevation
         this._roll = roll
@@ -136,14 +160,13 @@ class Flycam {
     fun matrix(): Matrix4 {
         val projection = Matrix4().perspective(_fov, _aspect, _ncp, _fcp)
 
-        val ar = Matrix4().rotate(_zenith, _azimuth.toFloat())
+        val ar = Matrix4().rotate(_zenith, _azimuth)
         _right = ar.vecMultiply(Vector3(1.0f, 0.0f, 0.0f))
 
-        val er = Matrix4().rotate(_right, _elevation.toFloat())
+        val er = Matrix4().rotate(_right, _elevation)
         _look = er.vecMultiply(_right.cross(_zenith))
 
         val offset = Matrix4().translate(_eye)
-        offset.transpose()
 
         return offset.multiply(er).multiply(ar).multiply(projection)
     }

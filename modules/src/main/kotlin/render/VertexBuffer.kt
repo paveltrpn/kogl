@@ -3,6 +3,7 @@ package render
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
+import java.nio.ByteBuffer
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
 
@@ -81,14 +82,20 @@ class VertexBuffer {
     }
 
     fun updateVertexData(data: FloatArray) {
+        glBindVertexArray(_vao)
         glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal])
 
+        val pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)
+
         MemoryStack.stackPush().use { stack ->
-            val buffer: FloatBuffer = stack.callocFloat(data.size)
-            buffer.put(data)
+            val buffer: ByteBuffer = stack.calloc(data.size * 4)
+            buffer.asFloatBuffer().put(data)
             buffer.flip()
-            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
+
+            pointer?.put(buffer)
         }
+
+        glUnmapBuffer(GL_ARRAY_BUFFER)
     }
 
 //    NOTE: Unused!

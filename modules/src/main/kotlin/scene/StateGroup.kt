@@ -25,4 +25,9 @@ open class StateGroup : Node {
     fun setProgram(program: Program): Unit {
         _program = program
     }
+
+    val program: Program?
+        get(): Program? {
+            return _program
+        }
 }

@@ -10,14 +10,21 @@ import render.VertexBuffer
 abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
     protected val _vertices: FloatArray = vertices
     protected val _indices: IntArray = indices
-    protected var _staging: FloatArray
+    private var _staging = FloatArray(_vertices.size)
     protected val _buffer = VertexBuffer()
 
     init {
-        _buffer.bindVertexData(_vertices)
+        val axis = Vector3(0.2f, 0.5f, 0.5f)
+        val angl = 43.0f
+
+        val spin = algebra.rotation(axis, angl)
+        val offst = algebra.offset(0.0f, 0.0f, 0.0f);
+
+        transform(offst.multiply(spin))
+
+        _buffer.bindVertexData(_staging)
         _buffer.bindIndexData(_indices)
 
-        _staging = FloatArray(_vertices.size)
     }
 
     override fun traverse(): Unit {
@@ -30,11 +37,11 @@ abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
     protected fun transform(tr: Matrix4): Unit {
         var i: Int = 0
         while (i < _vertices.size) {
-            val vertex = Vector3(_vertices[i], _vertices[i + 1], _vertices[i + 2])
+            val vertex = Vector3(_vertices[i + 0], _vertices[i + 1], _vertices[i + 2])
 
             val transformed = tr.vecMultiply(vertex)
 
-            _staging[i] = transformed.x
+            _staging[i + 0] = transformed.x
             _staging[i + 1] = transformed.y
             _staging[i + 2] = transformed.z
 
@@ -59,6 +66,7 @@ class StaticDrawable(vertices: FloatArray, indices: IntArray) : Drawable(vertice
 
 class SpinableDrawable(vertices: FloatArray, indices: IntArray) : Drawable(vertices, indices) {
     private var _axis = Vector3()
+    private var _anglSpeed = 0.0f
     private var _angl = 0.0f
 
     var axis: Vector3
@@ -69,17 +77,23 @@ class SpinableDrawable(vertices: FloatArray, indices: IntArray) : Drawable(verti
             _axis = value
         }
 
-    var angl: Float
+    var anglSpeed: Float
         get(): Float {
-            return _angl
+            return _anglSpeed
         }
         set(value: Float) {
-            _angl = value
+            _anglSpeed = value
         }
 
     override fun applyTransform(tr: Matrix4): Unit {
+        _angl += _anglSpeed
+
+
+        if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
+
         val spin = rotation(_axis, _angl)
         val combinedTransform = tr.multiply(spin)
+
         transform(combinedTransform)
     }
 }

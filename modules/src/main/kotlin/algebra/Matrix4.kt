@@ -1,5 +1,9 @@
 package algebra
 
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.FloatBuffer
+
 class Matrix4 {
     private var _data = FloatArray(16) { it -> 0.0f }
 
@@ -222,21 +226,21 @@ class Matrix4 {
         _data[0] = 1.0f
         _data[1] = 0.0f
         _data[2] = 0.0f
-        _data[3] = 0.0f
+        _data[3] = x
 
         _data[4] = 0.0f
         _data[5] = 1.0f
         _data[6] = 0.0f
-        _data[7] = 0.0f
+        _data[7] = y
 
         _data[8] = 0.0f
         _data[9] = 0.0f
         _data[10] = 1.0f
-        _data[11] = 0.0f
+        _data[11] = z
 
-        _data[12] = x
-        _data[13] = y
-        _data[14] = z
+        _data[12] = 0.0f
+        _data[13] = 0.0f
+        _data[14] = 0.0f
         _data[15] = 1.0f
 
         return this
@@ -339,6 +343,19 @@ class Matrix4 {
         result._data[14] = -(2.0f * far.toFloat() * near.toFloat()) / (far.toFloat() - near.toFloat())
 
         return result
+    }
+
+    fun toFloatBuffer(): FloatBuffer {
+        val byteBuffer = ByteBuffer.allocateDirect(_data.size * 4) // 4 bytes per float
+        byteBuffer.order(ByteOrder.nativeOrder())
+        val floatBuffer = byteBuffer.asFloatBuffer()
+
+        floatBuffer.put(_data)
+
+        // Reset position to start
+        floatBuffer.position(0)
+
+        return floatBuffer
     }
 }
 

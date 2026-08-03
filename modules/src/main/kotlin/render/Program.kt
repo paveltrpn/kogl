@@ -3,9 +3,11 @@ package render
 import org.lwjgl.opengl.GL46.*
 import algebra.*
 import config.Config
+import org.lwjgl.system.MemoryStack
 import java.nio.ByteBuffer
 import kotlin.io.path.Path
 import kotlin.io.path.exists
+import kotlin.use
 
 enum class ShaderStageType {
     UNKNOWN,
@@ -123,21 +125,19 @@ class Program {
         glUniform1ui(location, value.toInt())
     }
 
-//    fun setVectorUniform(id: String, value: Vector2) {
-//        val location = getUniformLocation(id) ?: return
-//        glUniform2fv(location, floatArrayOf(value.x, value.y))
-//    }
-//
-//    fun setVectorUniform(id: String, value: Vector3) {
-//        val location = getUniformLocation(id) ?: return
-//        glUniform3fv(location, floatArrayOf(value.x, value.y, value.z))
-//    }
-//
+    fun setVectorUniform(id: String, value: Vector3) {
+        val location = getUniformLocation(id) ?: return
+        glUniform3fv(location, floatArrayOf(value.x, value.y, value.z))
+    }
+
 //    fun setVectorUniform(id: String, value: Vector4) {
-//        val location = getUniformLocation(id) ?: return
+//        val location = getUniformLocation(id) ?: return fun setVectorUniform(id: String, value: Vector2) {
+//            val location = getUniformLocation(id) ?: return
+//            glUniform2fv(location, floatArrayOf(value.x, value.y))
+//        }
 //        glUniform4fv(location, floatArrayOf(value.x, value.y, value.z, value.w))
 //    }
-//
+
 //    fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix2) {
 //        val location = getUniformLocation(id) ?: return
 //        glUniformMatrix2fv(location, transpose, value.data)
@@ -147,11 +147,16 @@ class Program {
 //        val location = getUniformLocation(id) ?: return
 //        glUniformMatrix3fv(location, transpose, value.data)
 //    }
-//
-//    fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix4) {
-//        val location = getUniformLocation(id) ?: return
-//        glUniformMatrix4fv(location, transpose, value.data)
-//    }
-//
+
+    fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix4) {
+        val location = getUniformLocation(id) ?: return
+        MemoryStack.stackPush().use { stack ->
+            val floatBuffer = stack.mallocFloat(16)
+            floatBuffer.put(value.toFloatBuffer())
+            floatBuffer.flip()
+            glUniformMatrix4fv(location, false, floatBuffer)
+        }
+    }
+
 
 }

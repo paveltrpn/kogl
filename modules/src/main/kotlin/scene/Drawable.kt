@@ -14,14 +14,6 @@ abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
     protected val _buffer = VertexBuffer()
 
     init {
-        val axis = Vector3(0.2f, 0.5f, 0.5f)
-        val angl = 43.0f
-
-        val spin = algebra.rotation(axis, angl)
-        val offst = algebra.offset(0.0f, 0.0f, 0.0f);
-
-        transform(offst.multiply(spin))
-
         _buffer.bindVertexData(_staging)
         _buffer.bindIndexData(_indices)
 
@@ -87,7 +79,6 @@ class SpinableDrawable(vertices: FloatArray, indices: IntArray) : Drawable(verti
 
     override fun applyTransform(tr: Matrix4): Unit {
         _angl += _anglSpeed
-
 
         if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
 

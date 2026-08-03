@@ -30,8 +30,6 @@ class Render : EventObserver {
     fun preLoop(): Unit {
         glViewport(0, 0, 1200, 800)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
-
-
     }
 
     fun frame(): Unit {
@@ -60,12 +58,11 @@ class Render : EventObserver {
     }
 
     private fun testCubesGraph(): StateGroup {
-        val colorShaderSource = ShaderSource("color")
+        val colorShaderSource = ShaderSource("flatshade")
         val colorProgram = Program(colorShaderSource)
 
         colorProgram.addUniform("view_matrix")
-        colorProgram.addUniform("color")
-
+        // colorProgram.addUniform("color")
 
         val colorStateGroup = StateGroup()
         colorStateGroup.setProgram(colorProgram)
@@ -97,20 +94,20 @@ class Render : EventObserver {
             0, 7, 4, 0, 3, 7
         )
 
-        //val cubeStatic = StaticDrawable(vertices, indices)
+        val cubeStatic = StaticDrawable(vertices, indices)
         val cubeSpin = SpinableDrawable(vertices, indices)
-        cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f)
-        cubeSpin.anglSpeed = 0.1f
+        cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f).normalize()
+        cubeSpin.anglSpeed = 0.4f
 
-//        val offsetOne = Transform()
-//        offsetOne.transform = algebra.offset(0.5f, 0.0f, 0.0f);
+        val offsetOne = Transform()
+        offsetOne.transform = algebra.offset(2.0f, 0.0f, 0.0f);
         val offsetTwo = Transform()
-        offsetTwo.transform = algebra.offset(0.0f, 0.0f, -3.0f);
+        offsetTwo.transform = algebra.offset(-0.5f, 0.0f, 0.0f);
 
-        //offsetOne.addChild(cubeStatic)
+        offsetOne.addChild(cubeStatic)
         offsetTwo.addChild(cubeSpin)
 
-        //colorStateGroup.addChild(offsetOne)
+        colorStateGroup.addChild(offsetOne)
         colorStateGroup.addChild(offsetTwo)
 
         return colorStateGroup

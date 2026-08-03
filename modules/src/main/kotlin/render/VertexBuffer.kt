@@ -85,17 +85,23 @@ class VertexBuffer {
         glBindVertexArray(_vao)
         glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal])
 
-        val pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)
-
         MemoryStack.stackPush().use { stack ->
-            val buffer: ByteBuffer = stack.calloc(data.size * 4)
-            buffer.asFloatBuffer().put(data)
+            val buffer: FloatBuffer = stack.callocFloat(data.size)
+            buffer.put(data)
             buffer.flip()
-
-            pointer?.put(buffer)
+            glBufferData(GL_ARRAY_BUFFER, buffer, GL_DYNAMIC_DRAW)
         }
 
-        glUnmapBuffer(GL_ARRAY_BUFFER)
+//        val pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)
+//        MemoryStack.stackPush().use { stack ->
+//            val buffer: ByteBuffer = stack.calloc(data.size * 4)
+//            buffer.asFloatBuffer().put(data)
+//            buffer.flip()
+//
+//            pointer?.put(buffer)
+//        }
+//
+//        glUnmapBuffer(GL_ARRAY_BUFFER)
     }
 
 //    NOTE: Unused!

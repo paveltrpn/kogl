@@ -98,4 +98,26 @@ class Vector3 {
     fun scale(s: Float): Vector3 {
         return Vector3(data[0] * s, data[1] * s, data[2] * s)
     }
+
+    fun length(): Float {
+        return kotlin.math.sqrt(data[0] * data[0] + data[1] * data[1] + data[2] * data[2])
+    }
+
+    fun normalize(): Vector3 {
+        val len = length()
+        return if (len > 0) {
+            Vector3(data[0] / len, data[1] / len, data[2] / len)
+        } else {
+            Vector3()
+        }
+    }
+
+    fun normalizeSelf() {
+        val len = length()
+        if (len > 0) {
+            data[0] /= len
+            data[1] /= len
+            data[2] /= len
+        }
+    }
 }

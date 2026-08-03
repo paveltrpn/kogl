@@ -166,7 +166,8 @@ class Flycam {
         val er = Matrix4().rotate(_right, _elevation)
         _look = er.vecMultiply(_right.cross(_zenith))
 
-        val offset = Matrix4().translate(_eye)
+        val offset = Matrix4().offset(_eye)
+        offset.transpose()
 
         return offset.multiply(er).multiply(ar).multiply(projection)
     }

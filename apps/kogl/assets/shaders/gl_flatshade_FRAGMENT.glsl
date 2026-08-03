@@ -7,5 +7,5 @@ out vec4 outColor;
 
 void main()
 {
-    outColor = vec4(newColor.rgb*vLighting, 1.0f);
+    outColor = vec4(newColor.rgb * vLighting, 1.0f);
 }

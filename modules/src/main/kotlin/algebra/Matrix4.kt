@@ -8,7 +8,7 @@ class Matrix4 {
     private var _data = FloatArray(16) { it -> 0.0f }
 
     constructor() {
-
+        idtt()
     }
 
     constructor(other: Matrix4) {
@@ -105,6 +105,25 @@ class Matrix4 {
             _data[14] = value.w
         }
 
+    fun idtt() {
+        _data[0] = 1.0f;
+        _data[1] = 0.0f;
+        _data[2] = 0.0f;
+        _data[3] = 0.0f;
+        _data[4] = 0.0f;
+        _data[5] = 1.0f
+        _data[6] = 0.0f;
+        _data[7] = 0.0f;
+        _data[8] = 0.0f;
+        _data[9] = 0.0f;
+        _data[10] = 1.0f
+        _data[11] = 0.0f;
+        _data[12] = 0.0f;
+        _data[13] = 0.0f;
+        _data[14] = 0.0f;
+        _data[15] = 1.0f
+    }
+
     fun multiply(other: Matrix4): Matrix4 {
         val result = Matrix4()
         for (i in 0..3) {
@@ -160,44 +179,46 @@ class Matrix4 {
         return result
     }
 
-    fun fromAxisAngle(axis: Vector3, angle: Float): Matrix4 {
-        val x = axis.x
-        val y = axis.y
-        val z = axis.z
-        val cos = kotlin.math.cos(toRadians(angle)).toFloat()
-        val sin = kotlin.math.sin(toRadians(angle)).toFloat()
-        val oneMinusCos = 1.0f - cos
+    fun fromAxisAngle(ax: Vector3, phi: Float): Matrix4 {
+        val cosphi = kotlin.math.cos(toRadians(phi));
+        val sinphi = kotlin.math.sin(toRadians(phi));
+        val vxvy = ax.x * ax.y;
+        val vxvz = ax.x * ax.z;
+        val vyvz = ax.y * ax.z;
+        val vx = ax.x;
+        val vy = ax.y;
+        val vz = ax.z;
 
-        _data[0] = cos + x * x * oneMinusCos
-        _data[1] = x * y * oneMinusCos - z * sin
-        _data[2] = x * z * oneMinusCos + y * sin
-        _data[3] = 0.0f
+        _data[0] = cosphi + (1.0f - cosphi) * vx * vx;
+        _data[1] = (1.0f - cosphi) * vxvy - sinphi * vz;
+        _data[2] = (1.0f - cosphi) * vxvz + sinphi * vy;
+        _data[3] = 0.0f;
 
-        _data[4] = y * x * oneMinusCos + z * sin
-        _data[5] = cos + y * y * oneMinusCos
-        _data[6] = y * z * oneMinusCos - x * sin
-        _data[7] = 0.0f
+        _data[4] = (1.0f - cosphi) * vxvy + sinphi * vz;
+        _data[5] = cosphi + (1.0f - cosphi) * vy * vy;
+        _data[6] = (1.0f - cosphi) * vyvz - sinphi * vx;
+        _data[7] = 0.0f;
 
-        _data[8] = z * x * oneMinusCos - y * sin
-        _data[9] = z * y * oneMinusCos + x * sin
-        _data[10] = cos + z * z * oneMinusCos
-        _data[11] = 0.0f
+        _data[8] = (1.0f - cosphi) * vxvz - sinphi * vy;
+        _data[9] = (1.0f - cosphi) * vyvz + sinphi * vx;
+        _data[10] = cosphi + (1.0f - cosphi) * vz * vz;
+        _data[11] = 0.0f;
 
-        _data[12] = 0.0f
-        _data[13] = 0.0f
-        _data[14] = 0.0f
-        _data[15] = 1.0f
+        _data[12] = 0.0f;
+        _data[13] = 0.0f;
+        _data[14] = 0.0f;
+        _data[15] = 1.0f;
 
         return this
     }
 
     fun fromEuler(x: Float, y: Float, z: Float): Matrix4 {
-        val cx = kotlin.math.cos(toRadians(x)).toFloat()
-        val sx = kotlin.math.sin(toRadians(x)).toFloat()
-        val cy = kotlin.math.cos(toRadians(y)).toFloat()
-        val sy = kotlin.math.sin(toRadians(y)).toFloat()
-        val cz = kotlin.math.cos(toRadians(z)).toFloat()
-        val sz = kotlin.math.sin(toRadians(z)).toFloat()
+        val cx = kotlin.math.cos(toRadians(x))
+        val sx = kotlin.math.sin(toRadians(x))
+        val cy = kotlin.math.cos(toRadians(y))
+        val sy = kotlin.math.sin(toRadians(y))
+        val cz = kotlin.math.cos(toRadians(z))
+        val sz = kotlin.math.sin(toRadians(z))
 
         _data[0] = cy * cz
         _data[1] = cy * sz
@@ -296,53 +317,12 @@ class Matrix4 {
         _data[11] = _data[14].also { _data[14] = _data[11] }
     }
 
-    fun translate(x: Float, y: Float, z: Float): Matrix4 {
-        _data[0] = 1.0f
-        _data[1] = 0.0f
-        _data[2] = 0.0f
-        _data[3] = 0.0f
-
-        _data[4] = 0.0f
-        _data[5] = 1.0f
-        _data[6] = 0.0f
-        _data[7] = 0.0f
-
-        _data[8] = 0.0f
-        _data[9] = 0.0f
-        _data[10] = 1.0f
-        _data[11] = 0.0f
-
-        _data[12] = x
-        _data[13] = y
-        _data[14] = z
-        _data[15] = 1.0f
-
-        return this
-    }
-
-    fun translate(v: Vector3): Matrix4 {
-        return translate(v.x, v.y, v.z)
-    }
-
     fun rotate(axis: Vector3, angle: Float): Matrix4 {
         return fromAxisAngle(axis, angle)
     }
 
     fun rotate(axis: Vector3, angle: Double): Matrix4 {
         return fromAxisAngle(axis, angle.toFloat())
-    }
-
-    fun perspective(fov: Double, aspect: Double, near: Double, far: Double): Matrix4 {
-        val result = Matrix4()
-        val tanHalfFov = kotlin.math.tan(toRadians(fov) / 2.0)
-
-        result._data[0] = 1.0f / (aspect.toFloat() * tanHalfFov.toFloat())
-        result._data[5] = 1.0f / tanHalfFov.toFloat()
-        result._data[10] = -(far.toFloat() + near.toFloat()) / (far.toFloat() - near.toFloat())
-        result._data[11] = -1.0f
-        result._data[14] = -(2.0f * far.toFloat() * near.toFloat()) / (far.toFloat() - near.toFloat())
-
-        return result
     }
 
     fun toFloatBuffer(): FloatBuffer {

@@ -3,6 +3,7 @@ package render
 import org.lwjgl.opengl.GL46.*
 
 import algebra.Matrix4
+import algebra.Vector3
 import event.*
 import scene.*
 
@@ -94,7 +95,8 @@ class Render : EventObserver {
 
         val cubeStatic = StaticDrawable(vertices, indices)
         val cubeSpin = SpinableDrawable(vertices, indices)
-        cubeSpin.spin = Matrix4()
+        cubeSpin.axis = Vector3(0.0f, 1.0f, 0.0f)
+        cubeSpin.angl = 0.01f
 
         val offsetOne = Transform()
         offsetOne.transform = algebra.offset(0.5f, 0.0f, 0.0f);

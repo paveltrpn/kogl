@@ -4,8 +4,8 @@ import algebra.*
 
 class Scene {
     private var _graph: MutableList<StateGroup> = mutableListOf()
-
     private var _transformAccumulator = Matrix4()
+    private var _camera = Flycam()
 
     // Iterative traverse over all available state groups and
     // attached nodes. Must be depth-first traversal.
@@ -58,6 +58,8 @@ class Scene {
             }
 
             is Drawable -> {
+                next.applyTransform(_transformAccumulator)
+                
                 // Reach Drawable leaf node, perform transformation
                 // applying and draw call.
                 next.traverse()

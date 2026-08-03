@@ -1,5 +1,5 @@
-package scene
+package mesh
 
 class Material {
-    
+
 }

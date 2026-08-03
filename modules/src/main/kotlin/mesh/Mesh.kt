@@ -1,4 +1,4 @@
-package scene
+package mesh
 
 class Mesh {
     var vertecies: FloatArray? = null

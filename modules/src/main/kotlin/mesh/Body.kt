@@ -1,4 +1,4 @@
-package scene
+package mesh
 
 class Body {
     var mesh: Mesh? = null

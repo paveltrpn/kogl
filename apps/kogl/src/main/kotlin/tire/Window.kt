@@ -7,11 +7,10 @@ import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.Configuration
 import org.lwjgl.system.MemoryUtil.*
 
-import config.Config
-import render.Render
-import render.ShaderSource
-import render.Program
+import config.*
+import render.*
 import event.*
+import mesh.*
 
 class Window {
     private var allocator: GLFWAllocator? = null
@@ -24,11 +23,15 @@ class Window {
     private val _render: Render
 
     init {
+        // Place to init all singletons.
         Config.init("")
         GlobalEventEmitter.init()
+        BodyStorage.init("")
 
+        //
         initGLFW()
 
+        //
         _render = Render()
         GlobalEventEmitter.instance().attach(_render)
     }
@@ -74,7 +77,7 @@ class Window {
         GLFWErrorCallback.createPrint().set()
 
         if (!glfwInit()) {
-            println("Unable to initialize glfw")
+            println("Unable to initialize glfw.")
         }
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)

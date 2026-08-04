@@ -3,7 +3,6 @@ package render
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
-import java.nio.ByteBuffer
 import java.nio.IntBuffer
 import java.nio.FloatBuffer
 
@@ -26,11 +25,10 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
         _vertexCount = vertices.size / 3
 
         _buffers = MemoryUtil.memAllocInt(VertexBuffersEnum.entries.size)
+        glCreateBuffers(_buffers);
 
         _vao = glCreateVertexArrays()
         glBindVertexArray(_vao)
-
-        glCreateBuffers(_buffers);
 
         glNamedBufferStorage(
             _buffers[VertexBuffersEnum.VERTICIES.ordinal],
@@ -63,6 +61,8 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
             _vao,
             _buffers[VertexBuffersEnum.INDICIES.ordinal]
         );
+
+        glBindVertexArray(0)
     }
 
     fun clean(): Unit {

@@ -15,84 +15,69 @@ enum class VertexBuffersEnum {
     NORMALS
 }
 
-class VertexBuffer {
+class VertexBuffer(vertices: FloatArray, indices: IntArray) {
     private val _vao: Int
     private val _buffers: IntBuffer
     private var _vertexCount: Int = 0
     private var _indexCount: Int = 0
 
     init {
+        _indexCount = indices.size
+        _vertexCount = vertices.size / 3
+
         _buffers = MemoryUtil.memAllocInt(VertexBuffersEnum.entries.size)
 
-        _vao = glGenVertexArrays()
+        _vao = glCreateVertexArrays()
         glBindVertexArray(_vao)
 
-        glGenBuffers(_buffers);
+        glCreateBuffers(_buffers);
 
-        glBindVertexArray(0)
-    }
+        glNamedBufferStorage(
+            _buffers[VertexBuffersEnum.VERTICIES.ordinal],
+            vertices.size.toLong() * 4,
+            GL_DYNAMIC_STORAGE_BIT
+        );
 
-    fun clean() {
-        glDeleteBuffers(_buffers)
-        glDeleteVertexArrays(_vao)
-
-        MemoryUtil.memFree(_buffers)
-    }
-
-    fun bind() {
-        glBindVertexArray(_vao)
-    }
-
-    fun release() {
-        glBindVertexArray(0)
-    }
-
-    fun bindVertexData(data: FloatArray) {
-        _vertexCount = data.size / 3
-
-        glBindVertexArray(_vao)
-        glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal])
+//        MemoryStack.stackPush().use { stack ->
+//            val buffer: FloatBuffer = stack.callocFloat(vertices.size)
+//            buffer.put(vertices)
+//            buffer.flip()
+//            glNamedBufferStorage(vbo, buffer, GL_DYNAMIC_STORAGE_BIT);
+//        }
 
         MemoryStack.stackPush().use { stack ->
-            val buffer: FloatBuffer = stack.callocFloat(data.size)
-            buffer.put(data)
+            val buffer: IntBuffer = stack.callocInt(indices.size)
+            buffer.put(indices)
             buffer.flip()
-            glBufferData(GL_ARRAY_BUFFER, buffer, GL_DYNAMIC_DRAW)
+            glNamedBufferStorage(_buffers[VertexBuffersEnum.INDICIES.ordinal], buffer, GL_DYNAMIC_STORAGE_BIT);
         }
 
-        glEnableVertexAttribArray(0)
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L)
-        glBindVertexArray(0)
-    }
+        // Link VBO to VAO attribute 0 (position)
+        glVertexArrayVertexBuffer(_vao, 0, _buffers[VertexBuffersEnum.VERTICIES.ordinal], 0, Float.SIZE_BYTES * 3);
 
-    fun bindIndexData(data: IntArray) {
-        _indexCount = data.size
+        glEnableVertexArrayAttrib(_vao, 0);
+        glVertexArrayAttribFormat(_vao, 0, 3, GL_FLOAT, false, 0);
+        glVertexArrayAttribBinding(_vao, 0, 0);
 
-        glBindVertexArray(_vao)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffers[VertexBuffersEnum.INDICIES.ordinal])
-
-        MemoryStack.stackPush().use { stack ->
-            val buffer: IntBuffer = stack.callocInt(data.size)
-            buffer.put(data)
-            buffer.flip()
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_DYNAMIC_DRAW)
-        }
-
-        glBindVertexArray(0)
+        // Attach Index Buffer(EBO) directly to the VAO
+        glVertexArrayElementBuffer(
+            _vao,
+            _buffers[VertexBuffersEnum.INDICIES.ordinal]
+        );
     }
 
     fun updateVertexData(data: FloatArray) {
-        glBindVertexArray(_vao)
-        glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal])
-
-        MemoryStack.stackPush().use { stack ->
-            val buffer: FloatBuffer = stack.callocFloat(data.size)
-            buffer.put(data)
-            buffer.flip()
-            glBufferData(GL_ARRAY_BUFFER, buffer, GL_DYNAMIC_DRAW)
-        }
-
-//        val pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)
+//        val pointer = glMapNamedBufferRange(
+//            vbo,
+//            0,
+//            (_vertexCount * 3 * 4).toLong(),
+//            GL_MAP_WRITE_BIT or GL_MAP_INVALIDATE_RANGE_BIT
+//        )
+//
+//        if (pointer == null) {
+//            println(" ==== error ")
+//        }
+//
 //        MemoryStack.stackPush().use { stack ->
 //            val buffer: ByteBuffer = stack.calloc(data.size * 4)
 //            buffer.asFloatBuffer().put(data)
@@ -101,24 +86,19 @@ class VertexBuffer {
 //            pointer?.put(buffer)
 //        }
 //
-//        glUnmapBuffer(GL_ARRAY_BUFFER)
-    }
+//        glUnmapNamedBuffer(vbo)
 
-//    NOTE: Unused!
-//    fun updateIndexData(data: IntArray) {
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VertexBuffersEnum.INDICIES.ordinal)
-//
-//        MemoryStack.stackPush().use { stack ->
-//            val buffer: IntBuffer = stack.callocInt(data.size)
-//            buffer.put(data)
-//            buffer.flip()
-//            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, buffer)
-//        }
-//    }
+        MemoryStack.stackPush().use { stack ->
+            val buffer: FloatBuffer = stack.callocFloat(data.size)
+            buffer.put(data)
+            buffer.flip()
+            glNamedBufferSubData(_buffers[VertexBuffersEnum.VERTICIES.ordinal], 0, buffer)
+        }
+    }
 
     fun drawIndexed() {
         glBindVertexArray(_vao)
-        glDrawElements(GL_TRIANGLES, _indexCount, GL_UNSIGNED_INT, 0L)
+        glDrawElements(GL_TRIANGLES, _indexCount, GL_UNSIGNED_INT, 0)
         glBindVertexArray(0)
     }
 }

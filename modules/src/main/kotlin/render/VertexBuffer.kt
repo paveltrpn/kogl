@@ -66,6 +66,13 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
         );
     }
 
+    fun clean(): Unit {
+        glDeleteBuffers(_buffers)
+        glDeleteVertexArrays(_vao)
+        
+        MemoryUtil.memFree(_buffers)
+    }
+
     fun updateVertexData(data: FloatArray) {
 //        val pointer = glMapNamedBufferRange(
 //            vbo,

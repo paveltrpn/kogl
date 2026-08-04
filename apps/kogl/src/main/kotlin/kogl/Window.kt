@@ -3,7 +3,6 @@ package kogl
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
-import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.Configuration
 import org.lwjgl.system.MemoryUtil.*
 

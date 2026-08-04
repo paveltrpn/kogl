@@ -1,28 +1,25 @@
 package mesh
 
-class Mesh {
-    var vertecies: FloatArray? = null
-        set(value: FloatArray?): Unit {
-            field = value
-        }
+// Dual-Indexing (Per-Face Normals/UVs).
+// Compatible with .obj, FBX, glTF.
+class ObjTriangleIndices {
+    var vertexIndex = IntArray(3) { it -> 0 }
+    var normalIndex = IntArray(3) { it -> 0 }
+    var texcrdIndex = IntArray(3) { it -> 0 }
+};
 
-    var indicies: IntArray? = null
-        set(value: IntArray?): Unit {
-            field = value
-        }
+interface Mesh {
 
-    var normals: FloatArray? = null
-        set(value: FloatArray?): Unit {
-            field = value
-        }
+}
 
-    var texcrds: FloatArray? = null
-        set(value: FloatArray?): Unit {
-            field = value
-        }
+class ObjMesh : Mesh {
 
-    var vertcolors: FloatArray? = null
-        set(value: FloatArray?): Unit {
-            field = value
-        }
+}
+
+class InterleavedMesh : Mesh {
+
+}
+
+class SeparatedBuffersMesh : Mesh {
+
 }

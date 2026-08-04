@@ -7,8 +7,8 @@ import java.nio.IntBuffer
 import java.nio.FloatBuffer
 
 enum class VertexBuffersEnum {
-    VERTICIES,
-    INDICIES,
+    VERTICES,
+    INDICES,
     COLORS,
     TEXCRDS,
     NORMALS
@@ -31,7 +31,7 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
         glBindVertexArray(_vao)
 
         glNamedBufferStorage(
-            _buffers[VertexBuffersEnum.VERTICIES.ordinal],
+            _buffers[VertexBuffersEnum.VERTICES.ordinal],
             vertices.size.toLong() * 4,
             GL_DYNAMIC_STORAGE_BIT
         );
@@ -47,11 +47,11 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
             val buffer: IntBuffer = stack.callocInt(indices.size)
             buffer.put(indices)
             buffer.flip()
-            glNamedBufferStorage(_buffers[VertexBuffersEnum.INDICIES.ordinal], buffer, GL_DYNAMIC_STORAGE_BIT);
+            glNamedBufferStorage(_buffers[VertexBuffersEnum.INDICES.ordinal], buffer, GL_DYNAMIC_STORAGE_BIT);
         }
 
         // Link VBO to VAO attribute 0 (position)
-        glVertexArrayVertexBuffer(_vao, 0, _buffers[VertexBuffersEnum.VERTICIES.ordinal], 0, Float.SIZE_BYTES * 3);
+        glVertexArrayVertexBuffer(_vao, 0, _buffers[VertexBuffersEnum.VERTICES.ordinal], 0, Float.SIZE_BYTES * 3);
         glEnableVertexArrayAttrib(_vao, 0);
         glVertexArrayAttribFormat(_vao, 0, 3, GL_FLOAT, false, 0);
         glVertexArrayAttribBinding(_vao, 0, 0);
@@ -59,7 +59,7 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
         // Attach Index Buffer(EBO) directly to the VAO
         glVertexArrayElementBuffer(
             _vao,
-            _buffers[VertexBuffersEnum.INDICIES.ordinal]
+            _buffers[VertexBuffersEnum.INDICES.ordinal]
         );
 
         glBindVertexArray(0)
@@ -98,7 +98,7 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
             val buffer: FloatBuffer = stack.callocFloat(data.size)
             buffer.put(data)
             buffer.flip()
-            glNamedBufferSubData(_buffers[VertexBuffersEnum.VERTICIES.ordinal], 0, buffer)
+            glNamedBufferSubData(_buffers[VertexBuffersEnum.VERTICES.ordinal], 0, buffer)
         }
     }
 

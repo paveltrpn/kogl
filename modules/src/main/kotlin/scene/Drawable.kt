@@ -8,10 +8,10 @@ import render.VertexBuffer
 // ============================================================================
 
 abstract class Drawable(vertices: FloatArray, indices: IntArray) : Node {
-    protected val _vertices: FloatArray = vertices
-    protected val _indices: IntArray = indices
+    private val _vertices: FloatArray = vertices
+    private val _indices: IntArray = indices
     private var _staging = FloatArray(_vertices.size)
-    protected val _buffer = VertexBuffer(_vertices, _indices)
+    private val _buffer = VertexBuffer(_vertices, _indices)
 
     init {
     }

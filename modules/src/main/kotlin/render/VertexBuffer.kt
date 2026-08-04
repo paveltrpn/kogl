@@ -54,7 +54,6 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
 
         // Link VBO to VAO attribute 0 (position)
         glVertexArrayVertexBuffer(_vao, 0, _buffers[VertexBuffersEnum.VERTICIES.ordinal], 0, Float.SIZE_BYTES * 3);
-
         glEnableVertexArrayAttrib(_vao, 0);
         glVertexArrayAttribFormat(_vao, 0, 3, GL_FLOAT, false, 0);
         glVertexArrayAttribBinding(_vao, 0, 0);
@@ -69,7 +68,7 @@ class VertexBuffer(vertices: FloatArray, indices: IntArray) {
     fun clean(): Unit {
         glDeleteBuffers(_buffers)
         glDeleteVertexArrays(_vao)
-        
+
         MemoryUtil.memFree(_buffers)
     }
 

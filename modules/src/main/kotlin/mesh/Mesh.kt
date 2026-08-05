@@ -1,6 +1,5 @@
 package mesh
 
-import algebra.Vector2
 import algebra.Vector3
 
 typealias MeshValueType = Float
@@ -24,52 +23,40 @@ class OBJMesh(
     txcoords: FloatArray,
     triangles: List<ObjTriangleIndices>
 ) : Mesh {
-    private var _name: String = name
-    private var _vertices = vertices
-    private var _vnormals = vnormals
-    private var _txcoords = txcoords
-    private var _triangles = triangles
+    private val _name: String = name
+    private val _vertices = vertices
+    private val _vnormals = vnormals
+    private val _txcoords = txcoords
+    private val _triangles = triangles
 
-    var name: String
+    val name: String
         get() {
             return _name
         }
-        set(value) {
-            _name = value
-        }
 
-    var vertices: FloatArray
+
+    val vertices: FloatArray
         get() {
             return _vertices
         }
-        set(value) {
-            _vertices = value
-        }
 
-    var normals: FloatArray
+
+    val vnormals: FloatArray
         get() {
             return _vnormals
         }
-        set(value) {
-            _vnormals = value
-        }
 
-    var txcoords: FloatArray
+
+    val txcoords: FloatArray
         get() {
             return _txcoords
         }
-        set(value) {
-            _txcoords = value
-        }
 
-    var triangles: List<ObjTriangleIndices>
+
+    val triangles: List<ObjTriangleIndices>
         get() {
             return _triangles
         }
-        set(value) {
-            _triangles = value
-        }
-
 
     val verticesCount: Int
         get(): Int {
@@ -103,97 +90,218 @@ class OBJMesh(
     }
 }
 
-//class InterleavedMesh : Mesh {
-//    data class Vertex(
-//        var pos: Vector3,
-//        var norm: Vector3,
-//        var uv: Vector2
-//    )
-//
-//    var _vertices: MutableList<Vertex> = mutableListOf()
-//    var _name: String = ""
-//
-//    constructor() {}
-//
-//    constructor(other: ObjMesh) {
-//        _name = other._name
-//        for (indecies in other._triangles) {
-//            val v1 = other._vertices[indecies.vertexIndex[0]]
-//            val v2 = other._vertices[indecies.vertexIndex[1]]
-//            val v3 = other._vertices[indecies.vertexIndex[2]]
-//
-//            val n1 = other._normals[indecies.normalIndex[0]]
-//            val n2 = other._normals[indecies.normalIndex[1]]
-//            val n3 = other._normals[indecies.normalIndex[2]]
-//
-//            val tx1 = other._texcrds[indecies.texCoordIndex[0]]
-//            val tx2 = other._texcrds[indecies.texCoordIndex[1]]
-//            val tx3 = other._texcrds[indecies.texCoordIndex[2]]
-//
-//            val vertex1 = Vertex(v1, n1, tx1)
-//            val vertex2 = Vertex(v2, n2, tx2)
-//            val vertex3 = Vertex(v3, n3, tx3)
-//
-//            _vertices.add(vertex1)
-//            _vertices.add(vertex2)
-//            _vertices.add(vertex3)
-//        }
-//    }
-//
-//    fun name(): String = _name
-//
-//    fun setName(name: String) {
-//        _name = name
-//    }
-//
-//    override fun verticesCount(): Long = _vertices.size.toLong()
-//    override fun trianglesCount(): Long = _vertices.size / 3L
-//}
-//
-//class SeparatedBuffersMesh : Mesh {
-//    var _vertices: MutableList<Vector3> = mutableListOf()
-//    var _normals: MutableList<Vector3> = mutableListOf()
-//    var _texcrds: MutableList<Vector2> = mutableListOf()
-//    var _name: String = ""
-//
-//    constructor() {}
-//
-//    constructor(other: ObjMesh) {
-//        _name = other._name
-//        for (indecies in other._triangles) {
-//            val v1 = other._vertices[indecies.vertexIndex[0]]
-//            val v2 = other._vertices[indecies.vertexIndex[1]]
-//            val v3 = other._vertices[indecies.vertexIndex[2]]
-//
-//            val n1 = other._normals[indecies.normalIndex[0]]
-//            val n2 = other._normals[indecies.normalIndex[1]]
-//            val n3 = other._normals[indecies.normalIndex[2]]
-//
-//            val tx1 = other._texcrds[indecies.texCoordIndex[0]]
-//            val tx2 = other._texcrds[indecies.texCoordIndex[1]]
-//            val tx3 = other._texcrds[indecies.texCoordIndex[2]]
-//
-//            _vertices.add(v1)
-//            _vertices.add(v2)
-//            _vertices.add(v3)
-//
-//            _normals.add(n1)
-//            _normals.add(n2)
-//            _normals.add(n3)
-//
-//            _texcrds.add(tx1)
-//            _texcrds.add(tx2)
-//            _texcrds.add(tx3)
-//        }
-//    }
-//
-//    fun name(): String = _name
-//
-//    fun setName(name: String) {
-//        _name = name
-//    }
-//
-//    override fun verticesCount(): Long = _vertices.size.toLong()
-//    override fun trianglesCount(): Long = _vertices.size / 3L
-//}
+class SeparatedBuffersMesh : Mesh {
+    private val _vertices: FloatArray
+    private val _vnormals: FloatArray
+    private val _txcoords: FloatArray
+    private val _name: String
+
+    constructor(other: OBJMesh) {
+        _name = other.name
+
+        val vertices: MutableList<Float> = mutableListOf()
+        val vnormals: MutableList<Float> = mutableListOf()
+        val txcoords: MutableList<Float> = mutableListOf()
+
+        for (indices in other.triangles) {
+            val (a_vId, b_vId, c_vId) = indices.vertexIndex
+
+            val a_vx = other.vertices[a_vId + 0]
+            val a_vy = other.vertices[a_vId + 1]
+            val a_vz = other.vertices[a_vId + 2]
+
+            val b_vx = other.vertices[b_vId + 0]
+            val b_vy = other.vertices[b_vId + 1]
+            val b_vz = other.vertices[b_vId + 2]
+
+            val c_vx = other.vertices[c_vId + 0]
+            val c_vy = other.vertices[c_vId + 1]
+            val c_vz = other.vertices[c_vId + 2]
+
+            vertices.addAll(listOf(a_vx, a_vy, a_vz))
+            vertices.addAll(listOf(b_vx, b_vy, b_vz))
+            vertices.addAll(listOf(c_vx, c_vy, c_vz))
+
+            val (a_nId, b_nId, c_nId) = indices.normalIndex
+
+            val a_nx = other.vnormals[a_nId + 0]
+            val a_ny = other.vnormals[a_nId + 1]
+            val a_nz = other.vnormals[a_nId + 2]
+
+            val b_nx = other.vnormals[b_nId + 0]
+            val b_ny = other.vnormals[b_nId + 1]
+            val b_nz = other.vnormals[b_nId + 2]
+
+            val c_nx = other.vnormals[c_nId + 0]
+            val c_ny = other.vnormals[c_nId + 1]
+            val c_nz = other.vnormals[c_nId + 2]
+
+            vnormals.addAll(listOf(a_nx, a_ny, a_nz))
+            vnormals.addAll(listOf(b_nx, b_ny, b_nz))
+            vnormals.addAll(listOf(c_nx, c_ny, c_nz))
+
+            val (a_tId, b_tId, c_tId) = indices.texCoordIndex
+
+            val a_tu = other.txcoords[a_nId + 0]
+            val a_tv = other.txcoords[a_nId + 1]
+
+            val b_tu = other.txcoords[b_nId + 0]
+            val b_tv = other.txcoords[b_nId + 1]
+
+            val c_tu = other.txcoords[c_nId + 0]
+            val c_tv = other.txcoords[c_nId + 1]
+
+            txcoords.addAll(listOf(a_tu, a_tv))
+            txcoords.addAll(listOf(b_tu, b_tv))
+            txcoords.addAll(listOf(c_tu, c_tv))
+        }
+
+        _vertices = vertices.toFloatArray()
+        _vnormals = vnormals.toFloatArray()
+        _txcoords = txcoords.toFloatArray()
+    }
+
+    val name: String
+        get() {
+            return _name
+        }
+
+    val vertices: FloatArray
+        get() {
+            return _vertices
+        }
+
+    val vnormals: FloatArray
+        get() {
+            return _vnormals
+        }
+
+    val txcoords: FloatArray
+        get() {
+            return _txcoords
+        }
+}
+
+// TODO
+class IndexedSeparatedBuffersMesh : Mesh {
+    private val _name: String
+    private val _vertices: FloatArray
+    private val _vnormals: FloatArray
+    private val _txcoords: FloatArray
+    private val _indices: IntArray
+
+    constructor(other: OBJMesh) {
+        _name = other.name
+
+        _vertices = floatArrayOf()
+        _vnormals = floatArrayOf()
+        _txcoords = floatArrayOf()
+        _indices = intArrayOf()
+    }
+
+    val name: String
+        get() {
+            return _name
+        }
+
+    val vertices: FloatArray
+        get() {
+            return _vertices
+        }
+
+    val vnormals: FloatArray
+        get() {
+            return _vnormals
+        }
+
+    val txcoords: FloatArray
+        get() {
+            return _txcoords
+        }
+
+    val indices: IntArray
+        get() {
+            return _indices
+        }
+}
+
+class InterleavedMesh : Mesh {
+    private val _name: String
+
+    // Stores triples - [vx,vy,vz, vnx, vny, vnz, u, v, ...]
+    private val _mesh: FloatArray
+
+    constructor(other: OBJMesh) {
+        _name = other.name
+
+        val mesh: MutableList<Float> = mutableListOf()
+
+        for (indices in other.triangles) {
+            val (a_vId, b_vId, c_vId) = indices.vertexIndex
+
+            val a_vx = other.vertices[a_vId + 0]
+            val a_vy = other.vertices[a_vId + 1]
+            val a_vz = other.vertices[a_vId + 2]
+
+            val b_vx = other.vertices[b_vId + 0]
+            val b_vy = other.vertices[b_vId + 1]
+            val b_vz = other.vertices[b_vId + 2]
+
+            val c_vx = other.vertices[c_vId + 0]
+            val c_vy = other.vertices[c_vId + 1]
+            val c_vz = other.vertices[c_vId + 2]
+
+            val (a_nId, b_nId, c_nId) = indices.normalIndex
+
+            val a_nx = other.vnormals[a_nId + 0]
+            val a_ny = other.vnormals[a_nId + 1]
+            val a_nz = other.vnormals[a_nId + 2]
+
+            val b_nx = other.vnormals[b_nId + 0]
+            val b_ny = other.vnormals[b_nId + 1]
+            val b_nz = other.vnormals[b_nId + 2]
+
+            val c_nx = other.vnormals[c_nId + 0]
+            val c_ny = other.vnormals[c_nId + 1]
+            val c_nz = other.vnormals[c_nId + 2]
+
+            val (a_tId, b_tId, c_tId) = indices.texCoordIndex
+
+            val a_tu = other.txcoords[a_nId + 0]
+            val a_tv = other.txcoords[a_nId + 1]
+
+            val b_tu = other.txcoords[b_nId + 0]
+            val b_tv = other.txcoords[b_nId + 1]
+
+            val c_tu = other.txcoords[c_nId + 0]
+            val c_tv = other.txcoords[c_nId + 1]
+
+            mesh.addAll(listOf(a_vx, a_vy, a_vz))
+            mesh.addAll(listOf(b_vx, b_vy, b_vz))
+            mesh.addAll(listOf(c_vx, c_vy, c_vz))
+
+            mesh.addAll(listOf(a_nx, a_ny, a_nz))
+            mesh.addAll(listOf(b_nx, b_ny, b_nz))
+            mesh.addAll(listOf(c_nx, c_ny, c_nz))
+
+            mesh.addAll(listOf(a_tu, a_tv))
+            mesh.addAll(listOf(b_tu, b_tv))
+            mesh.addAll(listOf(c_tu, c_tv))
+        }
+
+        _mesh = mesh.toFloatArray()
+    }
+
+    val name: String
+        get() {
+            return _name
+        }
+
+    val mesh: FloatArray
+        get() {
+            return _mesh
+        }
+}
+
+
 

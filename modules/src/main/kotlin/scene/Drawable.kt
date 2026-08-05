@@ -12,27 +12,21 @@ abstract class Drawable(mesh: IndexedMesh) : Node {
     private val _mesh = mesh
     private val _buffer = MeshBuffer(_mesh)
 
+    protected var _combined = Matrix4().idtt()
+
     override fun traverse(): Unit {
-        // _buffer.updateVertexData(_staging)
         _buffer.drawIndexed()
     }
 
     abstract fun applyTransform(tr: Matrix4): Unit
 
-//    protected fun transform(tr: Matrix4): Unit {
-//        var i: Int = 0
-//        while (i < _vertices.size) {
-//            val vertex = Vector3(_vertices[i + 0], _vertices[i + 1], _vertices[i + 2])
-//
-//            val transformed = tr.vecMultiply(vertex)
-//
-//            _staging[i + 0] = transformed.x
-//            _staging[i + 1] = transformed.y
-//            _staging[i + 2] = transformed.z
-//
-//            i += 3
-//        }
-//    }
+    var combined: Matrix4
+        get(): Matrix4 {
+            return _combined
+        }
+        set(value: Matrix4) {
+            _combined = value
+        }
 }
 
 // ============================================================================
@@ -41,7 +35,10 @@ abstract class Drawable(mesh: IndexedMesh) : Node {
 
 class StaticDrawable(mesh: IndexedMesh) : Drawable(mesh) {
     override fun applyTransform(tr: Matrix4): Unit {
-        // transform(tr)
+        // Why transpose?
+        tr.transpose()
+
+        _combined = tr
     }
 }
 
@@ -78,8 +75,9 @@ class SpinableDrawable(mesh: IndexedMesh) : Drawable(mesh) {
 
         val spin = rotation(_axis, _angl)
 
-        val combined = tr.multiply(spin)
+        // Why transpose?
+        tr.transpose()
 
-        // transform(combined)
+        _combined = spin.multiply(tr)
     }
 }

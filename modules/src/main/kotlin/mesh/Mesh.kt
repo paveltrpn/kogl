@@ -1,6 +1,6 @@
 package mesh
 
-import algebra.Vector3
+import algebra.*
 
 typealias MeshValueType = Float
 
@@ -86,6 +86,21 @@ class OBJMesh(
         }
 
         return Vector3(_vertices[i], _vertices[i + 1], _vertices[i + 2])
+    }
+
+    private fun transform(tr: Matrix4): Unit {
+        var i: Int = 0
+        while (i < _vertices.size) {
+            val vertex = Vector3(_vertices[i + 0], _vertices[i + 1], _vertices[i + 2])
+
+            val transformed = tr.vecMultiply(vertex)
+
+            _vertices[i + 0] = transformed.x
+            _vertices[i + 1] = transformed.y
+            _vertices[i + 2] = transformed.z
+
+            i += 3
+        }
     }
 }
 

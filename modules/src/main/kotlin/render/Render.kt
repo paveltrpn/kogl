@@ -63,6 +63,7 @@ class Render : EventObserver {
         val colorProgram = Program(colorShaderSource)
 
         colorProgram.addUniform("view_matrix")
+        colorProgram.addUniform("drawable_matrix")
         // colorProgram.addUniform("color")
 
         val colorStateGroup = StateGroup()
@@ -98,6 +99,7 @@ class Render : EventObserver {
         val boxMesh = IndexedMesh("Box", vertices, floatArrayOf(), floatArrayOf(), indices)
 
         val cubeStatic = StaticDrawable(boxMesh)
+
         val cubeSpin = SpinableDrawable(boxMesh)
         cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f)
         cubeSpin.anglSpeed = 0.8f
@@ -106,7 +108,7 @@ class Render : EventObserver {
         offsetOne.transform = algebra.offset(2.0f, 0.0f, 0.0f);
 
         val scale = Transform()
-        scale.transform = algebra.scale(2.0f, 2.0f, 2.0f)
+        scale.transform = algebra.scale(1.0f, 1.0f, 1.0f)
 
         val offsetTwo = Transform()
         offsetTwo.transform = algebra.offset(-2.0f, 0.0f, 0.0f);

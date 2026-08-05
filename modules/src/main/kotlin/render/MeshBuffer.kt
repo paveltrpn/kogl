@@ -75,4 +75,36 @@ class MeshBuffer(mesh: IndexedMesh) {
         glDrawElements(GL_TRIANGLES, _mesh.indices.size, GL_UNSIGNED_INT, 0)
         glBindVertexArray(0)
     }
+
+//    fun updateVertexData(data: FloatArray) {
+//        // By buffer mapping.
+//        val pointer = glMapNamedBufferRange(
+//            vbo,
+//            0,
+//            (_vertexCount * 3 * 4).toLong(),
+//            GL_MAP_WRITE_BIT or GL_MAP_INVALIDATE_RANGE_BIT
+//        )
+//
+//        if (pointer == null) {
+//            return
+//        }
+//
+//        MemoryStack.stackPush().use { stack ->
+//            val buffer: ByteBuffer = stack.calloc(data.size * 4)
+//            buffer.asFloatBuffer().put(data)
+//            buffer.flip()
+//
+//            pointer?.put(buffer)
+//        }
+//
+//        glUnmapNamedBuffer(vbo)
+//
+//        // By buffer subdata update.
+//        MemoryStack.stackPush().use { stack ->
+//            val buffer: FloatBuffer = stack.callocFloat(data.size)
+//            buffer.put(data)
+//            buffer.flip()
+//            glNamedBufferSubData(_buffers[VertexBuffersEnum.VERTICES.ordinal], 0, buffer)
+//        }
+//    }
 }

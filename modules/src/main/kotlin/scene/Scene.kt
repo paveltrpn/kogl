@@ -1,10 +1,12 @@
 package scene
 
 import algebra.*
+import render.Program
 
 class Scene {
     private var _graph: MutableList<StateGroup> = mutableListOf()
     private var _transformAccumulator = Matrix4()
+    private var _currentProgram: Program? = null
     private var _camera = Flycam()
 
     init {
@@ -30,7 +32,9 @@ class Scene {
             // Pop from the top.
             when (val current = stack.removeLast()) {
                 is StateGroup -> {
-                    current.program?.setMatrixUniform("view_matrix", false, _camera.matrix())
+                    _currentProgram = current.program
+
+                    _currentProgram?.setMatrixUniform("view_matrix", false, _camera.matrix())
 
                     current.traverse()
 
@@ -68,11 +72,15 @@ class Scene {
                 digIntoTransform(next)
             }
 
+            // Reach Drawable leaf node...
             is Drawable -> {
+                // ...perform transformation...
                 next.applyTransform(_transformAccumulator)
 
-                // Reach Drawable leaf node, perform transformation
-                // applying and draw call.
+                // ...update shader uniform...
+                _currentProgram?.setMatrixUniform("drawable_matrix", false, next.combined)
+
+                // ...applying and draw call.
                 next.traverse()
             }
 

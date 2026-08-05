@@ -4,6 +4,7 @@ import algebra.Vector2
 import algebra.Vector3
 import java.io.File
 import java.io.FileNotFoundException
+import javax.print.attribute.standard.RequestingUserName
 
 private enum class ObjFormatToken {
     GEOMETRIC_VERTICES,
@@ -133,6 +134,7 @@ private fun parseTriangleString(str: String): ObjTriangleIndices {
         val t = indices[1].toInt()
         val n = indices[2].toInt()
 
+        // In OBJ format indices starts with 1.
         triangle.vertexIndex[i] = v - 1
         triangle.normalIndex[i] = n - 1
         triangle.texCoordIndex[i] = t - 1
@@ -152,7 +154,11 @@ fun readWavefrontObjFile(filePath: String): Mesh {
 
     val fileHandle = file.readText()
 
-    val objMesh = ObjMesh()
+    var name: String = ""
+    val vertices: MutableList<Float> = mutableListOf()
+    val vnormals: MutableList<Float> = mutableListOf()
+    val txcoords: MutableList<Float> = mutableListOf()
+    val triangles: MutableList<ObjTriangleIndices> = mutableListOf()
 
     for (line in fileHandle.lineSequence()) {
         val str = line.trim()
@@ -164,39 +170,44 @@ fun readWavefrontObjFile(filePath: String): Mesh {
             }
 
             str.startsWith(tokensMap[ObjFormatToken.OBJECT_NAME]!!) -> {
-                objMesh._name = str.substring(tokensMap[ObjFormatToken.OBJECT_NAME]!!.length).trim()
+                name = str.substring(tokensMap[ObjFormatToken.OBJECT_NAME]!!.length).trim()
                 continue
             }
 
             str.startsWith(tokensMap[ObjFormatToken.GEOMETRIC_VERTICES]!!) -> {
                 val vertexString = str.substring(tokensMap[ObjFormatToken.GEOMETRIC_VERTICES]!!.length)
                 val (x, y, z) = parseVertexString(vertexString)
-                objMesh._vertices.add(Vector3(x, y, z))
+                vertices.addLast(x)
+                vertices.addLast(y)
+                vertices.addLast(z)
                 continue
             }
 
             str.startsWith(tokensMap[ObjFormatToken.VERTEX_NORMALS]!!) -> {
                 val normalString = str.substring(tokensMap[ObjFormatToken.VERTEX_NORMALS]!!.length)
                 val (nx, ny, nz) = parseNormalString(normalString)
-                objMesh._normals.add(Vector3(nx, ny, nz))
+                vnormals.addLast(nx)
+                vnormals.addLast(ny)
+                vnormals.addLast(nz)
                 continue
             }
 
             str.startsWith(tokensMap[ObjFormatToken.TEXTURE_VERTICES]!!) -> {
                 val texcrdString = str.substring(tokensMap[ObjFormatToken.TEXTURE_VERTICES]!!.length)
                 val (u, v) = parseTexCoordString(texcrdString)
-                objMesh._texcrds.add(Vector2(u, v))
+                txcoords.addLast(u)
+                txcoords.addLast(v)
                 continue
             }
 
             str.startsWith(tokensMap[ObjFormatToken.FACE]!!) -> {
                 val triangleString = str.substring(tokensMap[ObjFormatToken.FACE]!!.length)
                 val triangle = parseTriangleString(triangleString)
-                objMesh._triangles.add(triangle)
+                triangles.addLast(triangle)
                 continue
             }
         }
     }
 
-    return objMesh
+    return OBJMesh(name, vertices.toFloatArray(), vnormals.toFloatArray(), txcoords.toFloatArray(), triangles)
 }

@@ -5,6 +5,9 @@ import algebra.Vector3
 
 typealias MeshValueType = Float
 
+// Dual-Indexing (Per-Face Normals/UVs). Each value is an index into
+// corresponding face data array\.
+// Compatible with .obj, FBX, glTF
 class ObjTriangleIndices {
     var vertexIndex = IntArray(3) { 0 }
     var normalIndex = IntArray(3) { 0 }
@@ -14,50 +17,89 @@ class ObjTriangleIndices {
 interface Mesh {
 }
 
-class ObjMesh : Mesh {
-    var _vertices: MutableList<Vector3> = mutableListOf()
-    var _normals: MutableList<Vector3> = mutableListOf()
-    var _texcrds: MutableList<Vector2> = mutableListOf()
-    var _vertclr: MutableList<Vector3> = mutableListOf()
-    var _triangles: MutableList<ObjTriangleIndices> = mutableListOf()
-    var _name: String = ""
+class OBJMesh(
+    name: String,
+    vertices: FloatArray,
+    vnormals: FloatArray,
+    txcoords: FloatArray,
+    triangles: List<ObjTriangleIndices>
+) : Mesh {
+    private var _name: String = name
+    private var _vertices = vertices
+    private var _vnormals = vnormals
+    private var _txcoords = txcoords
+    private var _triangles = triangles
 
-    fun verticesData(): List<Vector3> = _vertices
-    fun indicesData(): List<ObjTriangleIndices> = _triangles
-    fun normalsData(): List<Vector3> = _normals
-    fun texcrdsData(): List<Vector2> = _texcrds
-    fun vertclrData(): List<Vector3> = _vertclr
+    var name: String
+        get() {
+            return _name
+        }
+        set(value) {
+            _name = value
+        }
 
-    fun vertices(): List<Vector3> = _vertices
-    fun indices(): List<ObjTriangleIndices> = _triangles
-    fun normals(): List<Vector3> = _normals
-    fun texcrds(): List<Vector2> = _texcrds
-    fun vertclr(): List<Vector3> = _vertclr
+    var vertices: FloatArray
+        get() {
+            return _vertices
+        }
+        set(value) {
+            _vertices = value
+        }
 
-    fun setVertices(vertices: List<Vector3>) {
-        _vertices = vertices.toMutableList()
-    }
+    var normals: FloatArray
+        get() {
+            return _vnormals
+        }
+        set(value) {
+            _vnormals = value
+        }
 
-    fun setTriangles(triangles: List<ObjTriangleIndices>) {
-        _triangles = triangles.toMutableList()
-    }
+    var txcoords: FloatArray
+        get() {
+            return _txcoords
+        }
+        set(value) {
+            _txcoords = value
+        }
 
-    fun setNormals(normals: List<Vector3>) {
-        _normals = normals.toMutableList()
-    }
+    var triangles: List<ObjTriangleIndices>
+        get() {
+            return _triangles
+        }
+        set(value) {
+            _triangles = value
+        }
 
-    fun setTexCoords(texCoords: List<Vector2>) {
-        _texcrds = texCoords.toMutableList()
-    }
 
-    fun setVertexColors(vertexColors: List<Vector3>) {
-        _vertclr = vertexColors.toMutableList()
-    }
+    val verticesCount: Int
+        get(): Int {
+            return _vertices.size.div(3) ?: 0
+        }
 
-    fun name(): String = _name
+    val vnormalsCount: Int
+        get(): Int {
+            return _vnormals.size.div(3) ?: 0
+        }
 
-    fun setName(name: String) {
-        _name = name
+    val txcoordsCount: Int
+        get(): Int {
+            return _txcoords.size.div(2) ?: 0
+        }
+
+    val trianglesCount: Int
+        get(): Int {
+            return _triangles.size.div(9) ?: 0
+        }
+
+    // Return i-th triangle vertices as Vector3
+    operator fun get(index: Int): Vector3? {
+        val i = index * 3
+
+        if (i + 2 >= _vertices.size) {
+            return null
+        }
+
+        return Vector3(_vertices[i], _vertices[i + 1], _vertices[i + 2])
     }
 }
 

@@ -145,7 +145,7 @@ class VertexBufferOLD {
         _vertexCount = data.size / 3
 
         glBindVertexArray(_vao)
-        glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal])
+        glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICES.ordinal])
 
         MemoryStack.stackPush().use { stack ->
             val buffer: FloatBuffer = stack.callocFloat(data.size)
@@ -163,7 +163,7 @@ class VertexBufferOLD {
         _indexCount = data.size
 
         glBindVertexArray(_vao)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffers[VertexBuffersEnum.INDICIES.ordinal])
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffers[VertexBuffersEnum.INDICES.ordinal])
 
         MemoryStack.stackPush().use { stack ->
             val buffer: IntBuffer = stack.callocInt(data.size)
@@ -177,7 +177,7 @@ class VertexBufferOLD {
 
     fun updateVertexData(data: FloatArray) {
         glBindVertexArray(_vao)
-        glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICIES.ordinal])
+        glBindBuffer(GL_ARRAY_BUFFER, _buffers[VertexBuffersEnum.VERTICES.ordinal])
 
         MemoryStack.stackPush().use { stack ->
             val buffer: FloatBuffer = stack.callocFloat(data.size)
@@ -200,7 +200,7 @@ class VertexBufferOLD {
 
 //    NOTE: Unused!
 //    fun updateIndexData(data: IntArray) {
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VertexBuffersEnum.INDICIES.ordinal)
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VertexBuffersEnum.INDICES.ordinal)
 //
 //        MemoryStack.stackPush().use { stack ->
 //            val buffer: IntBuffer = stack.callocInt(data.size)

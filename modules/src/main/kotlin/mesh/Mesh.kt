@@ -16,7 +16,13 @@ class ObjTriangleIndices {
 // ======================= Mesh ===============================================
 // ============================================================================
 
-interface Mesh {
+abstract class Mesh(name: String) {
+    protected val _name: String = name
+
+    val name: String
+        get(): String {
+            return _name
+        }
 }
 
 // ============================================================================
@@ -29,18 +35,11 @@ class OBJMesh(
     vnormals: FloatArray,
     txcoords: FloatArray,
     triangles: List<ObjTriangleIndices>
-) : Mesh {
-    private val _name: String = name
+) : Mesh(name) {
     private val _vertices = vertices
     private val _vnormals = vnormals
     private val _txcoords = txcoords
     private val _triangles = triangles
-
-    val name: String
-        get() {
-            return _name
-        }
-
 
     val vertices: FloatArray
         get() {
@@ -120,11 +119,8 @@ class SeparatedArraysMesh : Mesh {
     private val _vertices: FloatArray
     private val _vnormals: FloatArray
     private val _txcoords: FloatArray
-    private val _name: String
 
-    constructor(other: OBJMesh) {
-        _name = other.name
-
+    constructor(other: OBJMesh) : super(other.name) {
         val vertices: MutableList<Float> = mutableListOf()
         val vnormals: MutableList<Float> = mutableListOf()
         val txcoords: MutableList<Float> = mutableListOf()
@@ -187,11 +183,6 @@ class SeparatedArraysMesh : Mesh {
         _txcoords = txcoords.toFloatArray()
     }
 
-    val name: String
-        get() {
-            return _name
-        }
-
     val vertices: FloatArray
         get() {
             return _vertices
@@ -214,14 +205,12 @@ class SeparatedArraysMesh : Mesh {
 
 // TODO
 class IndexedMesh : Mesh {
-    private val _name: String
     private val _vertices: FloatArray
     private val _vnormals: FloatArray
     private val _txcoords: FloatArray
     private val _indices: IntArray
 
-    constructor(other: OBJMesh) {
-        _name = other.name
+    constructor(other: OBJMesh) : super(other.name) {
 
         _vertices = floatArrayOf()
         _vnormals = floatArrayOf()
@@ -235,19 +224,13 @@ class IndexedMesh : Mesh {
         vnormals: FloatArray,
         txcoords: FloatArray,
         indices: IntArray
-    ) {
-        _name = name
+    ) : super(name) {
 
         _vertices = vertices
         _vnormals = vnormals
         _txcoords = txcoords
         _indices = indices
     }
-
-    val name: String
-        get() {
-            return _name
-        }
 
     val vertices: FloatArray
         get() {
@@ -275,14 +258,10 @@ class IndexedMesh : Mesh {
 // ============================================================================
 
 class InterleavedMesh : Mesh {
-    private val _name: String
-
     // Stores triples - [vx,vy,vz, vnx, vny, vnz, u, v, ...]
     private val _mesh: FloatArray
 
-    constructor(other: OBJMesh) {
-        _name = other.name
-
+    constructor(other: OBJMesh) : super(other.name) {
         val mesh: MutableList<Float> = mutableListOf()
 
         for (indices in other.triangles) {
@@ -340,11 +319,6 @@ class InterleavedMesh : Mesh {
 
         _mesh = mesh.toFloatArray()
     }
-
-    val name: String
-        get() {
-            return _name
-        }
 
     val mesh: FloatArray
         get() {

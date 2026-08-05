@@ -219,22 +219,22 @@ class InterleavedMeshBuffer(mesh: InterleavedMesh) : MeshBuffer() {
 
         // Configure Position Attribute (Location 0)
         glEnableVertexArrayAttrib(_vao, 0);
-        glVertexArrayAttribFormat(_vao, 0, 3, GL_FLOAT, false, 0);
+        glVertexArrayAttribFormat(_vao, 0, 3, GL_FLOAT, false, Float.SIZE_BYTES * 0);
         // Connect attrib 0 to binding index 0
         glVertexArrayAttribBinding(_vao, 0, 0);
 
         // Configure Normal Attribute (Location 1)
         glEnableVertexArrayAttrib(_vao, 1);
-        glVertexArrayAttribFormat(_vao, 1, 3, GL_FLOAT, false, 3 * Float.SIZE_BYTES);
+        glVertexArrayAttribFormat(_vao, 1, 3, GL_FLOAT, false, Float.SIZE_BYTES * 3);
         // Connect attrib 1 to binding index 0
         glVertexArrayAttribBinding(_vao, 1, 0);
 
         // Configure UV Attribute (Location 2)
         glEnableVertexArrayAttrib(_vao, 2);
-        glVertexArrayAttribFormat(_vao, 2, 2, GL_FLOAT, false, 6 * Float.SIZE_BYTES);
+        glVertexArrayAttribFormat(_vao, 2, 2, GL_FLOAT, false, Float.SIZE_BYTES * 6);
         // Connect attrib 2 to binding index 0
         glVertexArrayAttribBinding(_vao, 2, 0);
-        
+
         glBindVertexArray(0)
     }
 

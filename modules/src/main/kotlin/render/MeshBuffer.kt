@@ -138,6 +138,7 @@ class ArrayMeshBuffer(mesh: SeparatedArraysMesh) : MeshBuffer() {
         _vao = glCreateVertexArrays()
         glBindVertexArray(_vao)
 
+        // Create buffer for vertices.
         glNamedBufferStorage(
             _buffers[VertexBuffersEnum.VERTICES.ordinal],
             _mesh.vertices.size.toLong() * 4,
@@ -151,11 +152,31 @@ class ArrayMeshBuffer(mesh: SeparatedArraysMesh) : MeshBuffer() {
             glNamedBufferSubData(_buffers[VertexBuffersEnum.VERTICES.ordinal], 0, buffer)
         }
 
-        // Link VBO to VAO attribute 0 (position)
+        // Create buffer for normals.
+        glNamedBufferStorage(
+            _buffers[VertexBuffersEnum.NORMALS.ordinal],
+            _mesh.vnormals.size.toLong() * 4,
+            GL_DYNAMIC_STORAGE_BIT
+        );
+
+        MemoryStack.stackPush().use { stack ->
+            val buffer: FloatBuffer = stack.callocFloat(_mesh.vnormals.size)
+            buffer.put(_mesh.vnormals)
+            buffer.flip()
+            glNamedBufferSubData(_buffers[VertexBuffersEnum.NORMALS.ordinal], 0, buffer)
+        }
+
+        // Link vertex buffer to VAO attribute 0 (position)
         glVertexArrayVertexBuffer(_vao, 0, _buffers[VertexBuffersEnum.VERTICES.ordinal], 0, Float.SIZE_BYTES * 3);
         glEnableVertexArrayAttrib(_vao, 0);
         glVertexArrayAttribFormat(_vao, 0, 3, GL_FLOAT, false, 0);
         glVertexArrayAttribBinding(_vao, 0, 0);
+
+        // Link normals buffer to VAO attribute 1 (position)
+        glVertexArrayVertexBuffer(_vao, 1, _buffers[VertexBuffersEnum.NORMALS.ordinal], 0, Float.SIZE_BYTES * 3);
+        glEnableVertexArrayAttrib(_vao, 1);
+        glVertexArrayAttribFormat(_vao, 1, 3, GL_FLOAT, false, 0);
+        glVertexArrayAttribBinding(_vao, 1, 1);
 
         glBindVertexArray(0)
     }

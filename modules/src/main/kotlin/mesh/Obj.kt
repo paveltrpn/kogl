@@ -1,10 +1,7 @@
 package mesh
 
-import algebra.Vector2
-import algebra.Vector3
 import java.io.File
 import java.io.FileNotFoundException
-import javax.print.attribute.standard.RequestingUserName
 
 private enum class ObjFormatToken {
     GEOMETRIC_VERTICES,

@@ -6,6 +6,7 @@ import algebra.Matrix4
 import algebra.Vector3
 import event.*
 import scene.*
+import mesh.*
 
 class Render : EventObserver {
     private var _run: Boolean
@@ -94,8 +95,10 @@ class Render : EventObserver {
             0, 7, 4, 0, 3, 7
         )
 
-        val cubeStatic = StaticDrawable(vertices, indices)
-        val cubeSpin = SpinableDrawable(vertices, indices)
+        val boxMesh = IndexedMesh("Box", vertices, floatArrayOf(), floatArrayOf(), indices)
+
+        val cubeStatic = StaticDrawable(boxMesh)
+        val cubeSpin = SpinableDrawable(boxMesh)
         cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f)
         cubeSpin.anglSpeed = 0.8f
 

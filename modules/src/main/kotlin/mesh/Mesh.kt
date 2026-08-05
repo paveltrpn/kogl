@@ -12,8 +12,6 @@ class ObjTriangleIndices {
 }
 
 interface Mesh {
-    fun verticesCount(): Long
-    fun trianglesCount(): Long
 }
 
 class ObjMesh : Mesh {
@@ -61,113 +59,99 @@ class ObjMesh : Mesh {
     fun setName(name: String) {
         _name = name
     }
-
-    override fun verticesCount(): Long = _triangles.size * 3L
-    override fun trianglesCount(): Long = _triangles.size.toLong()
 }
 
-class InterleavedMesh : Mesh {
-    data class Vertex(
-        var pos: Vector3,
-        var norm: Vector3,
-        var uv: Vector2
-    )
+//class InterleavedMesh : Mesh {
+//    data class Vertex(
+//        var pos: Vector3,
+//        var norm: Vector3,
+//        var uv: Vector2
+//    )
+//
+//    var _vertices: MutableList<Vertex> = mutableListOf()
+//    var _name: String = ""
+//
+//    constructor() {}
+//
+//    constructor(other: ObjMesh) {
+//        _name = other._name
+//        for (indecies in other._triangles) {
+//            val v1 = other._vertices[indecies.vertexIndex[0]]
+//            val v2 = other._vertices[indecies.vertexIndex[1]]
+//            val v3 = other._vertices[indecies.vertexIndex[2]]
+//
+//            val n1 = other._normals[indecies.normalIndex[0]]
+//            val n2 = other._normals[indecies.normalIndex[1]]
+//            val n3 = other._normals[indecies.normalIndex[2]]
+//
+//            val tx1 = other._texcrds[indecies.texCoordIndex[0]]
+//            val tx2 = other._texcrds[indecies.texCoordIndex[1]]
+//            val tx3 = other._texcrds[indecies.texCoordIndex[2]]
+//
+//            val vertex1 = Vertex(v1, n1, tx1)
+//            val vertex2 = Vertex(v2, n2, tx2)
+//            val vertex3 = Vertex(v3, n3, tx3)
+//
+//            _vertices.add(vertex1)
+//            _vertices.add(vertex2)
+//            _vertices.add(vertex3)
+//        }
+//    }
+//
+//    fun name(): String = _name
+//
+//    fun setName(name: String) {
+//        _name = name
+//    }
+//
+//    override fun verticesCount(): Long = _vertices.size.toLong()
+//    override fun trianglesCount(): Long = _vertices.size / 3L
+//}
+//
+//class SeparatedBuffersMesh : Mesh {
+//    var _vertices: MutableList<Vector3> = mutableListOf()
+//    var _normals: MutableList<Vector3> = mutableListOf()
+//    var _texcrds: MutableList<Vector2> = mutableListOf()
+//    var _name: String = ""
+//
+//    constructor() {}
+//
+//    constructor(other: ObjMesh) {
+//        _name = other._name
+//        for (indecies in other._triangles) {
+//            val v1 = other._vertices[indecies.vertexIndex[0]]
+//            val v2 = other._vertices[indecies.vertexIndex[1]]
+//            val v3 = other._vertices[indecies.vertexIndex[2]]
+//
+//            val n1 = other._normals[indecies.normalIndex[0]]
+//            val n2 = other._normals[indecies.normalIndex[1]]
+//            val n3 = other._normals[indecies.normalIndex[2]]
+//
+//            val tx1 = other._texcrds[indecies.texCoordIndex[0]]
+//            val tx2 = other._texcrds[indecies.texCoordIndex[1]]
+//            val tx3 = other._texcrds[indecies.texCoordIndex[2]]
+//
+//            _vertices.add(v1)
+//            _vertices.add(v2)
+//            _vertices.add(v3)
+//
+//            _normals.add(n1)
+//            _normals.add(n2)
+//            _normals.add(n3)
+//
+//            _texcrds.add(tx1)
+//            _texcrds.add(tx2)
+//            _texcrds.add(tx3)
+//        }
+//    }
+//
+//    fun name(): String = _name
+//
+//    fun setName(name: String) {
+//        _name = name
+//    }
+//
+//    override fun verticesCount(): Long = _vertices.size.toLong()
+//    override fun trianglesCount(): Long = _vertices.size / 3L
+//}
 
-    var _vertices: MutableList<Vertex> = mutableListOf()
-    var _name: String = ""
-    var _bounding: AABoundingBox = AABoundingBox()
-
-    constructor() {}
-
-    constructor(other: ObjMesh) {
-        _name = other._name
-        for (indecies in other._triangles) {
-            val v1 = other._vertices[indecies.vertexIndex[0]]
-            val v2 = other._vertices[indecies.vertexIndex[1]]
-            val v3 = other._vertices[indecies.vertexIndex[2]]
-
-            val n1 = other._normals[indecies.normalIndex[0]]
-            val n2 = other._normals[indecies.normalIndex[1]]
-            val n3 = other._normals[indecies.normalIndex[2]]
-
-            val tx1 = other._texcrds[indecies.texCoordIndex[0]]
-            val tx2 = other._texcrds[indecies.texCoordIndex[1]]
-            val tx3 = other._texcrds[indecies.texCoordIndex[2]]
-
-            val vertex1 = Vertex(v1, n1, tx1)
-            val vertex2 = Vertex(v2, n2, tx2)
-            val vertex3 = Vertex(v3, n3, tx3)
-
-            _vertices.add(vertex1)
-            _vertices.add(vertex2)
-            _vertices.add(vertex3)
-        }
-    }
-
-    fun bounding(): AABoundingBox = _bounding
-
-    fun setBounding(bounding: AABoundingBox) {
-        _bounding = bounding
-    }
-
-    fun name(): String = _name
-
-    fun setName(name: String) {
-        _name = name
-    }
-
-    override fun verticesCount(): Long = _vertices.size.toLong()
-    override fun trianglesCount(): Long = _vertices.size / 3L
-}
-
-class SeparatedBuffersMesh : Mesh {
-    var _vertices: MutableList<Vector3> = mutableListOf()
-    var _normals: MutableList<Vector3> = mutableListOf()
-    var _texcrds: MutableList<Vector2> = mutableListOf()
-    var _name: String = ""
-
-    constructor() {}
-
-    constructor(other: ObjMesh) {
-        _name = other._name
-        for (indecies in other._triangles) {
-            val v1 = other._vertices[indecies.vertexIndex[0]]
-            val v2 = other._vertices[indecies.vertexIndex[1]]
-            val v3 = other._vertices[indecies.vertexIndex[2]]
-
-            val n1 = other._normals[indecies.normalIndex[0]]
-            val n2 = other._normals[indecies.normalIndex[1]]
-            val n3 = other._normals[indecies.normalIndex[2]]
-
-            val tx1 = other._texcrds[indecies.texCoordIndex[0]]
-            val tx2 = other._texcrds[indecies.texCoordIndex[1]]
-            val tx3 = other._texcrds[indecies.texCoordIndex[2]]
-
-            _vertices.add(v1)
-            _vertices.add(v2)
-            _vertices.add(v3)
-
-            _normals.add(n1)
-            _normals.add(n2)
-            _normals.add(n3)
-
-            _texcrds.add(tx1)
-            _texcrds.add(tx2)
-            _texcrds.add(tx3)
-        }
-    }
-
-    fun name(): String = _name
-
-    fun setName(name: String) {
-        _name = name
-    }
-
-    override fun verticesCount(): Long = _vertices.size.toLong()
-    override fun trianglesCount(): Long = _vertices.size / 3L
-}
-
-class AABoundingBox {
-    var min: Vector3 = Vector3()
-    var max: Vector3 = Vector3()
-}

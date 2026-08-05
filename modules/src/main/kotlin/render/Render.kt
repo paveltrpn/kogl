@@ -2,7 +2,6 @@ package render
 
 import org.lwjgl.opengl.GL46.*
 
-import algebra.Matrix4
 import algebra.Vector3
 import event.*
 import scene.*
@@ -59,16 +58,6 @@ class Render : EventObserver {
     }
 
     private fun testCubesGraph(): StateGroup {
-        val colorShaderSource = ShaderSource("flatshade")
-        val colorProgram = Program(colorShaderSource)
-
-        colorProgram.addUniform("view_matrix")
-        colorProgram.addUniform("drawable_matrix")
-        // colorProgram.addUniform("color")
-
-        val colorStateGroup = StateGroup()
-        colorStateGroup.setProgram(colorProgram)
-
         val vertices = floatArrayOf(
             // 8 cube vertices
             -0.5f, -0.5f, -0.5f,
@@ -98,9 +87,27 @@ class Render : EventObserver {
 
         val boxMesh = IndexedMesh("Box", vertices, floatArrayOf(), floatArrayOf(), indices)
 
+        // =================================================
+
+        val testObj = readWavefrontObjFile("/mnt/main/code/kogl/apps/kogl/assets/bodystorage/frame.obj")
+        val frameMesh = SeparatedArraysMesh(testObj as OBJMesh)
+
+        // =================================================
+
+        val colorShaderSource = ShaderSource("flatshade")
+        val colorProgram = Program(colorShaderSource)
+
+        colorProgram.addUniform("view_matrix")
+        colorProgram.addUniform("drawable_matrix")
+        // colorProgram.addUniform("color")
+
+        val colorStateGroup = StateGroup()
+        colorStateGroup.setProgram(colorProgram)
+
+
         val cubeStatic = StaticDrawable(boxMesh)
 
-        val cubeSpin = SpinableDrawable(boxMesh)
+        val cubeSpin = SpinableDrawable(frameMesh)
         cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f)
         cubeSpin.anglSpeed = 0.8f
 
@@ -108,7 +115,7 @@ class Render : EventObserver {
         offsetOne.transform = algebra.offset(2.0f, 0.0f, 0.0f);
 
         val scale = Transform()
-        scale.transform = algebra.scale(1.0f, 1.0f, 1.0f)
+        scale.transform = algebra.scale(1.0f, 2.0f, 1.0f)
 
         val offsetTwo = Transform()
         offsetTwo.transform = algebra.offset(-2.0f, 0.0f, 0.0f);

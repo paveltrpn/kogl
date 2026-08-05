@@ -8,14 +8,29 @@ import mesh.*
 // ======================= Drawable ===========================================
 // ============================================================================
 
-abstract class Drawable(mesh: IndexedMesh) : Node {
-    private val _mesh = mesh
-    private val _buffer = MeshBuffer(_mesh)
+abstract class Drawable(mesh: Mesh) : Node {
+    private var _buffer: MeshBuffer? = null
 
     protected var _combined = Matrix4().idtt()
 
+    init {
+        when (mesh) {
+            is IndexedMesh -> {
+                _buffer = IndexedMeshBuffer(mesh)
+            }
+
+            is SeparatedArraysMesh -> {
+                _buffer = ArrayMeshBuffer(mesh)
+            }
+
+            is InterleavedMesh -> {
+                _buffer = InterleavedMeshBuffer(mesh)
+            }
+        }
+    }
+
     override fun traverse(): Unit {
-        _buffer.drawIndexed()
+        _buffer?.draw()
     }
 
     abstract fun applyTransform(tr: Matrix4): Unit
@@ -33,7 +48,7 @@ abstract class Drawable(mesh: IndexedMesh) : Node {
 // ======================= StaticDrawable =====================================
 // ============================================================================
 
-class StaticDrawable(mesh: IndexedMesh) : Drawable(mesh) {
+class StaticDrawable(mesh: Mesh) : Drawable(mesh) {
     override fun applyTransform(tr: Matrix4): Unit {
         // Why transpose?
         tr.transpose()
@@ -46,7 +61,7 @@ class StaticDrawable(mesh: IndexedMesh) : Drawable(mesh) {
 // ======================= SpinableDrawable ===================================
 // ============================================================================
 
-class SpinableDrawable(mesh: IndexedMesh) : Drawable(mesh) {
+class SpinableDrawable(mesh: Mesh) : Drawable(mesh) {
     private var _axis = Vector3()
     private var _anglSpeed = 0.0f
     private var _angl = 0.0f

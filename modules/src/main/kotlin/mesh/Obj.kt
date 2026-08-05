@@ -145,6 +145,7 @@ fun parseTriangleString(str: String): ObjTriangleIndices {
 
 fun readWavefrontObjFile(filePath: String): SeparatedBuffersMesh {
     val file = File(filePath)
+
     if (!file.exists()) {
         throw FileNotFoundException("File \"$filePath\" not exist!")
     }
@@ -161,28 +162,33 @@ fun readWavefrontObjFile(filePath: String): SeparatedBuffersMesh {
             str.startsWith(tokens_[ObjTokens.COMMENT]!!) -> {
                 continue
             }
+
             str.startsWith(tokens_[ObjTokens.OBJECT_NAME]!!) -> {
                 objMesh._name = str.substring(tokens_[ObjTokens.OBJECT_NAME]!!.length).trim()
                 continue
             }
+
             str.startsWith(tokens_[ObjTokens.GEOMETRIC_VERTICES]!!) -> {
                 val vertexString = str.substring(tokens_[ObjTokens.GEOMETRIC_VERTICES]!!.length)
                 val (x, y, z) = parseVertexString(vertexString)
                 objMesh._vertices.add(Vector3(x, y, z))
                 continue
             }
+
             str.startsWith(tokens_[ObjTokens.VERTEX_NORMALS]!!) -> {
                 val normalString = str.substring(tokens_[ObjTokens.VERTEX_NORMALS]!!.length)
                 val (nx, ny, nz) = parseNormalString(normalString)
                 objMesh._normals.add(Vector3(nx, ny, nz))
                 continue
             }
+
             str.startsWith(tokens_[ObjTokens.TEXTURE_VERTICES]!!) -> {
                 val texcrdString = str.substring(tokens_[ObjTokens.TEXTURE_VERTICES]!!.length)
                 val (u, v) = parseTexCoordString(texcrdString)
                 objMesh._texcrds.add(Vector2(u, v))
                 continue
             }
+
             str.startsWith(tokens_[ObjTokens.FACE]!!) -> {
                 val triangleString = str.substring(tokens_[ObjTokens.FACE]!!.length)
                 val triangle = parseTriangleString(triangleString)

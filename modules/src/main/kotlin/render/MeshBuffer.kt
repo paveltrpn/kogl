@@ -203,7 +203,7 @@ class InterleavedMeshBuffer(mesh: InterleavedMesh) : MeshBuffer() {
         glBindVertexArray(_vao)
 
         glNamedBufferStorage(
-            _buffers[VertexBuffersEnum.VERTICES.ordinal],
+            _buffers[VertexBuffersEnum.INTERLEAVED.ordinal],
             _mesh.mesh.size.toLong() * 4,
             GL_DYNAMIC_STORAGE_BIT
         );
@@ -212,15 +212,29 @@ class InterleavedMeshBuffer(mesh: InterleavedMesh) : MeshBuffer() {
             val buffer: FloatBuffer = stack.callocFloat(_mesh.mesh.size)
             buffer.put(_mesh.mesh)
             buffer.flip()
-            glNamedBufferSubData(_buffers[VertexBuffersEnum.VERTICES.ordinal], 0, buffer)
+            glNamedBufferSubData(_buffers[VertexBuffersEnum.INTERLEAVED.ordinal], 0, buffer)
         }
 
-        // Link VBO to VAO attribute 0 (position)
-        glVertexArrayVertexBuffer(_vao, 0, _buffers[VertexBuffersEnum.VERTICES.ordinal], 0, Float.SIZE_BYTES * 3);
+        glVertexArrayVertexBuffer(_vao, 0, _buffers[VertexBuffersEnum.INTERLEAVED.ordinal], 0, Float.SIZE_BYTES * 8);
+
+        // Configure Position Attribute (Location 0)
         glEnableVertexArrayAttrib(_vao, 0);
         glVertexArrayAttribFormat(_vao, 0, 3, GL_FLOAT, false, 0);
+        // Connect attrib 0 to binding index 0
         glVertexArrayAttribBinding(_vao, 0, 0);
 
+        // Configure Normal Attribute (Location 1)
+        glEnableVertexArrayAttrib(_vao, 1);
+        glVertexArrayAttribFormat(_vao, 1, 3, GL_FLOAT, false, 3 * Float.SIZE_BYTES);
+        // Connect attrib 1 to binding index 0
+        glVertexArrayAttribBinding(_vao, 1, 0);
+
+        // Configure UV Attribute (Location 2)
+        glEnableVertexArrayAttrib(_vao, 2);
+        glVertexArrayAttribFormat(_vao, 2, 2, GL_FLOAT, false, 6 * Float.SIZE_BYTES);
+        // Connect attrib 2 to binding index 0
+        glVertexArrayAttribBinding(_vao, 2, 0);
+        
         glBindVertexArray(0)
     }
 

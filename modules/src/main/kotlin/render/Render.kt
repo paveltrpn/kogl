@@ -89,8 +89,11 @@ class Render : EventObserver {
 
         // =================================================
 
-        val testObj = readWavefrontObjFile("/mnt/main/code/kogl/apps/kogl/assets/bodystorage/frame.obj")
-        val frameMesh = SeparatedArraysMesh(testObj as OBJMesh)
+        val frameObj = readWavefrontObjFile("/mnt/main/code/kogl/apps/kogl/assets/bodystorage/frame.obj")
+        val frameMesh = InterleavedMesh(frameObj as OBJMesh)
+
+        val pyramidcutObj = readWavefrontObjFile("/mnt/main/code/kogl/apps/kogl/assets/bodystorage/pyramidcut.obj")
+        val pyramidcutMesh = SeparatedArraysMesh(pyramidcutObj as OBJMesh)
 
         // =================================================
 
@@ -104,8 +107,7 @@ class Render : EventObserver {
         val colorStateGroup = StateGroup()
         colorStateGroup.setProgram(colorProgram)
 
-
-        val cubeStatic = StaticDrawable(boxMesh)
+        val cubeStatic = StaticDrawable(pyramidcutMesh)
 
         val cubeSpin = SpinableDrawable(frameMesh)
         cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f)
@@ -115,7 +117,7 @@ class Render : EventObserver {
         offsetOne.transform = algebra.offset(2.0f, 0.0f, 0.0f);
 
         val scale = Transform()
-        scale.transform = algebra.scale(1.0f, 2.0f, 1.0f)
+        scale.transform = algebra.scale(1.5f, 2.0f, 2.5f)
 
         val offsetTwo = Transform()
         offsetTwo.transform = algebra.offset(-2.0f, 0.0f, 0.0f);

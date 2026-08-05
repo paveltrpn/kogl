@@ -11,7 +11,8 @@ enum class VertexBuffersEnum {
     INDICES,
     COLORS,
     TEXCRDS,
-    NORMALS
+    NORMALS,
+    INTERLEAVED
 }
 
 class VertexBufferOLD {

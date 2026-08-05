@@ -23,6 +23,23 @@ abstract class Mesh(name: String) {
         get(): String {
             return _name
         }
+
+    abstract fun transform(tr: Matrix4): Unit
+
+    protected fun transformVertices(vertices: FloatArray, tr: Matrix4): Unit {
+        var i: Int = 0
+        while (i < vertices.size) {
+            val vertex = Vector3(vertices[i + 0], vertices[i + 1], vertices[i + 2])
+
+            val transformed = tr.vecMultiply(vertex)
+
+            vertices[i + 0] = transformed.x
+            vertices[i + 1] = transformed.y
+            vertices[i + 2] = transformed.z
+
+            i += 3
+        }
+    }
 }
 
 // ============================================================================
@@ -95,19 +112,8 @@ class OBJMesh(
         return Vector3(_vertices[i], _vertices[i + 1], _vertices[i + 2])
     }
 
-    private fun transform(tr: Matrix4): Unit {
-        var i: Int = 0
-        while (i < _vertices.size) {
-            val vertex = Vector3(_vertices[i + 0], _vertices[i + 1], _vertices[i + 2])
-
-            val transformed = tr.vecMultiply(vertex)
-
-            _vertices[i + 0] = transformed.x
-            _vertices[i + 1] = transformed.y
-            _vertices[i + 2] = transformed.z
-
-            i += 3
-        }
+    override fun transform(tr: Matrix4): Unit {
+        transformVertices(_vertices, tr)
     }
 }
 
@@ -197,6 +203,10 @@ class SeparatedArraysMesh : Mesh {
         get() {
             return _txcoords
         }
+
+    override fun transform(tr: Matrix4): Unit {
+        transformVertices(_vertices, tr)
+    }
 }
 
 // ============================================================================
@@ -251,6 +261,10 @@ class IndexedMesh : Mesh {
         get() {
             return _indices
         }
+
+    override fun transform(tr: Matrix4): Unit {
+        transformVertices(_vertices, tr)
+    }
 }
 
 // ============================================================================
@@ -324,6 +338,10 @@ class InterleavedMesh : Mesh {
         get() {
             return _mesh
         }
+
+    override fun transform(tr: Matrix4): Unit {
+        // TODO
+    }
 }
 
 

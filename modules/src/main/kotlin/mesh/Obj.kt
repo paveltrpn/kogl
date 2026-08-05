@@ -5,7 +5,7 @@ import algebra.Vector3
 import java.io.File
 import java.io.FileNotFoundException
 
-enum class ObjTokens {
+private enum class ObjFormatToken {
     GEOMETRIC_VERTICES,
     TEXTURE_VERTICES,
     VERTEX_NORMALS,
@@ -19,7 +19,7 @@ enum class ObjTokens {
     FACE,
     CURVE,
     CURVE_2D,
-    SOURFACE,
+    SURFACE,
     PARAMETER_VALUES,
     OUTER_TRIMMING_LOOP,
     INNER_TRIMMING_LOOP,
@@ -44,46 +44,46 @@ enum class ObjTokens {
     COMMENT,
 }
 
-val tokens_: Map<ObjTokens, String> = mapOf(
-    ObjTokens.GEOMETRIC_VERTICES to "v ",
-    ObjTokens.TEXTURE_VERTICES to "vt ",
-    ObjTokens.VERTEX_NORMALS to "vn ",
-    ObjTokens.PARAMETER_SPACE_VERTICES to "vp ",
-    ObjTokens.CURVE_OR_SURFACE to "cstype ",
-    ObjTokens.DEGREE to "deg ",
-    ObjTokens.BASIS_MATRIX to "bmat ",
-    ObjTokens.STEP_SIZE to "step ",
-    ObjTokens.POINT to "p ",
-    ObjTokens.LINE to "l ",
-    ObjTokens.FACE to "f ",
-    ObjTokens.CURVE to "curv ",
-    ObjTokens.CURVE_2D to "curv2 ",
-    ObjTokens.SOURFACE to "surf ",
-    ObjTokens.PARAMETER_VALUES to "parm ",
-    ObjTokens.OUTER_TRIMMING_LOOP to "trim ",
-    ObjTokens.INNER_TRIMMING_LOOP to "hole ",
-    ObjTokens.SPECIAL_CURVE to "scrv ",
-    ObjTokens.SPECIAL_POINT to "sp ",
-    ObjTokens.END_STATEMENT to "end ",
-    ObjTokens.CONNECT to "con ",
-    ObjTokens.GROUP_NAME to "g ",
-    ObjTokens.SMOOTHING_GROUP to "s ",
-    ObjTokens.MERGING_GROUP to "mg ",
-    ObjTokens.OBJECT_NAME to "o ",
-    ObjTokens.BEVEL_INTERPOLATION to "bevel ",
-    ObjTokens.COLOR_INTERPOLATION to "c_interp ",
-    ObjTokens.DISSOLVE_INTERPOLATION to "d_interp ",
-    ObjTokens.LEVEL_OF_DETAIL to "lod ",
-    ObjTokens.MATERIAL_NAME to "usemtl ",
-    ObjTokens.MATERIAL_LIBRARY to "mtllib ",
-    ObjTokens.SHADOW_CASTING to "shadow_obj ",
-    ObjTokens.RAY_TRACING to "trace_obj ",
-    ObjTokens.CURVE_APPROXIMATION_TECHNIQUE to "ctech ",
-    ObjTokens.SURFACE_APPROXIMATION_TECHNIQUE to "stech ",
-    ObjTokens.COMMENT to "# "
+private val tokensMap: Map<ObjFormatToken, String> = mapOf(
+    ObjFormatToken.GEOMETRIC_VERTICES to "v ",
+    ObjFormatToken.TEXTURE_VERTICES to "vt ",
+    ObjFormatToken.VERTEX_NORMALS to "vn ",
+    ObjFormatToken.PARAMETER_SPACE_VERTICES to "vp ",
+    ObjFormatToken.CURVE_OR_SURFACE to "cstype ",
+    ObjFormatToken.DEGREE to "deg ",
+    ObjFormatToken.BASIS_MATRIX to "bmat ",
+    ObjFormatToken.STEP_SIZE to "step ",
+    ObjFormatToken.POINT to "p ",
+    ObjFormatToken.LINE to "l ",
+    ObjFormatToken.FACE to "f ",
+    ObjFormatToken.CURVE to "curv ",
+    ObjFormatToken.CURVE_2D to "curv2 ",
+    ObjFormatToken.SURFACE to "surf ",
+    ObjFormatToken.PARAMETER_VALUES to "parm ",
+    ObjFormatToken.OUTER_TRIMMING_LOOP to "trim ",
+    ObjFormatToken.INNER_TRIMMING_LOOP to "hole ",
+    ObjFormatToken.SPECIAL_CURVE to "scrv ",
+    ObjFormatToken.SPECIAL_POINT to "sp ",
+    ObjFormatToken.END_STATEMENT to "end ",
+    ObjFormatToken.CONNECT to "con ",
+    ObjFormatToken.GROUP_NAME to "g ",
+    ObjFormatToken.SMOOTHING_GROUP to "s ",
+    ObjFormatToken.MERGING_GROUP to "mg ",
+    ObjFormatToken.OBJECT_NAME to "o ",
+    ObjFormatToken.BEVEL_INTERPOLATION to "bevel ",
+    ObjFormatToken.COLOR_INTERPOLATION to "c_interp ",
+    ObjFormatToken.DISSOLVE_INTERPOLATION to "d_interp ",
+    ObjFormatToken.LEVEL_OF_DETAIL to "lod ",
+    ObjFormatToken.MATERIAL_NAME to "usemtl ",
+    ObjFormatToken.MATERIAL_LIBRARY to "mtllib ",
+    ObjFormatToken.SHADOW_CASTING to "shadow_obj ",
+    ObjFormatToken.RAY_TRACING to "trace_obj ",
+    ObjFormatToken.CURVE_APPROXIMATION_TECHNIQUE to "ctech ",
+    ObjFormatToken.SURFACE_APPROXIMATION_TECHNIQUE to "stech ",
+    ObjFormatToken.COMMENT to "# "
 )
 
-fun split(str: String, delim: Char): List<String> {
+private fun split(str: String, delim: Char): List<String> {
     val result = mutableListOf<String>()
     var left = 0
     for (i in str.indices) {
@@ -98,7 +98,7 @@ fun split(str: String, delim: Char): List<String> {
     return result
 }
 
-fun parseVertexString(str: String): Triple<Float, Float, Float> {
+private fun parseVertexString(str: String): Triple<Float, Float, Float> {
     val vertexValuesString = split(str, ' ')
     val x = vertexValuesString[0].toFloat()
     val y = vertexValuesString[1].toFloat()
@@ -106,7 +106,7 @@ fun parseVertexString(str: String): Triple<Float, Float, Float> {
     return Triple(x, y, z)
 }
 
-fun parseNormalString(str: String): Triple<Float, Float, Float> {
+private fun parseNormalString(str: String): Triple<Float, Float, Float> {
     val normalValuesString = split(str, ' ')
     val x = normalValuesString[0].toFloat()
     val y = normalValuesString[1].toFloat()
@@ -114,24 +114,24 @@ fun parseNormalString(str: String): Triple<Float, Float, Float> {
     return Triple(x, y, z)
 }
 
-fun parseTexCoordString(str: String): Pair<Float, Float> {
+private fun parseTexCoordString(str: String): Pair<Float, Float> {
     val texCoordValuesString = split(str, ' ')
     val u = texCoordValuesString[0].toFloat()
     val v = texCoordValuesString[1].toFloat()
     return Pair(u, v)
 }
 
-fun parseTriangleString(str: String): ObjTriangleIndices {
+private fun parseTriangleString(str: String): ObjTriangleIndices {
     val indicesString = split(str, ' ')
 
     val triangle = ObjTriangleIndices()
 
     var i = 0
     for (indexString in indicesString) {
-        val indicies = split(indexString, '/')
-        val v = indicies[0].toInt()
-        val t = indicies[1].toInt()
-        val n = indicies[2].toInt()
+        val indices = split(indexString, '/')
+        val v = indices[0].toInt()
+        val t = indices[1].toInt()
+        val n = indices[2].toInt()
 
         triangle.vertexIndex[i] = v - 1
         triangle.normalIndex[i] = n - 1
@@ -159,38 +159,38 @@ fun readWavefrontObjFile(filePath: String): SeparatedBuffersMesh {
         if (str.isEmpty()) continue
 
         when {
-            str.startsWith(tokens_[ObjTokens.COMMENT]!!) -> {
+            str.startsWith(tokensMap[ObjFormatToken.COMMENT]!!) -> {
                 continue
             }
 
-            str.startsWith(tokens_[ObjTokens.OBJECT_NAME]!!) -> {
-                objMesh._name = str.substring(tokens_[ObjTokens.OBJECT_NAME]!!.length).trim()
+            str.startsWith(tokensMap[ObjFormatToken.OBJECT_NAME]!!) -> {
+                objMesh._name = str.substring(tokensMap[ObjFormatToken.OBJECT_NAME]!!.length).trim()
                 continue
             }
 
-            str.startsWith(tokens_[ObjTokens.GEOMETRIC_VERTICES]!!) -> {
-                val vertexString = str.substring(tokens_[ObjTokens.GEOMETRIC_VERTICES]!!.length)
+            str.startsWith(tokensMap[ObjFormatToken.GEOMETRIC_VERTICES]!!) -> {
+                val vertexString = str.substring(tokensMap[ObjFormatToken.GEOMETRIC_VERTICES]!!.length)
                 val (x, y, z) = parseVertexString(vertexString)
                 objMesh._vertices.add(Vector3(x, y, z))
                 continue
             }
 
-            str.startsWith(tokens_[ObjTokens.VERTEX_NORMALS]!!) -> {
-                val normalString = str.substring(tokens_[ObjTokens.VERTEX_NORMALS]!!.length)
+            str.startsWith(tokensMap[ObjFormatToken.VERTEX_NORMALS]!!) -> {
+                val normalString = str.substring(tokensMap[ObjFormatToken.VERTEX_NORMALS]!!.length)
                 val (nx, ny, nz) = parseNormalString(normalString)
                 objMesh._normals.add(Vector3(nx, ny, nz))
                 continue
             }
 
-            str.startsWith(tokens_[ObjTokens.TEXTURE_VERTICES]!!) -> {
-                val texcrdString = str.substring(tokens_[ObjTokens.TEXTURE_VERTICES]!!.length)
+            str.startsWith(tokensMap[ObjFormatToken.TEXTURE_VERTICES]!!) -> {
+                val texcrdString = str.substring(tokensMap[ObjFormatToken.TEXTURE_VERTICES]!!.length)
                 val (u, v) = parseTexCoordString(texcrdString)
                 objMesh._texcrds.add(Vector2(u, v))
                 continue
             }
 
-            str.startsWith(tokens_[ObjTokens.FACE]!!) -> {
-                val triangleString = str.substring(tokens_[ObjTokens.FACE]!!.length)
+            str.startsWith(tokensMap[ObjFormatToken.FACE]!!) -> {
+                val triangleString = str.substring(tokensMap[ObjFormatToken.FACE]!!.length)
                 val triangle = parseTriangleString(triangleString)
                 objMesh._triangles.add(triangle)
                 continue

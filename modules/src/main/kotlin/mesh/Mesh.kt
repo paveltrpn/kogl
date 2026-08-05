@@ -23,7 +23,6 @@ class ObjMesh : Mesh {
     var _vertclr: MutableList<Vector3> = mutableListOf()
     var _triangles: MutableList<ObjTriangleIndices> = mutableListOf()
     var _name: String = ""
-    var _bounding: AABoundingBox = AABoundingBox()
 
     fun verticesData(): List<Vector3> = _vertices
     fun indicesData(): List<ObjTriangleIndices> = _triangles
@@ -57,12 +56,6 @@ class ObjMesh : Mesh {
         _vertclr = vertexColors.toMutableList()
     }
 
-    fun bounding(): AABoundingBox = _bounding
-
-    fun setBounding(bounding: AABoundingBox) {
-        _bounding = bounding
-    }
-
     fun name(): String = _name
 
     fun setName(name: String) {
@@ -88,7 +81,6 @@ class InterleavedMesh : Mesh {
 
     constructor(other: ObjMesh) {
         _name = other._name
-        _bounding = other._bounding
         for (indecies in other._triangles) {
             val v1 = other._vertices[indecies.vertexIndex[0]]
             val v2 = other._vertices[indecies.vertexIndex[1]]
@@ -133,13 +125,11 @@ class SeparatedBuffersMesh : Mesh {
     var _normals: MutableList<Vector3> = mutableListOf()
     var _texcrds: MutableList<Vector2> = mutableListOf()
     var _name: String = ""
-    var _bounding: AABoundingBox = AABoundingBox()
 
     constructor() {}
 
     constructor(other: ObjMesh) {
         _name = other._name
-        _bounding = other._bounding
         for (indecies in other._triangles) {
             val v1 = other._vertices[indecies.vertexIndex[0]]
             val v2 = other._vertices[indecies.vertexIndex[1]]
@@ -165,12 +155,6 @@ class SeparatedBuffersMesh : Mesh {
             _texcrds.add(tx2)
             _texcrds.add(tx3)
         }
-    }
-
-    fun bounding(): AABoundingBox = _bounding
-
-    fun setBounding(bounding: AABoundingBox) {
-        _bounding = bounding
     }
 
     fun name(): String = _name

@@ -127,7 +127,13 @@ class Program {
 
     fun setVectorUniform(id: String, value: Vector3) {
         val location = getUniformLocation(id) ?: return
-        glUniform3fv(location, floatArrayOf(value.x, value.y, value.z))
+        MemoryStack.stackPush().use { stack ->
+            val floatBuffer = stack.mallocFloat(3)
+            floatBuffer.put(value.array)
+            floatBuffer.flip()
+            glUniform3fv(location, floatBuffer)
+        }
+
     }
 
 //    fun setVectorUniform(id: String, value: Vector4) {

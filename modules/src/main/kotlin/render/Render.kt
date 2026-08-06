@@ -79,8 +79,9 @@ class Render : EventObserver {
 
         colorProgram.addUniform("view_matrix")
         colorProgram.addUniform("drawable_matrix")
+        colorProgram.addUniform("color")
 
-        // colorProgram.addUniform("color")
+        colorProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
 
         val colorStateGroup = StateGroup()
         colorStateGroup.setProgram(colorProgram)
@@ -292,15 +293,16 @@ class Render : EventObserver {
 
         colorProgram.addUniform("view_matrix")
         colorProgram.addUniform("drawable_matrix")
+        colorProgram.addUniform("color")
 
-        // colorProgram.addUniform("color")
+        colorProgram.setVectorUniform("color", Vector3(0.0f, 1.0f, 0.0f))
 
         val colorStateGroup = StateGroup()
         colorStateGroup.setProgram(colorProgram)
 
         // =================================================
 
-        val item = StaticDrawable(boxMesh)
+        val item = StaticDrawable(frameMesh)
 
         val scale = Transform()
         scale.matrix = algebra.scale(1.0f, 1.0f, 1.0f)

@@ -17,6 +17,11 @@ class Vector3 {
         data[2] = z
     }
 
+    val array: FloatArray
+        get(): FloatArray {
+            return data
+        }
+
     fun set(x: Float, y: Float, z: Float) {
         data[0] = x
         data[1] = y

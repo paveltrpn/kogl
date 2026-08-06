@@ -90,10 +90,10 @@ class Render : EventObserver {
         // =================================================
 
         val frameObj = readWavefrontObjFile("/mnt/main/code/kogl/apps/kogl/assets/bodystorage/frame.obj")
-        val frameMesh = InterleavedMesh(frameObj as OBJMesh)
+        val frameMesh = InterleavedMesh(frameObj)
 
         val pyramidcutObj = readWavefrontObjFile("/mnt/main/code/kogl/apps/kogl/assets/bodystorage/pyramidcut.obj")
-        val pyramidcutMesh = SeparatedArraysMesh(pyramidcutObj as OBJMesh)
+        val pyramidcutMesh = SeparatedArraysMesh(pyramidcutObj)
 
         // =================================================
 

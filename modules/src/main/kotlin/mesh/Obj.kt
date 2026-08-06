@@ -142,7 +142,7 @@ private fun parseTriangleString(str: String): ObjTriangleIndices {
     return triangle
 }
 
-fun readWavefrontObjFile(filePath: String): Mesh {
+fun readWavefrontObjFile(filePath: String): OBJMesh {
     val file = File(filePath)
 
     if (!file.exists()) {

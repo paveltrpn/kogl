@@ -19,8 +19,8 @@ class Render : EventObserver {
         val sparseObjectsGraph = sparseObjectsGraph()
         val testBoxGraph = testCubesGraph()
 
-        // _scene.addStateGroup(sparseObjectsGraph)
-        _scene.addStateGroup(testBoxGraph)
+        _scene.addStateGroup(sparseObjectsGraph)
+        // _scene.addStateGroup(testBoxGraph)
     }
 
     var run: Boolean

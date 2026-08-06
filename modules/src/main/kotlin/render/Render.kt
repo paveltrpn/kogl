@@ -28,8 +28,7 @@ class Render : EventObserver {
         }
 
     fun preLoop(): Unit {
-        glViewport(0, 0, 1200, 800)
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
+        
     }
 
     fun frame(): Unit {

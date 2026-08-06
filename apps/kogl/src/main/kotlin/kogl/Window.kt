@@ -10,26 +10,36 @@ import config.*
 import render.*
 import event.*
 import mesh.*
+import org.lwjgl.opengl.GL11.glClearColor
+import org.lwjgl.opengl.GL11.glViewport
 
 class Window {
     private var allocator: GLFWAllocator? = null
 
     private var _window: Long = 0
 
-    private val _width: Int = 1200
-    private val _height: Int = 800
+    private val _width: Int
+    private val _height: Int
 
     private val _render: Render
 
     init {
         // Place to init all singletons.
-        Config.init("")
+        Config.init()
         GlobalEventEmitter.init()
         BodyStorage.init("")
 
         println("Base path is ${Config.instance().basePath}")
+
+        _width = Config.instance().konfig.window_width
+        _height = Config.instance().konfig.window_height
+
         //
         initGLFW()
+
+        //
+        glViewport(0, 0, _width, _height)
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
 
         //
         _render = Render()
@@ -77,7 +87,7 @@ class Window {
         GLFWErrorCallback.createPrint().set()
 
         if (!glfwInit()) {
-            println("Unable to initialize glfw.")
+            throw RuntimeException("Unable to initialize GLFW.")
         }
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
@@ -85,7 +95,7 @@ class Window {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        _window = glfwCreateWindow(_width, _height, "kogl", NULL, NULL)
+        _window = glfwCreateWindow(_width, _height, Config.instance().konfig.application_name, NULL, NULL)
 
         if (_window == NULL) {
             throw RuntimeException("Failed to create the GLFW window")
@@ -100,11 +110,14 @@ class Window {
         //glfwSetWindowAspectRatio(window, 1, 1);
         val monitor = glfwGetPrimaryMonitor()
 
-        val vidmode: GLFWVidMode? = glfwGetVideoMode(monitor)
+        val vidmode: GLFWVidMode = glfwGetVideoMode(monitor) ?: throw RuntimeException("VideoMode is undefined!")
+
+        // val posx = Config.instance().konfig.window_pos_x
+        // val posy = Config.instance().konfig.window_pos_y
 
         glfwSetWindowPos(
             _window,
-            (vidmode!!.width() - _width) / 2,
+            (vidmode.width() - _width) / 2,
             (vidmode.height() - _height) / 2
         )
 

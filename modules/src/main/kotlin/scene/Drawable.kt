@@ -11,6 +11,7 @@ import mesh.*
 abstract class Drawable(mesh: Mesh) : Node {
     private var _buffer: MeshBuffer? = null
 
+    protected var _color = Vector3(1.0f, 1.0f, 1.0f)
     protected var _combined = Matrix4().idtt()
 
     init {
@@ -41,6 +42,14 @@ abstract class Drawable(mesh: Mesh) : Node {
         }
         set(value: Matrix4) {
             _combined = value
+        }
+
+    var color: Vector3
+        get(): Vector3 {
+            return _color
+        }
+        set(value: Vector3) {
+            _color = value
         }
 }
 

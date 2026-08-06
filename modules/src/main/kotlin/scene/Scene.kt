@@ -79,6 +79,7 @@ class Scene {
 
                 // ...update shader uniform...
                 _currentProgram?.setMatrixUniform("drawable_matrix", false, next.combined)
+                _currentProgram?.setVectorUniform("color", next.color)
 
                 // ...applying and draw call.
                 next.traverse()

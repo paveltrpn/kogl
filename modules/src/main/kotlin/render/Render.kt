@@ -102,6 +102,7 @@ class Render : EventObserver {
 
         for (i in 0..64) {
             val item = SpinableDrawable(diamondMesh)
+            item.color = randomVector3(0.1f, 0.9f)
             item.axis = randomVector3(-0.6f, 0.6f).normalize()
             item.anglSpeed = randomFloat(-1.0f, 1.0f)
 
@@ -121,6 +122,7 @@ class Render : EventObserver {
 
         for (i in 0..16) {
             val item = SpinableDrawable(frameMesh)
+            item.color = randomVector3(0.1f, 0.9f)
             item.axis = randomVector3(-0.6f, 0.6f).normalize()
             item.anglSpeed = randomFloat(0.4f, 1.2f)
 
@@ -140,6 +142,7 @@ class Render : EventObserver {
 
         for (i in 0..16) {
             val item = SpinableDrawable(arch01dMesh)
+            item.color = randomVector3(0.1f, 0.9f)
             item.axis = randomVector3(-0.6f, 0.6f).normalize()
             item.anglSpeed = randomFloat(0.4f, 1.2f)
 
@@ -281,6 +284,7 @@ class Render : EventObserver {
         )
 
         val boxMesh = IndexedMesh("Box", vertices, vnormals, texCoords, indices)
+        boxMesh.transform(algebra.rotation(0.0f, 0.0f, 45.0f))
 
         // =================================================
 
@@ -299,6 +303,7 @@ class Render : EventObserver {
         // =================================================
 
         val item = StaticDrawable(boxMesh)
+        item.color = Vector3(0.0f, 0.0f, 1.0f)
 
         val scale = Transform()
         scale.matrix = algebra.scale(1.0f, 1.0f, 1.0f)

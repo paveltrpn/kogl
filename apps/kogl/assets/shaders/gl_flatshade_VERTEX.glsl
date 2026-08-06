@@ -5,8 +5,7 @@ layout (location = 1) in vec3 nrm;
 
 uniform mat4 view_matrix;
 uniform mat4 drawable_matrix;
-
-// uniform vec3 color;
+uniform vec3 color;
 
 // uniform vec3 lightpos;
 // uniform vec3 lightcolor;
@@ -18,7 +17,6 @@ void main()
 {
     vec3 lightpos = vec3(1.0, 1.0, 0.0);
     vec3 lightcolor = vec3(1.0, 1.0, 1.0);
-    vec3 color = vec3(1.0, 0.0, 0.0);
     vec3 ambientLight = vec3(0.3, 0.3, 0.3);
 
     vec3 directionalVector = normalize(lightpos);

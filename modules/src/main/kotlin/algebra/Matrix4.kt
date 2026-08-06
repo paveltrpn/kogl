@@ -15,6 +15,11 @@ class Matrix4 {
         _data = other._data
     }
 
+    val data: FloatArray
+        get(): FloatArray {
+            return _data
+        }
+
     // Rows
     var row0: Vector4
         get(): Vector4 {
@@ -342,19 +347,6 @@ class Matrix4 {
 
     fun rotate(axis: Vector3, angle: Double): Matrix4 {
         return fromAxisAngle(axis, angle.toFloat())
-    }
-
-    fun toFloatBuffer(): FloatBuffer {
-        val byteBuffer = ByteBuffer.allocateDirect(_data.size * 4) // 4 bytes per float
-        byteBuffer.order(ByteOrder.nativeOrder())
-        val floatBuffer = byteBuffer.asFloatBuffer()
-
-        floatBuffer.put(_data)
-
-        // Reset position to start
-        floatBuffer.position(0)
-
-        return floatBuffer
     }
 }
 

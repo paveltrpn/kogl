@@ -129,7 +129,7 @@ class Program {
         val location = getUniformLocation(id) ?: return
         MemoryStack.stackPush().use { stack ->
             val floatBuffer = stack.mallocFloat(3)
-            floatBuffer.put(value.array)
+            floatBuffer.put(value.data)
             floatBuffer.flip()
             glUniform3fv(location, floatBuffer)
         }
@@ -158,7 +158,7 @@ class Program {
         val location = getUniformLocation(id) ?: return
         MemoryStack.stackPush().use { stack ->
             val floatBuffer = stack.mallocFloat(16)
-            floatBuffer.put(value.toFloatBuffer())
+            floatBuffer.put(value.data)
             floatBuffer.flip()
             glUniformMatrix4fv(location, false, floatBuffer)
         }

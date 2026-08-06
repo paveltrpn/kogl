@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.2.0"
+    kotlin("plugin.serialization") version "2.2.0"
 }
 
 repositories {
@@ -14,7 +15,7 @@ val lwjglNatives = "natives-linux"
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    testImplementation(kotlin("test"))
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
@@ -26,7 +27,7 @@ dependencies {
 
     implementation("org.lwjgl", "lwjgl-opengl")
     implementation("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
-    
+
     // implementation("org.lwjgl", "lwjgl-unsafe")
 }
 

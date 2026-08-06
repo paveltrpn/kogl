@@ -20,7 +20,7 @@ class Render : EventObserver {
         val testBoxGraph = testCubesGraph()
 
         _scene.addStateGroup(sparseObjectsGraph)
-        // _scene.addStateGroup(testBoxGraph)
+        _scene.addStateGroup(testBoxGraph)
     }
 
     var run: Boolean
@@ -187,7 +187,103 @@ class Render : EventObserver {
             0, 7, 4, 0, 3, 7
         )
 
-        val boxMesh = IndexedMesh("Box", vertices, floatArrayOf(), floatArrayOf(), indices)
+        val vnormals = floatArrayOf(
+            // Normal for each vertex according to indices
+            // Front face triangles (4,6,5, 4,7,6) - normal (0, 0, 1)
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            // Back face triangles (0,2,1, 0,3,2) - normal (0, 0, -1)
+            0.0f, 0.0f, -1.0f,
+            0.0f, 0.0f, -1.0f,
+            0.0f, 0.0f, -1.0f,
+            0.0f, 0.0f, -1.0f,
+            0.0f, 0.0f, -1.0f,
+            0.0f, 0.0f, -1.0f,
+            // Top face triangles (3,6,7, 3,2,6) - normal (0, 1, 0)
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            // Bottom face triangles (0,5,4, 0,1,5) - normal (0, -1, 0)
+            0.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f,
+            // Right face triangles (1,6,5, 1,2,6) - normal (1, 0, 0)
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            // Left face triangles (0,7,4, 0,3,7) - normal (-1, 0, 0)
+            -1.0f, 0.0f, 0.0f,
+            -1.0f, 0.0f, 0.0f,
+            -1.0f, 0.0f, 0.0f,
+            -1.0f, 0.0f, 0.0f,
+            -1.0f, 0.0f, 0.0f,
+            -1.0f, 0.0f, 0.0f
+        )
+
+        val texCoords = floatArrayOf(
+            // UV for each vertex according to indices
+            // Front face (4,6,5, 4,7,6)
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            // Back face (0,2,1, 0,3,2)
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            // Top face (3,6,7, 3,2,6)
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            // Bottom face (0,5,4, 0,1,5)
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            // Right face (1,6,5, 1,2,6)
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            // Left face (0,7,4, 0,3,7)
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f
+        )
+
+        val boxMesh = IndexedMesh("Box", vertices, vnormals, texCoords, indices)
+
+        val pathPrefix = Config.instance().basePath
+        val frameObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/frame.obj")
+        val frameMesh = InterleavedMesh(frameObj)
 
         // =================================================
 

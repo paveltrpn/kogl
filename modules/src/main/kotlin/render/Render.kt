@@ -16,9 +16,11 @@ class Render : EventObserver {
     init {
         _run = true
 
-        val testCubes = testCubesGraph()
+        val sparseObjectsGraph = sparseObjectsGraph()
+        val testBoxGraph = testCubesGraph()
 
-        _scene.addStateGroup(testCubes)
+        // _scene.addStateGroup(sparseObjectsGraph)
+        _scene.addStateGroup(testBoxGraph)
     }
 
     var run: Boolean
@@ -58,38 +60,7 @@ class Render : EventObserver {
         }
     }
 
-    private fun testCubesGraph(): StateGroup {
-        val vertices = floatArrayOf(
-            // 8 cube vertices
-            -0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, 0.5f, -0.5f,
-            -0.5f, 0.5f, -0.5f,
-            -0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, 0.5f,
-            0.5f, 0.5f, 0.5f,
-            -0.5f, 0.5f, 0.5f
-        )
-
-        val indices = intArrayOf(
-            // Front face (z = 0.5) - vertices 4,5,6,7
-            4, 6, 5, 4, 7, 6,
-            // Back face (z = -0.5) - vertices 0,1,2,3
-            0, 2, 1, 0, 3, 2,
-            // Top face (y = 0.5) - vertices 3,2,6,7
-            3, 6, 7, 3, 2, 6,
-            // Bottom face (y = -0.5) - vertices 0,1,5,4
-            0, 5, 4, 0, 1, 5,
-            // Right face (x = 0.5) - vertices 1,2,6,5
-            1, 6, 5, 1, 2, 6,
-            // Left face (x = -0.5) - vertices 0,3,7,4
-            0, 7, 4, 0, 3, 7
-        )
-
-        val boxMesh = IndexedMesh("Box", vertices, floatArrayOf(), floatArrayOf(), indices)
-
-        // =================================================
-
+    private fun sparseObjectsGraph(): StateGroup {
         val pathPrefix = Config.instance().basePath
 
         val frameObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/frame.obj")
@@ -184,6 +155,66 @@ class Render : EventObserver {
             offset.addChild(scale)
             colorStateGroup.addChild(offset)
         }
+
+        return colorStateGroup
+    }
+
+    private fun testCubesGraph(): StateGroup {
+        val vertices = floatArrayOf(
+            // 8 cube vertices
+            -0.5f, -0.5f, -0.5f,
+            0.5f, -0.5f, -0.5f,
+            0.5f, 0.5f, -0.5f,
+            -0.5f, 0.5f, -0.5f,
+            -0.5f, -0.5f, 0.5f,
+            0.5f, -0.5f, 0.5f,
+            0.5f, 0.5f, 0.5f,
+            -0.5f, 0.5f, 0.5f
+        )
+
+        val indices = intArrayOf(
+            // Front face (z = 0.5) - vertices 4,5,6,7
+            4, 6, 5, 4, 7, 6,
+            // Back face (z = -0.5) - vertices 0,1,2,3
+            0, 2, 1, 0, 3, 2,
+            // Top face (y = 0.5) - vertices 3,2,6,7
+            3, 6, 7, 3, 2, 6,
+            // Bottom face (y = -0.5) - vertices 0,1,5,4
+            0, 5, 4, 0, 1, 5,
+            // Right face (x = 0.5) - vertices 1,2,6,5
+            1, 6, 5, 1, 2, 6,
+            // Left face (x = -0.5) - vertices 0,3,7,4
+            0, 7, 4, 0, 3, 7
+        )
+
+        val boxMesh = IndexedMesh("Box", vertices, floatArrayOf(), floatArrayOf(), indices)
+
+        // =================================================
+
+        val colorShaderSource = ShaderSource("flatshade")
+        val colorProgram = Program(colorShaderSource)
+
+        colorProgram.addUniform("view_matrix")
+        colorProgram.addUniform("drawable_matrix")
+
+        // colorProgram.addUniform("color")
+
+        val colorStateGroup = StateGroup()
+        colorStateGroup.setProgram(colorProgram)
+
+        // =================================================
+
+        val item = StaticDrawable(boxMesh)
+
+        val scale = Transform()
+        scale.matrix = algebra.scale(1.0f, 1.0f, 1.0f)
+
+        val offset = Transform()
+        offset.matrix = algebra.offset(0.0f, 0.0f, 0.0f);
+
+        scale.addChild(item)
+        offset.addChild(scale)
+        colorStateGroup.addChild(offset)
 
         return colorStateGroup
     }

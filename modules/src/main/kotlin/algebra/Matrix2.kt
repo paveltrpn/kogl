@@ -1,55 +1,60 @@
 package algebra
 
 class Matrix2 {
-    private var data = FloatArray(4) { it -> 0.0f }
+    private var _data = FloatArray(4) { it -> 0.0f }
 
     constructor() {
 
     }
-    
+
     constructor(other: Matrix2) {
-        data = other.data
+        _data = other._data
     }
 
     constructor(a00: Float = 0.0f, a01: Float = 0.0f, a10: Float = 0.0f, a11: Float = 0.0f) {
-        data[0] = a00
-        data[1] = a01
-        data[2] = a10
-        data[3] = a11
+        _data[0] = a00
+        _data[1] = a01
+        _data[2] = a10
+        _data[3] = a11
     }
 
+    val data: FloatArray
+        get(): FloatArray {
+            return _data
+        }
+    
     var row0: Vector2
         get(): Vector2 {
-            return Vector2(data[0], data[1])
+            return Vector2(_data[0], _data[1])
         }
         set(value) {
-            data[0] = value.x
-            data[1] = value.y
+            _data[0] = value.x
+            _data[1] = value.y
         }
 
     var row1: Vector2
         get(): Vector2 {
-            return Vector2(data[2], data[3])
+            return Vector2(_data[2], _data[3])
         }
         set(value) {
-            data[2] = value.x
-            data[3] = value.y
+            _data[2] = value.x
+            _data[3] = value.y
         }
 
     var column0: Vector2
         get(): Vector2 {
-            return Vector2(data[0], data[2])
+            return Vector2(_data[0], _data[2])
         }
         set(value) {
-            data[0] = value.x
-            data[2] = value.y
+            _data[0] = value.x
+            _data[2] = value.y
         }
 
     var column1: Vector2
-        get() = Vector2(data[1], data[3])
+        get() = Vector2(_data[1], _data[3])
         set(value) {
-            data[1] = value.x
-            data[3] = value.y
+            _data[1] = value.x
+            _data[3] = value.y
         }
 
     fun multiply(other: Matrix2): Matrix2 {
@@ -57,7 +62,7 @@ class Matrix2 {
         for (i in 0..1) {
             for (j in 0..1) {
                 for (k in 0..1) {
-                    result.data[i * 2 + j] += data[i * 2 + k] * other.data[k * 2 + j]
+                    result._data[i * 2 + j] += _data[i * 2 + k] * other._data[k * 2 + j]
                 }
             }
         }
@@ -66,8 +71,8 @@ class Matrix2 {
 
     fun vecMultiply(other: Vector2): Vector2 {
         return Vector2(
-            data[0] * other.x + data[1] * other.y,
-            data[2] * other.x + data[3] * other.y
+            _data[0] * other.x + _data[1] * other.y,
+            _data[2] * other.x + _data[3] * other.y
         )
     }
 }

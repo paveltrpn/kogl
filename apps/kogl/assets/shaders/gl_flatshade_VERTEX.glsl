@@ -7,9 +7,6 @@ uniform mat4 view_matrix;
 uniform mat4 drawable_matrix;
 uniform vec3 color;
 
-// uniform vec3 lightpos;
-// uniform vec3 lightcolor;
-
 out vec3 newColor;
 out vec3 vLighting;
 

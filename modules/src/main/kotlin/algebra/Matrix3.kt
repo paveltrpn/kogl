@@ -1,76 +1,81 @@
 package algebra
 
 class Matrix3 {
-    private var data = FloatArray(9) { it -> 0.0f }
+    private var _data = FloatArray(9) { it -> 0.0f }
 
     constructor() {
 
     }
-    
+
     constructor(other: Matrix3) {
-        data = other.data
+        _data = other._data
     }
 
+    val data: FloatArray
+        get(): FloatArray {
+            return _data
+        }
+    
     // Rows
     var row0: Vector3
         get(): Vector3 {
-            return Vector3(data[0], data[1], data[2])
+            return Vector3(_data[0], _data[1], _data[2])
         }
         set(value) {
-            data[0] = value.x
-            data[1] = value.y
-            data[2] = value.z
+            _data[0] = value.x
+            _data[1] = value.y
+            _data[2] = value.z
         }
 
     var row1: Vector3
         get(): Vector3 {
-            return Vector3(data[3], data[4], data[5])
+            return Vector3(_data[3], _data[4], _data[5])
         }
         set(value) {
-            data[3] = value.x
-            data[4] = value.y
-            data[5] = value.z
+            _data[3] = value.x
+            _data[4] = value.y
+            _data[5] = value.z
         }
 
     var row2: Vector3
         get(): Vector3 {
-            return Vector3(data[6], data[7], data[8])
+            return Vector3(_data[6], _data[7], _data[8])
         }
         set(value) {
-            data[6] = value.x
-            data[7] = value.y
-            data[8] = value.z
+            _data[6] = value.x
+            _data[7] = value.y
+            _data[8] = value.z
         }
 
     // Columnes
     var column0: Vector3
         get(): Vector3 {
-            return Vector3(data[0], data[3], data[6])
+            return Vector3(_data[0], _data[3], _data[6])
         }
         set(value) {
-            data[0] = value.x
-            data[3] = value.y
-            data[6] = value.z
+            _data[0] = value.x
+            _data[3] = value.y
+            _data[6] = value.z
         }
 
     var column1: Vector3
         get(): Vector3 {
-            return Vector3(data[1], data[4], data[7])
+            return Vector3(_data[1], _data[4], _data[7])
         }
         set(value) {
-            data[1] = value.x
-            data[4] = value.y
-            data[7] = value.z
+            _data[1] = value.x
+            _data[4] = value.y
+            _data[7] = value.z
         }
 
     var column2: Vector3
         get(): Vector3 {
-            return Vector3(data[2], data[5], data[8])
+            return Vector3(_data[2], _data[5], _data[8])
         }
         set(value) {
-            data[2] = value.x
-            data[5] = value.y
-            data[8] = value.z
+            _data[2] = value.x
+            _data[5] = value.y
+            _data[8] = value.z
         }
 
     fun multiply(other: Matrix3): Matrix3 {
@@ -78,7 +83,7 @@ class Matrix3 {
         for (i in 0..2) {
             for (j in 0..2) {
                 for (k in 0..2) {
-                    result.data[i * 3 + j] += data[i * 3 + k] * other.data[k * 3 + j]
+                    result._data[i * 3 + j] += _data[i * 3 + k] * other._data[k * 3 + j]
                 }
             }
         }
@@ -87,9 +92,9 @@ class Matrix3 {
 
     fun vecMultiply(other: Vector3): Vector3 {
         return Vector3(
-            data[0] * other.x + data[1] * other.y + data[2] * other.z,
-            data[3] * other.x + data[4] * other.y + data[5] * other.z,
-            data[6] * other.x + data[7] * other.y + data[8] * other.z
+            _data[0] * other.x + _data[1] * other.y + _data[2] * other.z,
+            _data[3] * other.x + _data[4] * other.y + _data[5] * other.z,
+            _data[6] * other.x + _data[7] * other.y + _data[8] * other.z
         )
     }
 }

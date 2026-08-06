@@ -284,7 +284,7 @@ class Render : EventObserver {
         )
 
         val boxMesh = IndexedMesh("Box", vertices, vnormals, texCoords, indices)
-        boxMesh.transform(algebra.rotation(0.0f, 0.0f, 45.0f))
+        boxMesh.transform(algebra.rotation(0.0f, 45.0f, 45.0f))
 
         // =================================================
 

@@ -7,6 +7,7 @@ import config.Config
 import event.*
 import scene.*
 import mesh.*
+import kotlin.random.Random
 
 class Render : EventObserver {
     private var _run: Boolean
@@ -94,8 +95,11 @@ class Render : EventObserver {
         val frameObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/frame.obj")
         val frameMesh = InterleavedMesh(frameObj)
 
-        val pyramidcutObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/pyramidcut.obj")
-        val pyramidcutMesh = SeparatedArraysMesh(pyramidcutObj)
+        val diamondObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/diamond.obj")
+        val diamondMesh = SeparatedArraysMesh(diamondObj)
+
+        val arch01dObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/arch01.obj")
+        val arch01dMesh = SeparatedArraysMesh(arch01dObj)
 
         // =================================================
 
@@ -104,33 +108,82 @@ class Render : EventObserver {
 
         colorProgram.addUniform("view_matrix")
         colorProgram.addUniform("drawable_matrix")
+
         // colorProgram.addUniform("color")
 
         val colorStateGroup = StateGroup()
         colorStateGroup.setProgram(colorProgram)
 
-        val pyramidcut = StaticDrawable(pyramidcutMesh)
+        val sum: (Int, Int) -> Int = { a: Int, b: Int ->
+            val result = a + b
+            result // The last expression acts as the return value
+        }
 
-        val frame = SpinableDrawable(frameMesh)
-        frame.axis = Vector3(0.2f, 0.5f, 0.5f)
-        frame.anglSpeed = 0.8f
+        val randomFloat: (Float, Float) -> Float = { from: Float, to: Float ->
+            from + Random.nextFloat() * (to - from)
+        }
 
-        val offsetOne = Transform()
-        offsetOne.matrix = algebra.offset(2.0f, 0.0f, 0.0f);
+        val randomVector3: (Float, Float) -> Vector3 = { from: Float, to: Float ->
+            val list = List(3) { from + Random.nextFloat() * (to - from) }
+            Vector3(list[0], list[1], list[2])
+        }
 
-        val scale = Transform()
-        scale.matrix = algebra.scale(2.0f, 2.0f, 2.0f)
+        for (i in 0..64) {
+            val item = SpinableDrawable(diamondMesh)
+            item.axis = randomVector3(-0.6f, 0.6f).normalize()
+            item.anglSpeed = randomFloat(-1.0f, 1.0f)
 
-        val offsetTwo = Transform()
-        offsetTwo.matrix = algebra.offset(-1.5f, 0.0f, 0.0f);
+            val scale = Transform()
+            val sf = randomFloat(0.2f, 0.6f)
+            scale.matrix = algebra.scale(sf, sf, sf)
 
-        offsetTwo.addChild(scale)
-        scale.addChild(frame)
+            val offset = Transform()
+            val rz = randomFloat(-1.0f, -6.0f)
+            val rtv = randomVector3(-4.0f, 4.0f)
+            offset.matrix = algebra.offset(rtv.x, rtv.y, rz);
 
-        offsetOne.addChild(pyramidcut)
+            scale.addChild(item)
+            offset.addChild(scale)
+            colorStateGroup.addChild(offset)
+        }
 
-        colorStateGroup.addChild(offsetOne)
-        colorStateGroup.addChild(offsetTwo)
+        for (i in 0..16) {
+            val item = SpinableDrawable(frameMesh)
+            item.axis = randomVector3(-0.6f, 0.6f).normalize()
+            item.anglSpeed = randomFloat(0.4f, 1.2f)
+
+            val scale = Transform()
+            val sf = randomFloat(0.8f, 1.8f)
+            scale.matrix = algebra.scale(sf, sf, sf)
+
+            val offset = Transform()
+            val rz = randomFloat(-1.0f, -6.0f)
+            val rtv = randomVector3(-5.0f, 5.0f)
+            offset.matrix = algebra.offset(rtv.x, rtv.y, rz);
+
+            scale.addChild(item)
+            offset.addChild(scale)
+            colorStateGroup.addChild(offset)
+        }
+
+        for (i in 0..16) {
+            val item = SpinableDrawable(arch01dMesh)
+            item.axis = randomVector3(-0.6f, 0.6f).normalize()
+            item.anglSpeed = randomFloat(0.4f, 1.2f)
+
+            val scale = Transform()
+            val sf = randomFloat(0.8f, 1.4f)
+            scale.matrix = algebra.scale(sf, sf, sf)
+
+            val offset = Transform()
+            val rz = randomFloat(-1.0f, -6.0f)
+            val rtv = randomVector3(-6.0f, 6.0f)
+            offset.matrix = algebra.offset(rtv.x, rtv.y, rz);
+
+            scale.addChild(item)
+            offset.addChild(scale)
+            colorStateGroup.addChild(offset)
+        }
 
         return colorStateGroup
     }

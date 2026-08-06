@@ -27,6 +27,7 @@ class Window {
         GlobalEventEmitter.init()
         BodyStorage.init("")
 
+        println("Base path is ${Config.instance().basePath}")
         //
         initGLFW()
 

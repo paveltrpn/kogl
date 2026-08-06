@@ -4,7 +4,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.pathString
 
 class Config private constructor(path: String) {
-    val _basePath: String
+    private val _basePath: String
 
     companion object {
         @Volatile

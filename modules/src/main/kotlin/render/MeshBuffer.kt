@@ -103,7 +103,7 @@ class IndexedMeshBuffer(mesh: IndexedMesh) : MeshBuffer() {
         glVertexArrayAttribFormat(_vao, 1, 3, GL_FLOAT, false, 0);
         glVertexArrayAttribBinding(_vao, 1, 1);
 
-        // Attach Index Buffer(EBO) directly to the VAO
+        // Attach Index Buffer(EBO) directly to the VAO.
         glVertexArrayElementBuffer(
             _vao,
             _buffers[VertexBuffersEnum.INDICES.ordinal]

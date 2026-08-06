@@ -3,6 +3,7 @@ package render
 import org.lwjgl.opengl.GL46.*
 
 import algebra.Vector3
+import config.Config
 import event.*
 import scene.*
 import mesh.*
@@ -88,10 +89,12 @@ class Render : EventObserver {
 
         // =================================================
 
-        val frameObj = readWavefrontObjFile("/mnt/main/code/kogl/apps/kogl/assets/bodystorage/frame.obj")
+        val pathPrefix = Config.instance().basePath
+
+        val frameObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/frame.obj")
         val frameMesh = InterleavedMesh(frameObj)
 
-        val pyramidcutObj = readWavefrontObjFile("/mnt/main/code/kogl/apps/kogl/assets/bodystorage/pyramidcut.obj")
+        val pyramidcutObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/pyramidcut.obj")
         val pyramidcutMesh = SeparatedArraysMesh(pyramidcutObj)
 
         // =================================================

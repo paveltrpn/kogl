@@ -4,14 +4,15 @@ import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.system.Configuration
-import org.lwjgl.system.MemoryUtil.*
+import org.lwjgl.opengl.GL11.glClearColor
+import org.lwjgl.opengl.GL11.glViewport
+import org.lwjgl.system.MemoryUtil
 
 import config.*
 import render.*
 import event.*
 import mesh.*
-import org.lwjgl.opengl.GL11.glClearColor
-import org.lwjgl.opengl.GL11.glViewport
+
 
 class Window {
     private var allocator: GLFWAllocator? = null
@@ -61,7 +62,7 @@ class Window {
     }
 
     fun destroy() {
-        if (_window != NULL) {
+        if (_window != MemoryUtil.NULL) {
             glfwDestroyWindow(_window)
         }
 
@@ -73,14 +74,14 @@ class Window {
         Configuration.STACK_SIZE.set(128 * 1024)
 
         allocator = GLFWAllocator.calloc()
-            .allocate(GLFWAllocateCallbackI { size: Long, user: Long -> nmemAllocChecked(size) })
+            .allocate(GLFWAllocateCallbackI { size: Long, user: Long -> MemoryUtil.nmemAllocChecked(size) })
             .reallocate(GLFWReallocateCallbackI { block: Long, size: Long, user: Long ->
-                nmemReallocChecked(
+                MemoryUtil.nmemReallocChecked(
                     block,
                     size
                 )
             })
-            .deallocate(GLFWDeallocateCallbackI { block: Long, user: Long -> nmemFree(block) })
+            .deallocate(GLFWDeallocateCallbackI { block: Long, user: Long -> MemoryUtil.nmemFree(block) })
 
         glfwInitAllocator(allocator)
 
@@ -95,9 +96,15 @@ class Window {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        _window = glfwCreateWindow(_width, _height, Config.instance().konfig.application_name, NULL, NULL)
+        _window = glfwCreateWindow(
+            _width,
+            _height,
+            Config.instance().konfig.application_name,
+            MemoryUtil.NULL,
+            MemoryUtil.NULL
+        )
 
-        if (_window == NULL) {
+        if (_window == MemoryUtil.NULL) {
             throw RuntimeException("Failed to create the GLFW window")
         }
 

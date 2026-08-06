@@ -14,8 +14,8 @@ import mesh.*
 
 abstract class MeshBuffer {
     // OpenGL related.
-    protected var _vao: Int
-    protected var _buffers: IntBuffer
+    protected val _vao: Int
+    protected val _buffers: IntBuffer
 
     init {
         _buffers = MemoryUtil.memAllocInt(VertexBuffersEnum.entries.size)

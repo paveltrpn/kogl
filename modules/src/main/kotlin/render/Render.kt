@@ -28,7 +28,7 @@ class Render : EventObserver {
         }
 
     fun preLoop(): Unit {
-        
+
     }
 
     fun frame(): Unit {
@@ -106,25 +106,25 @@ class Render : EventObserver {
         val colorStateGroup = StateGroup()
         colorStateGroup.setProgram(colorProgram)
 
-        val cubeStatic = StaticDrawable(pyramidcutMesh)
+        val pyramidcut = StaticDrawable(pyramidcutMesh)
 
-        val cubeSpin = SpinableDrawable(frameMesh)
-        cubeSpin.axis = Vector3(0.2f, 0.5f, 0.5f)
-        cubeSpin.anglSpeed = 0.8f
+        val frame = SpinableDrawable(frameMesh)
+        frame.axis = Vector3(0.2f, 0.5f, 0.5f)
+        frame.anglSpeed = 0.8f
 
         val offsetOne = Transform()
-        offsetOne.transform = algebra.offset(2.0f, 0.0f, 0.0f);
+        offsetOne.matrix = algebra.offset(2.0f, 0.0f, 0.0f);
 
         val scale = Transform()
-        scale.transform = algebra.scale(1.5f, 2.0f, 2.5f)
+        scale.matrix = algebra.scale(2.0f, 2.0f, 2.0f)
 
         val offsetTwo = Transform()
-        offsetTwo.transform = algebra.offset(-2.0f, 0.0f, 0.0f);
+        offsetTwo.matrix = algebra.offset(-1.5f, 0.0f, 0.0f);
 
-        offsetOne.addChild(scale)
-        scale.addChild(cubeStatic)
+        offsetTwo.addChild(scale)
+        scale.addChild(frame)
 
-        offsetTwo.addChild(cubeSpin)
+        offsetOne.addChild(pyramidcut)
 
         colorStateGroup.addChild(offsetOne)
         colorStateGroup.addChild(offsetTwo)

@@ -12,7 +12,7 @@ import config.*
 import render.*
 import event.*
 import mesh.*
-
+import image.*
 
 class Window {
     private var allocator: GLFWAllocator? = null
@@ -38,9 +38,11 @@ class Window {
         //
         initGLFW()
 
+        val cc = Color(Config.instance().konfig.background_color)
+
         //
         glViewport(0, 0, _width, _height)
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
+        glClearColor(cc.rf, cc.gf, cc.bf, 1.0f)
 
         //
         _render = Render()

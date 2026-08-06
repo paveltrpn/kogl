@@ -16,7 +16,7 @@ class Color() {
         fromHexString(color)
     }
 
-    var r: Byte
+    var rb: Byte
         get() : Byte {
             return data[0]
         }
@@ -24,7 +24,7 @@ class Color() {
             data[0] = value
         }
 
-    var g: Byte
+    var gb: Byte
         get() : Byte {
             return data[1]
         }
@@ -32,7 +32,7 @@ class Color() {
             data[1] = value
         }
 
-    var b: Byte
+    var bb: Byte
         get() : Byte {
             return data[2]
         }
@@ -40,13 +40,37 @@ class Color() {
             data[2] = value
         }
 
-    var a: Byte
+    var ab: Byte
         get() : Byte {
             return data[3]
         }
         set(value) {
             data[3] = value
         }
+
+    val rf: Float
+        get() : Float {
+            return data[0].toFloat() / 255.0f
+        }
+
+
+    val gf: Float
+        get() : Float {
+            return data[1].toFloat() / 255.0f
+        }
+
+
+    val bf: Float
+        get() : Float {
+            return data[2].toFloat() / 255.0f
+        }
+
+
+    val af: Float
+        get() : Float {
+            return data[3].toFloat() / 255.0f
+        }
+
 
     fun setColor(r: Int, g: Int, b: Int, a: Int): Unit {
         data[0] = r.toByte()
@@ -57,7 +81,7 @@ class Color() {
 
     fun fromHexString(color: String) {
         if (color.length != 9 || !color.startsWith("#")) {
-            throw IllegalArgumentException("Color string must be exactly 9 characters long and start with '#', got: $this")
+            throw IllegalArgumentException("Color string must be exactly 9 characters long and start with '#', got: $color")
         }
 
         val hex = color.substring(1) // Remove '#'

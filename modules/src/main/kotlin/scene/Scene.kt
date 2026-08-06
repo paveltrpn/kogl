@@ -10,7 +10,7 @@ class Scene {
     private var _camera = Flycam()
 
     init {
-        _camera.fov = 50.0f
+        _camera.fov = 45.0f
         _camera.aspect = 16.0f / 9.0f
         _camera.ncp = 0.1f
         _camera.fcp = 100.0f
@@ -64,7 +64,7 @@ class Scene {
 
         // Accumulate transformations from every Transform
         // on the path.
-        _transformAccumulator = _transformAccumulator.multiply(node.transform)
+        _transformAccumulator = _transformAccumulator.multiply(node.matrix)
 
         when (val next = node.child!!) {
             is Transform -> {

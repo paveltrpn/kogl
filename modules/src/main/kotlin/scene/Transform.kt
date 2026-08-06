@@ -18,7 +18,7 @@ open class Transform : Node {
             _child = value
         }
 
-    var transform: Matrix4
+    var matrix: Matrix4
         get(): Matrix4 {
             return _matrix
         }

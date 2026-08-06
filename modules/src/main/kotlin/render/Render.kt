@@ -282,10 +282,6 @@ class Render : EventObserver {
 
         val boxMesh = IndexedMesh("Box", vertices, vnormals, texCoords, indices)
 
-        val pathPrefix = Config.instance().basePath
-        val frameObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/frame.obj")
-        val frameMesh = InterleavedMesh(frameObj)
-
         // =================================================
 
         val colorShaderSource = ShaderSource("flatshade")
@@ -302,7 +298,7 @@ class Render : EventObserver {
 
         // =================================================
 
-        val item = StaticDrawable(frameMesh)
+        val item = StaticDrawable(boxMesh)
 
         val scale = Transform()
         scale.matrix = algebra.scale(1.0f, 1.0f, 1.0f)

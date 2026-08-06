@@ -9,12 +9,6 @@ rootProject.name = "kogl"
 include("kogl")
 project(":kogl").projectDir = file("apps/kogl")
 
-include("encode")
-project(":encode").projectDir = file("apps/encode")
-
 include(":kogl", ":modules")
-project(":modules").projectDir = file("modules")
-
-include(":encode", ":modules")
 project(":modules").projectDir = file("modules")
 

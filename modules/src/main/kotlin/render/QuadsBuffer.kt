@@ -4,12 +4,14 @@ import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryStack
 import java.nio.FloatBuffer
 
-class QuadsBuffer(vertexCount: Int) {
+class QuadsBuffer(capacity: Int) {
     private var _vao: Int = 0
     private val _vbo: Int
     private val _tbo: Int
 
-    private var _vertexCount = vertexCount
+    // Count of vertices in this buffer is possible count of quads
+    // that can hold this buffer times vertex per quad.
+    private var _vertexCount = capacity * 6
 
     init {
         _vao = glGenVertexArrays()
@@ -46,7 +48,7 @@ class QuadsBuffer(vertexCount: Int) {
             val buffer: FloatBuffer = stack.callocFloat(vertices.size)
             buffer.put(vertices)
             buffer.flip()
-            glBufferData(GL_ARRAY_BUFFER, buffer, GL_DYNAMIC_DRAW)
+            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, _tbo)
@@ -55,7 +57,7 @@ class QuadsBuffer(vertexCount: Int) {
             val buffer: FloatBuffer = stack.callocFloat(txcoords.size)
             buffer.put(txcoords)
             buffer.flip()
-            glBufferData(GL_ARRAY_BUFFER, buffer, GL_DYNAMIC_DRAW)
+            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
         }
 
 //        val pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)

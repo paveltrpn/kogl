@@ -11,14 +11,16 @@ import kotlin.random.Random
 
 class Render : EventObserver {
     private var _run: Boolean
-    private val _scene = Scene()
-    val _ui: UiGL
+    private val _scene: Scene
+    private val _ui: UiGL
 
     init {
         _run = true
 
         val sparseObjectsGraph = sparseObjectsGraph()
         val testBoxGraph = testCubesGraph()
+
+        _scene = Scene()
 
         _scene.addStateGroup(sparseObjectsGraph)
         _scene.addStateGroup(testBoxGraph)

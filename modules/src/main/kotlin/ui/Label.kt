@@ -164,6 +164,4 @@ class Label : UiComponent() {
         get(): Array<Vector4> {
             return _letterQuadsColors
         }
-
-
 };

@@ -2,20 +2,9 @@ package render
 
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryStack
-import org.lwjgl.system.MemoryUtil
-import java.nio.IntBuffer
 import java.nio.FloatBuffer
 
-enum class VertexBuffersEnum {
-    VERTICES,
-    INDICES,
-    COLORS,
-    TEXCRDS,
-    NORMALS,
-    INTERLEAVED
-}
-
-class VertexBuffer(vertexCount: Int) {
+class QuadsBuffer(vertexCount: Int) {
     private var _vao: Int = 0
     private val _vbo: Int
     private val _tbo: Int

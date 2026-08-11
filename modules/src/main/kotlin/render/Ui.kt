@@ -5,8 +5,8 @@ import ui.*
 class UiGL : Ui() {
     private val OUTPUT_QUADS_COUNT = 128
 
-    private val _labelBuffer = VertexBuffer(OUTPUT_QUADS_COUNT * 6)
-    private val _billboardBuffer = VertexBuffer(OUTPUT_QUADS_COUNT * 6)
+    private val _labelBuffer = QuadsBuffer(OUTPUT_QUADS_COUNT * 6)
+    private val _billboardBuffer = QuadsBuffer(OUTPUT_QUADS_COUNT * 6)
 
     fun draw(): Unit {
 

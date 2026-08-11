@@ -7,9 +7,8 @@ class Billboard : UiComponent() {
     private val VERTICIES_PER_QUAD = 6
     private val JUST_SINGLE_QUAD = 1
 
-    private val _quadVerticies = Array<Vector3>(JUST_SINGLE_QUAD * VERTICIES_PER_QUAD) { Vector3() };
-    private val _quadTexcrds = Array<Vector2>(JUST_SINGLE_QUAD * VERTICIES_PER_QUAD) { Vector2() };
-    private val _quadsColors = Array<Vector4>(JUST_SINGLE_QUAD * VERTICIES_PER_QUAD) { Vector4() };
+    private val _quadVerticies = FloatArray(JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * 3) { 0.0f };
+    private val _quadTexcrds = FloatArray(JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * 2) { 0.0f };
 
     // Colorf color_{};
 
@@ -48,34 +47,70 @@ class Billboard : UiComponent() {
         val bottomRightVt = Vector3(_posX + _width, _posY - _height, _z)
         val bottomLeftVt = Vector3(_posX, _posY - _height, _z)
 
-        _quadVerticies[0] = topLeftVt;
-        _quadVerticies[1] = topRightVt;
-        _quadVerticies[2] = bottomRightVt;
-        _quadVerticies[3] = topLeftVt;
-        _quadVerticies[4] = bottomRightVt;
-        _quadVerticies[5] = bottomLeftVt;
+        for (i in 0..<3) {
+            _quadVerticies[0 + ((i * 3) + 0)] = topLeftVt.x
+            _quadVerticies[0 + ((i * 3) + 1)] = topLeftVt.y
+            _quadVerticies[0 + ((i * 3) + 2)] = topLeftVt.z
+
+            _quadVerticies[3 + ((i * 3) + 0)] = topRightVt.x
+            _quadVerticies[3 + ((i * 3) + 1)] = topRightVt.y
+            _quadVerticies[3 + ((i * 3) + 2)] = topRightVt.z
+
+            _quadVerticies[6 + ((i * 3) + 0)] = bottomRightVt.x
+            _quadVerticies[6 + ((i * 3) + 1)] = bottomRightVt.y
+            _quadVerticies[6 + ((i * 3) + 2)] = bottomRightVt.z
+
+            _quadVerticies[9 + ((i * 3) + 0)] = topLeftVt.x
+            _quadVerticies[9 + ((i * 3) + 1)] = topLeftVt.y
+            _quadVerticies[9 + ((i * 3) + 2)] = topLeftVt.z
+
+            _quadVerticies[12 + ((i * 3) + 0)] = bottomRightVt.x
+            _quadVerticies[12 + ((i * 3) + 1)] = bottomRightVt.y
+            _quadVerticies[12 + ((i * 3) + 2)] = bottomRightVt.z
+
+            _quadVerticies[15 + ((i * 3) + 0)] = bottomLeftVt.x
+            _quadVerticies[15 + ((i * 3) + 1)] = bottomLeftVt.y
+            _quadVerticies[15 + ((i * 3) + 2)] = bottomLeftVt.z
+        }
+
+//        _quadVerticies[0] = topLeftVt
+//        _quadVerticies[1] = topRightVt;
+//        _quadVerticies[2] = bottomRightVt;
+//        _quadVerticies[3] = topLeftVt;
+//        _quadVerticies[4] = bottomRightVt;
+//        _quadVerticies[5] = bottomLeftVt;
 
         val topLeftTc = Vector2(0.0f, 0.0f)
         val topRightTc = Vector2(1.0f, 0.0f)
         val bottomRightTc = Vector2(1.0f, 1.0f)
         val bottomLeftTc = Vector2(0.0f, 1.0f)
 
-        _quadTexcrds[0] = topLeftTc;
-        _quadTexcrds[1] = topRightTc;
-        _quadTexcrds[2] = bottomRightTc;
-        _quadTexcrds[3] = bottomRightTc;
-        _quadTexcrds[4] = bottomLeftTc;
-        _quadTexcrds[5] = topLeftTc;
+        for (i in 0..<2) {
+            _quadVerticies[0 + ((i * 2) + 0)] = topLeftTc.x
+            _quadVerticies[0 + ((i * 2) + 1)] = topLeftTc.y
 
-        // val color = color_.asVector4f();
-        val color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
+            _quadVerticies[2 + ((i * 2) + 0)] = topRightTc.x
+            _quadVerticies[2 + ((i * 2) + 1)] = topRightTc.y
 
-        _quadsColors[0] = color;
-        _quadsColors[1] = color;
-        _quadsColors[2] = color;
-        _quadsColors[3] = color;
-        _quadsColors[4] = color;
-        _quadsColors[5] = color;
+            _quadVerticies[4 + ((i * 2) + 0)] = bottomRightTc.x
+            _quadVerticies[4 + ((i * 2) + 1)] = bottomRightTc.y
+
+            _quadVerticies[6 + ((i * 2) + 0)] = bottomRightTc.x
+            _quadVerticies[6 + ((i * 2) + 1)] = bottomRightTc.y
+
+            _quadVerticies[8 + ((i * 2) + 0)] = bottomLeftTc.x
+            _quadVerticies[8 + ((i * 2) + 1)] = bottomLeftTc.y
+
+            _quadVerticies[10 + ((i * 2) + 0)] = topLeftTc.x
+            _quadVerticies[10 + ((i * 2) + 1)] = topLeftTc.y
+        }
+
+//        _quadTexcrds[0] = topLeftTc;
+//        _quadTexcrds[1] = topRightTc;
+//        _quadTexcrds[2] = bottomRightTc;
+//        _quadTexcrds[3] = bottomRightTc;
+//        _quadTexcrds[4] = bottomLeftTc;
+//        _quadTexcrds[5] = topLeftTc;
     }
 
 
@@ -99,18 +134,13 @@ class Billboard : UiComponent() {
         return JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
     }
 
-    val vertices: Array<Vector3>
-        get(): Array<Vector3> {
+    val vertices: FloatArray
+        get(): FloatArray {
             return _quadVerticies;
         }
 
-    val txcoords: Array<Vector2>
-        get(): Array<Vector2> {
+    val txcoords: FloatArray
+        get():FloatArray {
             return _quadTexcrds
-        }
-
-    val colors: Array<Vector4>
-        get(): Array<Vector4> {
-            return _quadsColors
         }
 };

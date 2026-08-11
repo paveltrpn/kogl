@@ -9,9 +9,8 @@ class Label : UiComponent() {
     // from all draw() calls that can one instance of this class operates
     private val VERTICIES_PER_QUAD = 6
     private val MAX_LETTERS_COUNT = 64
-    private val _letterQuadsVertices = Array<Vector3>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector3() }
-    private val _letterQuadsTxcoords = Array<Vector2>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector2() }
-    private val _letterQuadsColors = Array<Vector4>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector4() }
+    private val _letterQuadsVertices = FloatArray(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD * 3) { 0.0f }
+    private val _letterQuadsTxcoords = FloatArray(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD * 2) { 0.0f }
 
     private var _glyphScale = 1.3f;
     private val GLYPH_WIDTH = 0.4f
@@ -115,17 +114,6 @@ class Label : UiComponent() {
             _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftTc;
             _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 5] = topLeftTc;
 
-            // Build character quad color data.
-            // val color = color_.asVector4f();
-            val color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
-
-            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 0] = color;
-            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 1] = color;
-            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 2] = color;
-            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 3] = color;
-            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 4] = color;
-            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 5] = color;
-
             _lettersCount++;
         }
     }
@@ -150,18 +138,13 @@ class Label : UiComponent() {
         return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
     }
 
-    val vertices: Array<Vector3>
-        get(): Array<Vector3> {
+    val vertices: FloatArray
+        get():FloatArray {
             return _letterQuadsVertices;
         }
 
-    val txcoords: Array<Vector2>
-        get(): Array<Vector2> {
+    val txcoords: FloatArray
+        get(): FloatArray {
             return _letterQuadsTxcoords
-        }
-
-    val colors: Array<Vector4>
-        get(): Array<Vector4> {
-            return _letterQuadsColors
         }
 };

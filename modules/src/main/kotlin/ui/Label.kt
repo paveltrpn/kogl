@@ -7,31 +7,31 @@ class Label : UiComponent() {
 
     // Size of "Letters buffer" - this is the number of all characters
     // from all draw() calls that can one instance of this class operates
-    val VERTICIES_PER_QUAD = 6
-    val MAX_LETTERS_COUNT = 64
-    val letterQuadsVertecies_ = Array<Vector3>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector3() }
-    val letterQuadsTexcrds_ = Array<Vector2>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector2() }
-    val letterQuadsColors_ = Array<Vector4>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector4() }
+    private val VERTICIES_PER_QUAD = 6
+    private val MAX_LETTERS_COUNT = 64
+    private val _letterQuadsVertices = Array<Vector3>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector3() }
+    private val _letterQuadsTxcoords = Array<Vector2>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector2() }
+    private val _letterQuadsColors = Array<Vector4>(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD) { Vector4() }
 
-    var glyphScale_ = 1.3f;
-    val GLYPH_WIDTH = 0.4f
-    val GLYPH_HEIGHT = 1.55f
-    var glyphQuadWdt_ = GLYPH_WIDTH * glyphScale_;
-    var glyphQuadHgt_ = GLYPH_HEIGHT * glyphScale_;
-    val GLYPH_GAP = 0.0f
-    var glyphGap_ = GLYPH_GAP;
+    private var _glyphScale = 1.3f;
+    private val GLYPH_WIDTH = 0.4f
+    private val GLYPH_HEIGHT = 1.55f
+    private var _glyphQuadWdt = GLYPH_WIDTH * _glyphScale;
+    private var _glyphQuadHgt = GLYPH_HEIGHT * _glyphScale;
+    private val GLYPH_GAP = 0.0f
+    private var _glyphGap = GLYPH_GAP;
 
-    var posX_ = 0.0f;
-    var posY_ = 0.0f;
+    private var _posX = 0.0f;
+    private var _posY = 0.0f;
 
     // Формат шрифта - изображение TGA с началом сверху слева,
     // 32 столбца на 8 строк символов, первый символ - 32 ("пробел").
     // Размер ячейки с символом получается делением горизонтального и вертикального
     // размера изображения на количество столбцов и строк соответственно.
-    val fontColumnCount_ = 32  // Количество столбцов символов в шрифте
-    val fontRowCount_ = 8      // Количество строк символов в шрифте
+    private val _fontColumnCount = 32  // Количество столбцов символов в шрифте
+    private val _fontRowCount = 8      // Количество строк символов в шрифте
 
-    var lettersCount_ = 0;
+    private var _lettersCount = 0;
 
     // Colorf color_{};
 
@@ -49,7 +49,7 @@ class Label : UiComponent() {
 
     fun setGlyphGap(value: Float): Unit {
         //
-        glyphGap_ = value;
+        _glyphGap = value;
     }
 
     fun setTextPosition(x: Float, y: Float): Unit {
@@ -66,104 +66,104 @@ class Label : UiComponent() {
     }
 
     fun setPos(x: Float, y: Float): Unit {
-        posX_ = x;
-        posY_ = y;
+        _posX = x;
+        _posY = y;
     }
 
 
     fun draw(string: String): Unit {
         // Размер ячейки с символом в долях текстурных координат по горизонтали
-        val tcGapX = 1.0f / fontColumnCount_.toFloat();
+        val tcGapX = 1.0f / _fontColumnCount.toFloat();
         // Размер ячейки с символом в долях текстурных координат по вертикали
-        val tcGapY = 1.0f / fontRowCount_.toFloat();
+        val tcGapY = 1.0f / _fontRowCount.toFloat();
 
         for (i in 0..<string.length) {
             // Смещение квада с i-ым символом, зависит от ширины квадов и зазора между ними
-            val offset = (glyphQuadWdt_ + glyphGap_) * i.toFloat();
+            val offset = (_glyphQuadWdt + _glyphGap) * i.toFloat();
 
             // Столбец, в котором находится символ
-            val glyphX = (string[i].code % fontColumnCount_).toFloat();
+            val glyphX = (string[i].code % _fontColumnCount).toFloat();
 
             // Строка, в котором находится символ
-            val glyphY = ((string[i].code / fontColumnCount_) - 1).toFloat();
+            val glyphY = ((string[i].code / _fontColumnCount) - 1).toFloat();
 
             // Build character quad vertecies data.
-            val topLeftVt = Vector3((offset + 0.0f) + posX_, 0.0f + posY_, 0.0f)
-            val topRightVt = Vector3((offset + glyphQuadWdt_) + posX_, 0.0f + posY_, 0.0f)
+            val topLeftVt = Vector3((offset + 0.0f) + _posX, 0.0f + _posY, 0.0f)
+            val topRightVt = Vector3((offset + _glyphQuadWdt) + _posX, 0.0f + _posY, 0.0f)
             val bottomRightVt = Vector3(
-                (offset + glyphQuadWdt_) + posX_, -glyphQuadHgt_ + posY_, 0.0f
+                (offset + _glyphQuadWdt) + _posX, -_glyphQuadHgt + _posY, 0.0f
             )
-            val bottomLeftVt = Vector3((offset + 0.0f) + posX_, -glyphQuadHgt_ + posY_, 0.0f)
+            val bottomLeftVt = Vector3((offset + 0.0f) + _posX, -_glyphQuadHgt + _posY, 0.0f)
 
             // Build character quad texture coordinates data.
-            letterQuadsVertecies_[(i * VERTICIES_PER_QUAD) + 0] = topLeftVt;
-            letterQuadsVertecies_[(i * VERTICIES_PER_QUAD) + 1] = topRightVt;
-            letterQuadsVertecies_[(i * VERTICIES_PER_QUAD) + 2] = bottomRightVt;
-            letterQuadsVertecies_[(i * VERTICIES_PER_QUAD) + 3] = bottomRightVt;
-            letterQuadsVertecies_[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftVt;
-            letterQuadsVertecies_[(i * VERTICIES_PER_QUAD) + 5] = topLeftVt;
+            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 0] = topLeftVt;
+            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 1] = topRightVt;
+            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 2] = bottomRightVt;
+            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 3] = bottomRightVt;
+            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftVt;
+            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 5] = topLeftVt;
 
             val topLeftTc = Vector2((tcGapX * glyphX) + 0.0f, (tcGapY * glyphY) + 0.0f)
             val topRightTc = Vector2((tcGapX * glyphX) + tcGapX, (tcGapY * glyphY) + 0.0f)
             val bottomRightTc = Vector2((tcGapX * glyphX) + tcGapX, (tcGapY * glyphY) + tcGapY)
             val bottomLeftTc = Vector2((tcGapX * glyphX) + 0.0f, (tcGapY * glyphY) + tcGapY)
 
-            letterQuadsTexcrds_[(i * VERTICIES_PER_QUAD) + 0] = topLeftTc;
-            letterQuadsTexcrds_[(i * VERTICIES_PER_QUAD) + 1] = topRightTc;
-            letterQuadsTexcrds_[(i * VERTICIES_PER_QUAD) + 2] = bottomRightTc;
-            letterQuadsTexcrds_[(i * VERTICIES_PER_QUAD) + 3] = bottomRightTc;
-            letterQuadsTexcrds_[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftTc;
-            letterQuadsTexcrds_[(i * VERTICIES_PER_QUAD) + 5] = topLeftTc;
+            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 0] = topLeftTc;
+            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 1] = topRightTc;
+            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 2] = bottomRightTc;
+            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 3] = bottomRightTc;
+            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftTc;
+            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 5] = topLeftTc;
 
             // Build character quad color data.
             // val color = color_.asVector4f();
             val color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
 
-            letterQuadsColors_[(i * VERTICIES_PER_QUAD) + 0] = color;
-            letterQuadsColors_[(i * VERTICIES_PER_QUAD) + 1] = color;
-            letterQuadsColors_[(i * VERTICIES_PER_QUAD) + 2] = color;
-            letterQuadsColors_[(i * VERTICIES_PER_QUAD) + 3] = color;
-            letterQuadsColors_[(i * VERTICIES_PER_QUAD) + 4] = color;
-            letterQuadsColors_[(i * VERTICIES_PER_QUAD) + 5] = color;
+            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 0] = color;
+            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 1] = color;
+            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 2] = color;
+            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 3] = color;
+            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 4] = color;
+            _letterQuadsColors[(i * VERTICIES_PER_QUAD) + 5] = color;
 
-            lettersCount_++;
+            _lettersCount++;
         }
     }
 
-    fun lettersCount(): Int {
-        //
-        return lettersCount_;
-    }
+    val lettersCount: Int
+        get(): Int {
+            return _lettersCount
+        }
 
     fun bufferVerticesSize(): Int {
         //
-        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3
+        return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3
     }
 
     fun bufferTexcrdsSize(): Int {
         //
-        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
+        return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
     }
 
     fun bufferVertclrsSize(): Int {
         //
-        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
+        return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
     }
 
+    val vertices: Array<Vector3>
+        get(): Array<Vector3> {
+            return _letterQuadsVertices;
+        }
 
-    fun verteciesData(): Array<Vector3> {
-        return letterQuadsVertecies_;
-    }
+    val txcoords: Array<Vector2>
+        get(): Array<Vector2> {
+            return _letterQuadsTxcoords
+        }
 
-
-    fun texcrdsData(): Array<Vector2> {
-        return letterQuadsTexcrds_
-    }
-
-
-    fun clrsData(): Array<Vector4> {
-        return letterQuadsColors_
-    }
+    val colors: Array<Vector4>
+        get(): Array<Vector4> {
+            return _letterQuadsColors
+        }
 
 
 };

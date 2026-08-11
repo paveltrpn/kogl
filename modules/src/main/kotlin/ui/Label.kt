@@ -170,10 +170,6 @@ class Label : UiComponent() {
         return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
     }
 
-    fun bufferVertclrsSize(): Int {
-        return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
-    }
-
     val vertices: FloatArray
         get():FloatArray {
             return _letterQuadsVertices;

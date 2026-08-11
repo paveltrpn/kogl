@@ -22,7 +22,7 @@ class Matrix2 {
         get(): FloatArray {
             return _data
         }
-    
+
     var row0: Vector2
         get(): Vector2 {
             return Vector2(_data[0], _data[1])

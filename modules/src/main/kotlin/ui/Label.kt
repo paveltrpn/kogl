@@ -116,7 +116,7 @@ class Label {
             letterQuadsTexcrds_[(i * VERTICIES_PER_QUAD) + 5] = topLeftTc;
 
             // Build character quad color data.
-            //val color = color_.asVector4f();
+            // val color = color_.asVector4f();
             val color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
 
             letterQuadsColors_[(i * VERTICIES_PER_QUAD) + 0] = color;
@@ -137,17 +137,17 @@ class Label {
 
     fun bufferVerticesSize(): Int {
         //
-        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3;
+        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3
     }
 
     fun bufferTexcrdsSize(): Int {
         //
-        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2;
+        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
     }
 
     fun bufferVertclrsSize(): Int {
         //
-        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4;
+        return lettersCount_ * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
     }
 
 

@@ -20,24 +20,20 @@ class Billboard : UiComponent() {
     private var _height = 1.0f
 
 //    fun setColor( const Colorf &value ) : Unit {
-//        //
 //        color_ = value;
 //    }
 
     fun setPos(px: Float, py: Float): Unit {
-        //
         _posX = px;
         _posY = py;
     }
 
     fun setSize(width: Float, height: Float): Unit {
-        //
         _width = width;
         _height = height;
     }
 
     fun setZ(z: Float): Unit {
-        //
         _z = z;
     }
 
@@ -115,22 +111,18 @@ class Billboard : UiComponent() {
 
 
     fun lettersCount(): Int {
-        //
         return JUST_SINGLE_QUAD;
     }
 
     fun bufferVerticesSize(): Int {
-        //
         return JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3
     }
 
     fun bufferTexcrdsSize(): Int {
-        //
         return JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
     }
 
     fun bufferVertclrsSize(): Int {
-        //
         return JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
     }
 

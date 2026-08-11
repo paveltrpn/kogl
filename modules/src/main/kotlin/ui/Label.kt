@@ -35,33 +35,26 @@ class Label : UiComponent() {
     // Colorf color_{};
 
     fun setGlyphWidth(value: Float): Unit {
-        //
     }
 
     fun setGlyphHeight(value: Float): Unit {
-        //
     }
 
     fun setGlyphScale(value: Float): Unit {
-        //
     }
 
     fun setGlyphGap(value: Float): Unit {
-        //
         _glyphGap = value;
     }
 
     fun setTextPosition(x: Float, y: Float): Unit {
-        //
     }
 
 //    fun setColor( const Colorf &value ) : Unit{
-//        //
 //        color_ = value;
 //    }
 
     fun resetStringParameters(): Unit {
-        //
     }
 
     fun setPos(x: Float, y: Float): Unit {
@@ -94,25 +87,71 @@ class Label : UiComponent() {
             )
             val bottomLeftVt = Vector3((offset + 0.0f) + _posX, -_glyphQuadHgt + _posY, 0.0f)
 
-            // Build character quad texture coordinates data.
-            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 0] = topLeftVt;
-            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 1] = topRightVt;
-            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 2] = bottomRightVt;
-            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 3] = bottomRightVt;
-            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftVt;
-            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 5] = topLeftVt;
+
+            for (j in 0..<3) {
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 0) + ((j * 3) + 0)] = topLeftVt.x
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 0) + ((j * 3) + 1)] = topLeftVt.y
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 0) + ((j * 3) + 2)] = topLeftVt.z
+
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 3) + ((j * 3) + 0)] = topRightVt.x
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 3) + ((j * 3) + 1)] = topRightVt.y
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 3) + ((j * 3) + 2)] = topRightVt.z
+
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 6) + ((j * 3) + 0)] = bottomRightVt.x
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 6) + ((j * 3) + 1)] = bottomRightVt.y
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 6) + ((j * 3) + 2)] = bottomRightVt.z
+
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 9) + ((j * 3) + 0)] = bottomRightVt.x
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 9) + ((j * 3) + 1)] = bottomRightVt.y
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 9) + ((j * 3) + 2)] = bottomRightVt.z
+
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 12) + ((j * 3) + 0)] = bottomLeftVt.x
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 12) + ((j * 3) + 1)] = bottomLeftVt.y
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 12) + ((j * 3) + 2)] = bottomLeftVt.z
+
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 15) + ((j * 3) + 0)] = topLeftVt.x
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 15) + ((j * 3) + 1)] = topLeftVt.y
+                _letterQuadsVertices[((i * VERTICIES_PER_QUAD) + 15) + ((j * 3) + 2)] = topLeftVt.z
+            }
+
+//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 0] = topLeftVt;
+//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 1] = topRightVt;
+//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 2] = bottomRightVt;
+//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 3] = bottomRightVt;
+//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftVt;
+//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 5] = topLeftVt;
 
             val topLeftTc = Vector2((tcGapX * glyphX) + 0.0f, (tcGapY * glyphY) + 0.0f)
             val topRightTc = Vector2((tcGapX * glyphX) + tcGapX, (tcGapY * glyphY) + 0.0f)
             val bottomRightTc = Vector2((tcGapX * glyphX) + tcGapX, (tcGapY * glyphY) + tcGapY)
             val bottomLeftTc = Vector2((tcGapX * glyphX) + 0.0f, (tcGapY * glyphY) + tcGapY)
 
-            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 0] = topLeftTc;
-            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 1] = topRightTc;
-            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 2] = bottomRightTc;
-            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 3] = bottomRightTc;
-            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftTc;
-            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 5] = topLeftTc;
+            for (j in 0..<3) {
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 0) + ((j * 2) + 0)] = topLeftTc.x
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 0) + ((j * 2) + 1)] = topLeftTc.y
+
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 2) + ((j * 2) + 0)] = topRightTc.x
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 2) + ((j * 2) + 1)] = topRightTc.y
+
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 4) + ((j * 2) + 0)] = bottomRightTc.x
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 4) + ((j * 2) + 1)] = bottomRightTc.y
+
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 6) + ((j * 2) + 0)] = bottomRightTc.x
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 6) + ((j * 2) + 1)] = bottomRightTc.y
+
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 8) + ((j * 2) + 0)] = bottomLeftTc.x
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 8) + ((j * 2) + 1)] = bottomLeftTc.y
+
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 10) + ((j * 2) + 0)] = topLeftTc.x
+                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 10) + ((j * 2) + 1)] = topLeftTc.y
+            }
+
+//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 0] = topLeftTc;
+//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 1] = topRightTc;
+//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 2] = bottomRightTc;
+//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 3] = bottomRightTc;
+//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftTc;
+//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 5] = topLeftTc;
 
             _lettersCount++;
         }
@@ -124,17 +163,14 @@ class Label : UiComponent() {
         }
 
     fun bufferVerticesSize(): Int {
-        //
         return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3
     }
 
     fun bufferTexcrdsSize(): Int {
-        //
         return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
     }
 
     fun bufferVertclrsSize(): Int {
-        //
         return lettersCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
     }
 

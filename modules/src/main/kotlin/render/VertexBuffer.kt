@@ -16,7 +16,7 @@ enum class VertexBuffersEnum {
 }
 
 class VertexBuffer(vertexCount: Int) {
-    private val _vao: Int
+    private var _vao: Int = 0
     private val _vbo: Int
     private val _tbo: Int
 
@@ -36,7 +36,7 @@ class VertexBuffer(vertexCount: Int) {
 
         glBindBuffer(GL_ARRAY_BUFFER, _tbo)
         glBufferData(GL_ARRAY_BUFFER, (Float.SIZE_BYTES * 2 * _vertexCount).toLong(), GL_DYNAMIC_DRAW)
-        glEnableVertexAttribArray(0)
+        glEnableVertexAttribArray(1)
         glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0L)
 
         glBindVertexArray(0)

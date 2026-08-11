@@ -11,7 +11,8 @@ import kotlin.random.Random
 
 class Render : EventObserver {
     private var _run: Boolean
-    private var _scene = Scene()
+    private val _scene = Scene()
+    val _ui: UiGL
 
     init {
         _run = true
@@ -21,6 +22,8 @@ class Render : EventObserver {
 
         _scene.addStateGroup(sparseObjectsGraph)
         _scene.addStateGroup(testBoxGraph)
+
+        _ui = UiGL()
     }
 
     var run: Boolean
@@ -42,6 +45,12 @@ class Render : EventObserver {
         glDepthFunc(GL_LESS);
 
         _scene.walk()
+
+        _ui.label(0.0f, 0.0f, "test string")
+
+        _ui.draw()
+
+        _ui.flush()
     }
 
     fun postLoop(): Unit {

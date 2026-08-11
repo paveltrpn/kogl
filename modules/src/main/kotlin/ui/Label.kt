@@ -3,7 +3,7 @@ package ui
 import algebra.*
 import kotlin.Float
 
-class Label {
+class Label : UiComponent() {
 
     // Size of "Letters buffer" - this is the number of all characters
     // from all draw() calls that can one instance of this class operates

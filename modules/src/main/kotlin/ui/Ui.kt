@@ -1,1 +1,32 @@
 package ui
+
+sealed class UiComponent {}
+
+abstract class Ui {
+    protected val _componentsList: MutableList<UiComponent> = mutableListOf();
+
+    fun label(px: Float, py: Float, msg: String): Unit {
+        val l = Label();
+
+        // l.setColor( { "white" } );
+        l.setGlyphGap(0.1f);
+        l.setPos(px, py);
+        l.draw(msg);
+
+        _componentsList.addLast(l)
+    }
+
+    fun billboard(px: Float, py: Float, sx: Float, sy: Float, z: Float): Unit {
+        val b = Billboard();
+
+        b.setPos(px, py);
+        b.setSize(sx, sy);
+        b.setZ(z);
+        // b.setColor( { "#b852ac33" } );
+        b.draw();
+
+        _componentsList.addLast(b);
+    }
+
+    abstract fun flush(): Unit;
+};

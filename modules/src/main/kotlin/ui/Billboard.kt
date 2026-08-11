@@ -3,7 +3,7 @@ package ui
 import algebra.*
 import kotlin.Float
 
-class Billboard {
+class Billboard : UiComponent() {
     val VERTICIES_PER_QUAD = 6
     val JUST_SINGLE_QUAD = 1
 

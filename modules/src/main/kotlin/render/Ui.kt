@@ -37,6 +37,7 @@ class UiGL : Ui() {
         _program.use()
 
         _labelBuffer.draw()
+
         _billboardBuffer.draw()
 
         _componentsList.clear()

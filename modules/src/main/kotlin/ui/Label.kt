@@ -59,7 +59,7 @@ class Label : UiComponent() {
         get() :Vector3 {
             return _position
         }
-        set(value) {
+        set(value: Vector3) {
             _position = value
         }
 

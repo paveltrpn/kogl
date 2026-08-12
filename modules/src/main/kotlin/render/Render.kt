@@ -64,7 +64,7 @@ class Render : EventObserver {
 
         val l2 = Label()
         l2.text = "test string"
-        l2.position = Vector3(0.0f, 2.5f, 0.5f)
+        l2.position = Vector3(0.0f, 3.5f, 0.5f)
         l2.letterSpace = 0.2f
         l2.letterScale = 1.8f
 
@@ -72,7 +72,11 @@ class Render : EventObserver {
         b1.size = Vector2(10.0f, 10.0f)
         b1.position = Vector3(-16.0f, 16.0f, 0.4f)
 
-        _ui.add(listOf(l1, l2, b1))
+        val b2 = Billboard()
+        b2.size = Vector2(10.0f, 10.0f)
+        b2.position = Vector3(-16.0f, -16.0f, 0.4f)
+
+        _ui.add(listOf(l1, l2, b1, b2))
 
         _ui.flush()
 

@@ -1,15 +1,16 @@
 package ui
 
-import algebra.*
 import kotlin.Float
+
+import algebra.*
 
 class Billboard : UiComponent() {
     private val VERTICIES_PER_QUAD = 6
 
-    private val _quadVerticies = FloatArray(1 * VERTICIES_PER_QUAD * 3) { 0.0f };
-    private val _quadTexcrds = FloatArray(1 * VERTICIES_PER_QUAD * 2) { 0.0f };
+    private val _quadVerticies = FloatArray(1 * VERTICIES_PER_QUAD * 3) { 0.0f }
+    private val _quadTexcrds = FloatArray(1 * VERTICIES_PER_QUAD * 2) { 0.0f }
 
-    // Colorf color_{};
+    // Colorf color_{}
 
     private var _position: Vector3 = Vector3()
 

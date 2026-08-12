@@ -43,16 +43,22 @@ class Render : EventObserver {
     fun frame(): Unit {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
+        glEnable(GL_DEPTH_TEST)
+        glDepthFunc(GL_LESS)
 
         _scene.walk()
 
-        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST)
+
+        glEnable(GL_BLEND)
+        // glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA)
 
         _ui.label(0.0f, 0.0f, "test string")
 
         _ui.flush()
+
+        glDisable(GL_BLEND)
     }
 
     fun postLoop(): Unit {

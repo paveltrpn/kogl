@@ -83,7 +83,7 @@ class Label : UiComponent() {
             )
             val bottomLeftVt = Vector3((offset + 0.0f) + position.x, -_glyphQuadHgt + position.y, position.z)
 
-            for (j in 0..<3) {
+            for (j in 0..<4) {
                 val vertex = i * VERTICIES_PER_QUAD * 3
                 val component = j * 3
 

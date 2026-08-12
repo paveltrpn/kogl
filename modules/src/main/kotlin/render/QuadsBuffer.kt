@@ -75,7 +75,7 @@ class QuadsBuffer(capacity: Int) {
 
     fun draw() {
         glBindVertexArray(_vao)
-        glDrawArrays(GL_TRIANGLES, 0, _vertexCount)
+        glDrawArrays(GL_TRIANGLES, 0, 10 * 6)
         glBindVertexArray(0)
     }
 }

@@ -6,9 +6,8 @@
  */
 
 rootProject.name = "kogl"
-include("kogl")
-project(":kogl").projectDir = file("kogl")
+include("kogl", "modules")
 
-include(":kogl", ":modules")
+project(":kogl").projectDir = file("kogl")
 project(":modules").projectDir = file("modules")
 

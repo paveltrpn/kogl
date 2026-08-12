@@ -60,12 +60,13 @@ class Render : EventObserver {
         val l1 = Label()
         l1.text = "test string"
         l1.position = Vector3(0.0f, 0.0f, 0.5f)
-        l1.glyphGap = 0.1f
+        l1.letterSpace = 0.1f
 
         val l2 = Label()
         l2.text = "test string"
         l2.position = Vector3(0.0f, 2.5f, 0.5f)
-        l2.glyphGap = 0.2f
+        l2.letterSpace = 0.2f
+        l2.letterScale = 1.8f
 
         val b1 = Billboard()
         b1.size = Vector2(10.0f, 10.0f)

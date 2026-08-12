@@ -14,14 +14,8 @@ class Label : UiComponent() {
     private val _letterQuadsVertices = FloatArray(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD * 3) { 0.0f }
     private val _letterQuadsTxcoords = FloatArray(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD * 2) { 0.0f }
 
-    private var _glyphScale = 1.3f
-    private val GLYPH_WIDTH = 0.4f
-    private val GLYPH_HEIGHT = 1.55f
-    private var _glyphQuadWdt = GLYPH_WIDTH * _glyphScale
-    private var _glyphQuadHgt = GLYPH_HEIGHT * _glyphScale
-    private val GLYPH_GAP = 0.0f
-    private var _glyphGap = GLYPH_GAP
-
+    private var _letterScale = 1.0f
+    private var _letterSpace = 0.0f
     private var _position: Vector3 = Vector3()
 
     // Формат шрифта - изображение с нулём сверху слева,
@@ -41,22 +35,20 @@ class Label : UiComponent() {
 
     // Colorf color_{}
 
-    fun setGlyphWidth(value: Float): Unit {
-    }
-
-    fun setGlyphHeight(value: Float): Unit {
-    }
-
-    fun setGlyphScale(value: Float): Unit {
-    }
-
-
-    var glyphGap: Float
+    var letterScale: Float
         get():Float {
-            return _glyphGap
+            return _letterScale
         }
         set(value) {
-            _glyphGap = value
+            _letterScale = value
+        }
+
+    var letterSpace: Float
+        get():Float {
+            return _letterSpace
+        }
+        set(value) {
+            _letterSpace = value
         }
 
 //    fun setColor( const Colorf &value ) : Unit{
@@ -72,6 +64,12 @@ class Label : UiComponent() {
         }
 
     override fun draw(): Unit {
+        val GLYPH_WIDTH = 0.4f
+        val GLYPH_HEIGHT = 1.55f
+
+        val letterWidth = GLYPH_WIDTH * _letterScale
+        val letterHeight = GLYPH_HEIGHT * _letterScale
+
         // Размер ячейки с символом в долях текстурных координат по горизонтали
         val tcGapX = 1.0f / _fontColumnCount.toFloat()
         // Размер ячейки с символом в долях текстурных координат по вертикали
@@ -79,7 +77,7 @@ class Label : UiComponent() {
 
         for ((i, element) in _text.withIndex()) {
             // Смещение квада с i-ым символом, зависит от ширины квадов и зазора между ними
-            val offset = (_glyphQuadWdt + _glyphGap) * i.toFloat()
+            val offset = (letterWidth + _letterSpace) * i.toFloat()
 
             // Столбец, в котором находится символ
             val glyphX = (element.code % _fontColumnCount).toFloat()
@@ -89,11 +87,11 @@ class Label : UiComponent() {
 
             // Build character quad vertices data.
             val topLeftVt = Vector3((offset + 0.0f) + position.x, 0.0f + position.y, position.z)
-            val topRightVt = Vector3((offset + _glyphQuadWdt) + position.x, 0.0f + position.y, position.z)
+            val topRightVt = Vector3((offset + letterWidth) + position.x, 0.0f + position.y, position.z)
             val bottomRightVt = Vector3(
-                (offset + _glyphQuadWdt) + position.x, -_glyphQuadHgt + position.y, position.z
+                (offset + letterWidth) + position.x, -letterHeight + position.y, position.z
             )
-            val bottomLeftVt = Vector3((offset + 0.0f) + position.x, -_glyphQuadHgt + position.y, position.z)
+            val bottomLeftVt = Vector3((offset + 0.0f) + position.x, -letterHeight + position.y, position.z)
 
             // Fill vertices array.
             val vertexOffset = i * VERTICIES_PER_QUAD * 3

@@ -1,6 +1,6 @@
 plugins {
-    application
     kotlin("jvm")
+    application
 }
 
 val lwjglVersion = "3.3.6"
@@ -34,4 +34,6 @@ kotlin {
 application {
     mainClass = "kogl.MainKt"
 }
+
+
 

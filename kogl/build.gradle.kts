@@ -1,10 +1,6 @@
 plugins {
     application
-    kotlin("jvm") version "2.2.0"
-}
-
-repositories {
-    mavenCentral()
+    kotlin("jvm")
 }
 
 val lwjglVersion = "3.3.6"

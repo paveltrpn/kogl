@@ -7,7 +7,7 @@
 
 rootProject.name = "kogl"
 include("kogl")
-project(":kogl").projectDir = file("apps/kogl")
+project(":kogl").projectDir = file("kogl")
 
 include(":kogl", ":modules")
 project(":modules").projectDir = file("modules")

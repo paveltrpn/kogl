@@ -1,10 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm")
     kotlin("plugin.serialization") version "2.2.0"
-}
-
-repositories {
-    mavenCentral()
 }
 
 val group = "com.example"

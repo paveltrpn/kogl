@@ -83,74 +83,61 @@ class Label : UiComponent() {
             )
             val bottomLeftVt = Vector3((offset + 0.0f) + position.x, -_glyphQuadHgt + position.y, position.z)
 
-            for (j in 0..<4) {
-                val vertex = i * VERTICIES_PER_QUAD * 3
-                val component = j * 3
+            // Fill vertices array.
+            val vertexOffset = i * VERTICIES_PER_QUAD * 3
 
-                _letterQuadsVertices[(vertex + 0) + (component + 0)] = topLeftVt.x
-                _letterQuadsVertices[(vertex + 0) + (component + 1)] = topLeftVt.y
-                _letterQuadsVertices[(vertex + 0) + (component + 2)] = topLeftVt.z
+            _letterQuadsVertices[vertexOffset + 0] = topLeftVt.x
+            _letterQuadsVertices[vertexOffset + 1] = topLeftVt.y
+            _letterQuadsVertices[vertexOffset + 2] = topLeftVt.z
 
-                _letterQuadsVertices[(vertex + 3) + (component + 0)] = topRightVt.x
-                _letterQuadsVertices[(vertex + 3) + (component + 1)] = topRightVt.y
-                _letterQuadsVertices[(vertex + 3) + (component + 2)] = topRightVt.z
+            _letterQuadsVertices[vertexOffset + 3] = topRightVt.x
+            _letterQuadsVertices[vertexOffset + 4] = topRightVt.y
+            _letterQuadsVertices[vertexOffset + 5] = topRightVt.z
 
-                _letterQuadsVertices[(vertex + 6) + (component + 0)] = bottomRightVt.x
-                _letterQuadsVertices[(vertex + 6) + (component + 1)] = bottomRightVt.y
-                _letterQuadsVertices[(vertex + 6) + (component + 2)] = bottomRightVt.z
+            _letterQuadsVertices[vertexOffset + 6] = bottomRightVt.x
+            _letterQuadsVertices[vertexOffset + 7] = bottomRightVt.y
+            _letterQuadsVertices[vertexOffset + 8] = bottomRightVt.z
 
-                _letterQuadsVertices[(vertex + 9) + (component + 0)] = bottomRightVt.x
-                _letterQuadsVertices[(vertex + 9) + (component + 1)] = bottomRightVt.y
-                _letterQuadsVertices[(vertex + 9) + (component + 2)] = bottomRightVt.z
+            _letterQuadsVertices[vertexOffset + 9] = bottomRightVt.x
+            _letterQuadsVertices[vertexOffset + 10] = bottomRightVt.y
+            _letterQuadsVertices[vertexOffset + 11] = bottomRightVt.z
 
-                _letterQuadsVertices[(vertex + 12) + (component + 0)] = bottomLeftVt.x
-                _letterQuadsVertices[(vertex + 12) + (component + 1)] = bottomLeftVt.y
-                _letterQuadsVertices[(vertex + 12) + (component + 2)] = bottomLeftVt.z
+            _letterQuadsVertices[vertexOffset + 12] = bottomLeftVt.x
+            _letterQuadsVertices[vertexOffset + 13] = bottomLeftVt.y
+            _letterQuadsVertices[vertexOffset + 14] = bottomLeftVt.z
 
-                _letterQuadsVertices[(vertex + 15) + (component + 0)] = topLeftVt.x
-                _letterQuadsVertices[(vertex + 15) + (component + 1)] = topLeftVt.y
-                _letterQuadsVertices[(vertex + 15) + (component + 2)] = topLeftVt.z
-            }
+            _letterQuadsVertices[vertexOffset + 15] = topLeftVt.x
+            _letterQuadsVertices[vertexOffset + 16] = topLeftVt.y
+            _letterQuadsVertices[vertexOffset + 17] = topLeftVt.z
 
-//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 0] = topLeftVt
-//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 1] = topRightVt
-//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 2] = bottomRightVt
-//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 3] = bottomRightVt
-//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftVt
-//            _letterQuadsVertices[(i * VERTICIES_PER_QUAD) + 5] = topLeftVt
-
+            // Build character quad texture coordinates data.
             val topLeftTc = Vector2((tcGapX * glyphX) + 0.0f, (tcGapY * glyphY) + 0.0f)
             val topRightTc = Vector2((tcGapX * glyphX) + tcGapX, (tcGapY * glyphY) + 0.0f)
             val bottomRightTc = Vector2((tcGapX * glyphX) + tcGapX, (tcGapY * glyphY) + tcGapY)
             val bottomLeftTc = Vector2((tcGapX * glyphX) + 0.0f, (tcGapY * glyphY) + tcGapY)
 
-            for (j in 0..<3) {
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 0) + ((j * 2) + 0)] = topLeftTc.x
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 0) + ((j * 2) + 1)] = topLeftTc.y
+            // Fill texture coordinates array.
+            val txOffset = i * VERTICIES_PER_QUAD * 2
 
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 2) + ((j * 2) + 0)] = topRightTc.x
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 2) + ((j * 2) + 1)] = topRightTc.y
+            _letterQuadsTxcoords[txOffset + 0] = topLeftTc.x
+            _letterQuadsTxcoords[txOffset + 1] = topLeftTc.y
 
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 4) + ((j * 2) + 0)] = bottomRightTc.x
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 4) + ((j * 2) + 1)] = bottomRightTc.y
+            _letterQuadsTxcoords[txOffset + 2] = topRightTc.x
+            _letterQuadsTxcoords[txOffset + 3] = topRightTc.y
 
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 6) + ((j * 2) + 0)] = bottomRightTc.x
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 6) + ((j * 2) + 1)] = bottomRightTc.y
+            _letterQuadsTxcoords[txOffset + 4] = bottomRightTc.x
+            _letterQuadsTxcoords[txOffset + 5] = bottomRightTc.y
 
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 8) + ((j * 2) + 0)] = bottomLeftTc.x
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 8) + ((j * 2) + 1)] = bottomLeftTc.y
+            _letterQuadsTxcoords[txOffset + 6] = bottomRightTc.x
+            _letterQuadsTxcoords[txOffset + 7] = bottomRightTc.y
 
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 10) + ((j * 2) + 0)] = topLeftTc.x
-                _letterQuadsTxcoords[((i * VERTICIES_PER_QUAD) + 10) + ((j * 2) + 1)] = topLeftTc.y
-            }
+            _letterQuadsTxcoords[txOffset + 8] = bottomLeftTc.x
+            _letterQuadsTxcoords[txOffset + 9] = bottomLeftTc.y
 
-//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 0] = topLeftTc
-//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 1] = topRightTc
-//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 2] = bottomRightTc
-//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 3] = bottomRightTc
-//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 4] = bottomLeftTc
-//            _letterQuadsTxcoords[(i * VERTICIES_PER_QUAD) + 5] = topLeftTc
+            _letterQuadsTxcoords[txOffset + 10] = topLeftTc.x
+            _letterQuadsTxcoords[txOffset + 11] = topLeftTc.y
 
+            // Increment outputt quads (letters) count
             _quadsCount++
         }
     }

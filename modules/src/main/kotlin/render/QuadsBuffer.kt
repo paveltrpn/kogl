@@ -5,7 +5,7 @@ import org.lwjgl.system.MemoryStack
 import java.nio.FloatBuffer
 
 class QuadsBuffer(capacity: Int) {
-    private var _vao: Int = 0
+    private var _vao: Int
     private val _vbo: Int
     private val _tbo: Int
 
@@ -48,17 +48,17 @@ class QuadsBuffer(capacity: Int) {
             val buffer: FloatBuffer = stack.callocFloat(vertices.size)
             buffer.put(vertices)
             buffer.flip()
-            glBufferData(GL_ARRAY_BUFFER, buffer, GL_DYNAMIC_DRAW)
+            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
         }
 
-//        glBindBuffer(GL_ARRAY_BUFFER, _tbo)
-//
-//        MemoryStack.stackPush().use { stack ->
-//            val buffer: FloatBuffer = stack.callocFloat(txcoords.size)
-//            buffer.put(txcoords)
-//            buffer.flip()
-//            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
-//        }
+        glBindBuffer(GL_ARRAY_BUFFER, _tbo)
+
+        MemoryStack.stackPush().use { stack ->
+            val buffer: FloatBuffer = stack.callocFloat(txcoords.size)
+            buffer.put(txcoords)
+            buffer.flip()
+            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
+        }
 
 //        val pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)
 //        MemoryStack.stackPush().use { stack ->
@@ -68,7 +68,6 @@ class QuadsBuffer(capacity: Int) {
 //
 //            pointer?.put(buffer)
 //        }
-//
 //        glUnmapBuffer(GL_ARRAY_BUFFER)
 
         glBindVertexArray(0)
@@ -76,7 +75,7 @@ class QuadsBuffer(capacity: Int) {
 
     fun draw() {
         glBindVertexArray(_vao)
-        glDrawArrays(GL_TRIANGLES, 0, _vertexCount / 3)
+        glDrawArrays(GL_TRIANGLES, 0, _vertexCount)
         glBindVertexArray(0)
     }
 }

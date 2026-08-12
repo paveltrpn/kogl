@@ -3,41 +3,29 @@ package render
 import ui.*
 
 class UiGL : Ui() {
-    private val OUTPUT_QUADS_COUNT = 128
+    private val OUTPUT_QUADS_CAPACITY = 128
 
     private var _program: Program
 
-    private val _labelBuffer = QuadsBuffer(OUTPUT_QUADS_COUNT * 6)
-    private val _billboardBuffer = QuadsBuffer(OUTPUT_QUADS_COUNT * 6)
+    private val _labelBuffer = QuadsBuffer(OUTPUT_QUADS_CAPACITY)
+    private val _billboardBuffer = QuadsBuffer(OUTPUT_QUADS_CAPACITY)
 
     init {
         val programSource = ShaderSource("screenString")
         _program = Program(programSource)
     }
 
-    fun draw(): Unit {
-
-    }
-
     override fun flush(): Unit {
         for (component in _componentsList) {
+            var nowOffset = 0
+
             when (component) {
                 is Billboard -> {
-                    // println(" === ${component.quadsCount}")
                 }
 
                 is Label -> {
-                    val v = floatArrayOf(
-                        -1.0f, 1.0f, 10.0f,
-                        1.0f, 1.0f, 10.0f,
-                        1.0f, -1.0f, 10.0f,
-                        1.0f, -1.0f, 10.0f,
-                        -1.0f, -1.0f, 10.0f,
-                        -1.0f, 1.0f, 10.0f
-                    )
-
-                    _labelBuffer.updateData(v, component.txcoords)
-                    // println(" === ${component.quadsCount}")
+                    _labelBuffer.updateData(component.vertices, component.txcoords)
+                    nowOffset = component.quadsCount
                 }
             }
 

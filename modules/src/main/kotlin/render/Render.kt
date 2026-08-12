@@ -22,8 +22,8 @@ class Render : EventObserver {
 
         _scene = Scene()
 
-        // _scene.addStateGroup(sparseObjectsGraph)
-        // _scene.addStateGroup(testBoxGraph)
+        _scene.addStateGroup(sparseObjectsGraph)
+        _scene.addStateGroup(testBoxGraph)
 
         _ui = UiGL()
     }
@@ -48,7 +48,7 @@ class Render : EventObserver {
 
         _scene.walk()
 
-        // glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST);
 
         _ui.label(0.0f, 0.0f, "test string")
 

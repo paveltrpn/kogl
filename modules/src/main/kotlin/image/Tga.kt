@@ -54,6 +54,12 @@ class Tga(path: String) : Image() {
             throw RuntimeException("Unsupported TGA image type, bits is $header!!.bits.toInt()")
         }
 
+//        _components = when (bits.toInt()) {
+//            24 -> 3
+//            32 -> 4
+//            else -> 4
+//        }
+
         _width = header!!.width.toInt()
         _height = header!!.height.toInt()
 
@@ -230,7 +236,7 @@ class Tga(path: String) : Image() {
                     _data[destIdx + 0] = gray.toByte()
                     _data[destIdx + 1] = gray.toByte()
                     _data[destIdx + 2] = gray.toByte()
-                    _data[destIdx + 3] = -1
+                    _data[destIdx + 3] = 255.toByte()
 
                     pixelIdx++
                 }
@@ -248,7 +254,7 @@ class Tga(path: String) : Image() {
                     _data[destIdx + 0] = gray.toByte()
                     _data[destIdx + 1] = gray.toByte()
                     _data[destIdx + 2] = gray.toByte()
-                    _data[destIdx + 3] = -1
+                    _data[destIdx + 3] = 255.toByte()
 
                     pixelIdx++
                 }

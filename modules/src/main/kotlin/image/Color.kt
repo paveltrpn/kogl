@@ -81,12 +81,12 @@ class Color() {
 
     fun fromHexString(color: String) {
         if (color.length != 9 || !color.startsWith("#")) {
-            throw IllegalArgumentException("Color string must be exactly 9 characters long and start with '#', got: $color")
+            throw RuntimeException("Color string must be exactly 9 characters long and start with '#', got: $color")
         }
 
         val hex = color.substring(1) // Remove '#'
         if (hex.length != 8 || !hex.all { it.isHexDigit() }) {
-            throw IllegalArgumentException("Color string must contain exactly 8 valid hexadecimal digits after '#', got: $hex")
+            throw RuntimeException("Color string must contain exactly 8 valid hexadecimal digits after '#', got: $hex")
         }
 
         data = ByteArray(4) { i ->

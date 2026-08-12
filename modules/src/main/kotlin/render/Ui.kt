@@ -1,11 +1,14 @@
 package render
 
 import ui.*
+import image.*
 
 class UiGL : Ui() {
     private val OUTPUT_QUADS_CAPACITY = 128
 
-    private var _program: Program
+    private val _program: Program
+
+    // private val _font: Texture
 
     private val _labelBuffer = QuadsBuffer(OUTPUT_QUADS_CAPACITY)
     private val _billboardBuffer = QuadsBuffer(OUTPUT_QUADS_CAPACITY)
@@ -13,6 +16,9 @@ class UiGL : Ui() {
     init {
         val programSource = ShaderSource("screenString")
         _program = Program(programSource)
+
+//        val fontImage = Tga("")
+//        _font = Texture(fontImage)
     }
 
     override fun flush(): Unit {

@@ -34,9 +34,9 @@ class Scene {
                 is StateGroup -> {
                     _currentProgram = current.program
 
-                    _currentProgram?.setMatrixUniform("view_matrix", false, _camera.matrix())
-
                     current.traverse()
+
+                    _currentProgram?.setMatrixUniform("view_matrix", false, _camera.matrix())
 
                     for (i in current.children.indices.reversed()) {
                         // Push children to the stack.

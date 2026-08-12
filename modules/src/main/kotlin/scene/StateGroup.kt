@@ -15,7 +15,7 @@ open class StateGroup : Node {
         }
 
     override fun traverse(): Unit {
-        _program!!.use()
+        _program?.use()
     }
 
     fun addChild(child: Node): Unit {

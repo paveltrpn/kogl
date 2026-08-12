@@ -1,6 +1,8 @@
 package ui
 
-sealed class UiComponent {}
+sealed class UiComponent {
+    protected var _quadsCount = 0;
+}
 
 abstract class Ui {
     protected val _componentsList: MutableList<UiComponent> = mutableListOf();

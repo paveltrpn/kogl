@@ -5,10 +5,9 @@ import kotlin.Float
 
 class Billboard : UiComponent() {
     private val VERTICIES_PER_QUAD = 6
-    private val JUST_SINGLE_QUAD = 1
 
-    private val _quadVerticies = FloatArray(JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * 3) { 0.0f };
-    private val _quadTexcrds = FloatArray(JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * 2) { 0.0f };
+    private val _quadVerticies = FloatArray(1 * VERTICIES_PER_QUAD * 3) { 0.0f };
+    private val _quadTexcrds = FloatArray(1 * VERTICIES_PER_QUAD * 2) { 0.0f };
 
     // Colorf color_{};
 
@@ -107,23 +106,26 @@ class Billboard : UiComponent() {
 //        _quadTexcrds[3] = bottomRightTc;
 //        _quadTexcrds[4] = bottomLeftTc;
 //        _quadTexcrds[5] = topLeftTc;
+
+        _quadsCount++;
     }
 
 
-    fun lettersCount(): Int {
-        return JUST_SINGLE_QUAD;
-    }
+    val quadsCount: Int
+        get(): Int {
+            return _quadsCount;
+        }
 
     fun bufferVerticesSize(): Int {
-        return JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3
+        return quadsCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3
     }
 
     fun bufferTexcrdsSize(): Int {
-        return JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
+        return quadsCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
     }
 
     fun bufferVertclrsSize(): Int {
-        return JUST_SINGLE_QUAD * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
+        return quadsCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
     }
 
     val vertices: FloatArray

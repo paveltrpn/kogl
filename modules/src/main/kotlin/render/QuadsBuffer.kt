@@ -17,17 +17,17 @@ class QuadsBuffer(capacity: Int) {
         _vao = glGenVertexArrays()
         glBindVertexArray(_vao)
 
-        _vbo = glGenBuffers();
-        _tbo = glGenBuffers();
+        _vbo = glGenBuffers()
+        _tbo = glGenBuffers()
 
+        glEnableVertexAttribArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, _vbo)
         glBufferData(GL_ARRAY_BUFFER, (Float.SIZE_BYTES * 3 * _vertexCount).toLong(), GL_DYNAMIC_DRAW)
-        glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L)
 
+        glEnableVertexAttribArray(1)
         glBindBuffer(GL_ARRAY_BUFFER, _tbo)
         glBufferData(GL_ARRAY_BUFFER, (Float.SIZE_BYTES * 2 * _vertexCount).toLong(), GL_DYNAMIC_DRAW)
-        glEnableVertexAttribArray(1)
         glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0L)
 
         glBindVertexArray(0)
@@ -48,22 +48,22 @@ class QuadsBuffer(capacity: Int) {
             val buffer: FloatBuffer = stack.callocFloat(vertices.size)
             buffer.put(vertices)
             buffer.flip()
-            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
+            glBufferData(GL_ARRAY_BUFFER, buffer, GL_DYNAMIC_DRAW)
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, _tbo)
-
-        MemoryStack.stackPush().use { stack ->
-            val buffer: FloatBuffer = stack.callocFloat(txcoords.size)
-            buffer.put(txcoords)
-            buffer.flip()
-            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
-        }
+//        glBindBuffer(GL_ARRAY_BUFFER, _tbo)
+//
+//        MemoryStack.stackPush().use { stack ->
+//            val buffer: FloatBuffer = stack.callocFloat(txcoords.size)
+//            buffer.put(txcoords)
+//            buffer.flip()
+//            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
+//        }
 
 //        val pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)
 //        MemoryStack.stackPush().use { stack ->
-//            val buffer: ByteBuffer = stack.calloc(data.size * 4)
-//            buffer.asFloatBuffer().put(data)
+//            val buffer = stack.calloc(vertices.size * 3)
+//            buffer.asFloatBuffer().put(vertices)
 //            buffer.flip()
 //
 //            pointer?.put(buffer)
@@ -76,7 +76,7 @@ class QuadsBuffer(capacity: Int) {
 
     fun draw() {
         glBindVertexArray(_vao)
-        glDrawArrays(GL_TRIANGLES, _vertexCount, GL_UNSIGNED_INT)
+        glDrawArrays(GL_TRIANGLES, 0, _vertexCount / 3)
         glBindVertexArray(0)
     }
 }

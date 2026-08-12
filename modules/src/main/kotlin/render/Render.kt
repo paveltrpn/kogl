@@ -57,24 +57,32 @@ class Render : EventObserver {
         // glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA)
 
+        val TEXT_START_POS_X = -30.0f
+        val TEXT_START_POS_Y = 18.0f
+        val TEXT_PLANE_Z = 0.5f
+
         val l1 = Label()
         l1.text = "test string"
-        l1.position = Vector3(0.0f, 0.0f, 0.5f)
+        l1.position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y)
+        l1.z = TEXT_PLANE_Z
         l1.letterSpace = 0.1f
 
         val l2 = Label()
         l2.text = "test string"
-        l2.position = Vector3(0.0f, 3.5f, 0.5f)
+        l2.position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y + 3.5f)
+        l2.z = TEXT_PLANE_Z
         l2.letterSpace = 0.2f
         l2.letterScale = 1.8f
 
         val b1 = Billboard()
         b1.size = Vector2(10.0f, 10.0f)
-        b1.position = Vector3(-16.0f, 16.0f, 0.4f)
+        b1.position = Vector2(-30.0f, 16.0f)
+        b1.z = TEXT_PLANE_Z
 
         val b2 = Billboard()
         b2.size = Vector2(10.0f, 10.0f)
-        b2.position = Vector3(-16.0f, -16.0f, 0.4f)
+        b2.position = Vector2(-30.0f, 32.0f)
+        b2.z = TEXT_PLANE_Z
 
         _ui.add(listOf(l1, l2, b1, b2))
 

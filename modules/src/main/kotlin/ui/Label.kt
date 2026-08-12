@@ -16,7 +16,7 @@ class Label : UiComponent() {
 
     private var _letterScale = 1.0f
     private var _letterSpace = 0.0f
-    private var _position: Vector3 = Vector3()
+    private var _position: Vector3 = Vector3(0.0f, 0.0f, 0.5f)
 
     // Формат шрифта - изображение с нулём сверху слева,
     // 32 столбца на 8 строк символов, первый символ - 32 ("пробел").
@@ -55,12 +55,21 @@ class Label : UiComponent() {
 //        color_ = value
 //    }
 
-    var position: Vector3
-        get() :Vector3 {
-            return _position
+    var position: Vector2
+        get() :Vector2 {
+            return Vector2(_position.x, _position.y)
         }
-        set(value: Vector3) {
-            _position = value
+        set(value) {
+            _position.x = value.x
+            _position.y = value.y
+        }
+
+    var z: Float
+        get(): Float {
+            return _position.z
+        }
+        set(value) {
+            _position.z = value
         }
 
     override fun draw(): Unit {
@@ -86,12 +95,12 @@ class Label : UiComponent() {
             val glyphY = ((element.code / _fontColumnCount) - 1).toFloat()
 
             // Build character quad vertices data.
-            val topLeftVt = Vector3((offset + 0.0f) + position.x, 0.0f + position.y, position.z)
-            val topRightVt = Vector3((offset + letterWidth) + position.x, 0.0f + position.y, position.z)
+            val topLeftVt = Vector3((offset + 0.0f) + _position.x, 0.0f + _position.y, _position.z)
+            val topRightVt = Vector3((offset + letterWidth) + _position.x, 0.0f + _position.y, _position.z)
             val bottomRightVt = Vector3(
-                (offset + letterWidth) + position.x, -letterHeight + position.y, position.z
+                (offset + letterWidth) + _position.x, -letterHeight + _position.y, _position.z
             )
-            val bottomLeftVt = Vector3((offset + 0.0f) + position.x, -letterHeight + position.y, position.z)
+            val bottomLeftVt = Vector3((offset + 0.0f) + _position.x, -letterHeight + _position.y, _position.z)
 
             // Fill vertices array.
             val vertexOffset = i * VERTICIES_PER_QUAD * 3

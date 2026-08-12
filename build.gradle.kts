@@ -9,6 +9,7 @@ allprojects {
     }
 }
 
+// Here for build fat jar ($ gradle shadowJar).
 dependencies {
     implementation(project(":modules"))
     implementation(project(":kogl"))

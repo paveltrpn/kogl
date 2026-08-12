@@ -46,20 +46,29 @@ class Billboard : UiComponent() {
             _height = value
         }
 
-    var position: Vector3
-        get() :Vector3 {
-            return _position
+    var position: Vector2
+        get() :Vector2 {
+            return Vector2(_position.x, _position.y)
         }
         set(value) {
-            _position = value
+            _position.x = value.x
+            _position.y = value.y
+        }
+
+    var z: Float
+        get(): Float {
+            return _position.z
+        }
+        set(value) {
+            _position.z = value
         }
 
     override fun draw(): Unit {
         // Build quad vertices data.
-        val topLeftVt = Vector3(position.x, position.y, position.z)
-        val topRightVt = Vector3(position.x + _width, position.y, position.z)
-        val bottomRightVt = Vector3(position.x + _width, position.y - _height, position.z)
-        val bottomLeftVt = Vector3(position.x, position.y - _height, position.z)
+        val topLeftVt = Vector3(_position.x, _position.y, _position.z)
+        val topRightVt = Vector3(_position.x + _width, _position.y, _position.z)
+        val bottomRightVt = Vector3(_position.x + _width, _position.y - _height, _position.z)
+        val bottomLeftVt = Vector3(_position.x, _position.y - _height, _position.z)
 
         // Fill vertices array.
         _quadVerticies[0] = topLeftVt.x

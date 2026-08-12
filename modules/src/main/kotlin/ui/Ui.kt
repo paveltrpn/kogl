@@ -14,7 +14,7 @@ abstract class Ui {
 
         // l.setColor( { "white" } )
         l.setGlyphGap(0.1f)
-        l.position = Vector3(px, py, 10.0f)
+        l.position = Vector3(px, py, 0.5f)
 
         l.draw(msg)
 

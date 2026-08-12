@@ -39,7 +39,14 @@ class QuadsBuffer(capacity: Int) {
         glDeleteVertexArrays(_vao)
     }
 
-    fun updateData(vertices: FloatArray, txcoords: FloatArray) {
+    /**
+     * Fills the vertex Buffer Object (VBO) and Texture Coordinate Buffer Object (TBO) with vertex data.
+     *
+     * @param offset The starting quad index offset in the buffer where data will be written.
+     * @param vertices A Flat FloatArray containing vertex positions in XYZ order (3 floats per vertex, 6 vertices per quad).
+     * @param txcoords A flat FloatArray containing texture coordinates in ST order (2 floats per vertex, 6 vertices per quad).
+     */
+    fun fill(offset: Int, vertices: FloatArray, txcoords: FloatArray) {
         glBindVertexArray(_vao)
 
         glBindBuffer(GL_ARRAY_BUFFER, _vbo)
@@ -48,7 +55,7 @@ class QuadsBuffer(capacity: Int) {
             val buffer: FloatBuffer = stack.callocFloat(vertices.size)
             buffer.put(vertices)
             buffer.flip()
-            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
+            glBufferSubData(GL_ARRAY_BUFFER, offset.toLong() * 6 * 3 * Float.SIZE_BYTES, buffer)
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, _tbo)
@@ -57,7 +64,7 @@ class QuadsBuffer(capacity: Int) {
             val buffer: FloatBuffer = stack.callocFloat(txcoords.size)
             buffer.put(txcoords)
             buffer.flip()
-            glBufferSubData(GL_ARRAY_BUFFER, 0, buffer)
+            glBufferSubData(GL_ARRAY_BUFFER, offset.toLong() * 6 * 2 * Float.SIZE_BYTES, buffer)
         }
 
 //        val pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY)

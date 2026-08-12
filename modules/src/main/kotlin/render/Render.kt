@@ -55,6 +55,7 @@ class Render : EventObserver {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA)
 
         _ui.label(0.0f, 0.0f, "test string")
+        _ui.label(0.0f, 2.3f, "test string111")
 
         _ui.flush()
 

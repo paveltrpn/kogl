@@ -8,13 +8,13 @@ out vec2 TexCoord;
 out vec4 Color;
 
 void main() {
-    #define SIZE 8
+    #define SIZE 32
     float left = -SIZE;
     float right = SIZE;
     float top = SIZE;
     float bottom = -SIZE;
-    float Znear = 0.0;
-    float Zfar = 100.0;
+    float Znear = -1.0;
+    float Zfar = 1.0;
 
     mat4 orthomatrix;
     orthomatrix[0].x = 2.0 / (right - left);

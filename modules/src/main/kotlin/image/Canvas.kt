@@ -1,7 +1,12 @@
 package image
 
 // Canvas is always have underlying RGBA image.
-class Canvas(width: Int, height: Int) : Image(width, height) {
+class Canvas(width: Int, height: Int) : Image() {
+    init {
+        _width = width
+        _height = height
+        _data = ByteArray(_width * _height * _components)
+    }
 
     fun fillWith(color: Color): Unit {
         for (j in 0..<(width * height)) {

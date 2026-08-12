@@ -4,104 +4,107 @@ import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-data class TgaHeader(
-    val identsize: UByte,
-    val colorMapType: UByte,
-    val imageType: UByte,
-    val colorMapStart: UShort,
-    val colorMapLength: UShort,
-    val colorMapBits: UByte,
-    val xstart: UShort,
-    val ystart: UShort,
-    val width: UShort,
-    val height: UShort,
-    val bits: UByte,
+class TgaHeader(imageData: ByteArray) {
+    val identsize: UByte
+    val colorMapType: UByte
+    val imageType: UByte
+    val colorMapStart: UShort
+    val colorMapLength: UShort
+    val colorMapBits: UByte
+    val xstart: UShort
+    val ystart: UShort
+    val width: UShort
+    val height: UShort
+    val bits: UByte
     val descriptor: UByte
-)
 
-class Tga(path: String) : Image(0, 0) {
+    init {
+        val endianness = ByteOrder.LITTLE_ENDIAN
+
+        identsize = imageData[0].toUByte()
+        colorMapType = imageData[1].toUByte()
+        imageType = imageData[2].toUByte()
+        colorMapStart = ByteBuffer.wrap(imageData, 3, 2).order(endianness).short.toUShort()
+        colorMapLength = ByteBuffer.wrap(imageData, 5, 2).order(endianness).short.toUShort()
+        colorMapBits = imageData[7].toUByte()
+        xstart = ByteBuffer.wrap(imageData, 8, 2).order(endianness).short.toUShort()
+        ystart = ByteBuffer.wrap(imageData, 10, 2).order(endianness).short.toUShort()
+        width = ByteBuffer.wrap(imageData, 12, 2).order(endianness).short.toUShort()
+        height = ByteBuffer.wrap(imageData, 14, 2).order(endianness).short.toUShort()
+        bits = imageData[16].toUByte()
+        descriptor = imageData[17].toUByte()
+    }
+}
+
+class Tga(path: String) : Image() {
     private var header: TgaHeader? = null
-    private var idExtensionLength: Int = 0
-    private var colorMapData: ByteArray? = null
 
     init {
         val file = File(path)
 
-        val data = file.readBytes()
+        val imageData = file.readBytes()
 
         // println("${data.size} bytes read")
 
-        // Parse header.
-        val identsize = data[0].toUByte()
-        val colorMapType = data[1].toUByte()
-        val imageType = data[2].toUByte()
-        val colorMapStart = ByteBuffer.wrap(data, 3, 2).order(ByteOrder.LITTLE_ENDIAN).short.toUShort()
-        val colorMapLength = ByteBuffer.wrap(data, 5, 2).order(ByteOrder.LITTLE_ENDIAN).short.toUShort()
-        val colorMapBits = data[7].toUByte()
-        val xstart = ByteBuffer.wrap(data, 8, 2).order(ByteOrder.LITTLE_ENDIAN).short.toUShort()
-        val ystart = ByteBuffer.wrap(data, 10, 2).order(ByteOrder.LITTLE_ENDIAN).short.toUShort()
+        header = TgaHeader(imageData)
 
-        val width = ByteBuffer.wrap(data, 12, 2).order(ByteOrder.LITTLE_ENDIAN).short.toUShort()
-        val height = ByteBuffer.wrap(data, 14, 2).order(ByteOrder.LITTLE_ENDIAN).short.toUShort()
+        // println("TGA Header: type=$header!!.imageType, width=$width, height=$height, bits=$header!!.bits")
 
-        val bits = data[16].toUByte()
-        val descriptor = data[17].toUByte()
-
-        header = TgaHeader(
-            identsize,
-            colorMapType,
-            imageType,
-            colorMapStart,
-            colorMapLength,
-            colorMapBits,
-            xstart,
-            ystart,
-            width,
-            height,
-            bits,
-            descriptor
-        )
-        idExtensionLength = identsize.toInt()
-
-        println("TGA Header: type=$imageType, width=$width, height=$height, bits=$bits")
-
-        val components = when (bits.toInt()) {
-            24 -> 3
-            32 -> 4
-            else -> 4
+        if (header!!.bits.toInt() != 32) {
+            throw RuntimeException("Unsupported TGA image type, bits is $header!!.bits.toInt()")
         }
-        this.data = ByteArray(this.width * this.height * this.components)
 
-        val offset = 18 + identsize.toInt()
+        _width = header!!.width.toInt()
+        _height = header!!.height.toInt()
+
+        _data = ByteArray(width * height * components)
+
+        val offset = 18 + header!!.identsize.toInt()
 
         // Load color map if present
-        if (colorMapType.toInt() != 0) {
-            val cmapBytes = (colorMapBits.toInt() + 7) / 8
-            colorMapData = ByteArray(colorMapLength.toInt() * cmapBytes)
+        if (header!!.colorMapType.toInt() != 0) {
+            val cmapBytes = (header!!.colorMapBits.toInt() + 7) / 8
+            val colorMapData = ByteArray(header!!.colorMapLength.toInt() * cmapBytes)
             System.arraycopy(data, offset, colorMapData, 0, colorMapData.size)
         }
 
         val imageDataOffset =
-            if (colorMapType.toInt() != 0) offset + colorMapLength.toInt() * ((colorMapBits.toInt() + 7) / 8) else offset
+            if (header!!.colorMapType.toInt() != 0) {
+                offset + header!!.colorMapLength.toInt() * ((header!!.colorMapBits.toInt() + 7) / 8)
+            } else {
+                offset
+            }
 
-        when (imageType.toInt()) {
-            1 -> decodeRunLengthEncoded(data, imageDataOffset, true)
-            2 -> decodeUncompressed(data, imageDataOffset, false)
-            3 -> decodeGrayscaleRLE(data, imageDataOffset)
-            9, 10 -> decodeRunLengthEncoded(data, imageDataOffset, false)
-            else -> throw IllegalArgumentException("Unsupported TGA image type: $imageType")
+        when (header!!.imageType.toInt()) {
+            1 -> {
+                decodeRLE(imageData, imageDataOffset, true)
+            }
+
+            2 -> {
+                decodeUncompressed(imageData, imageDataOffset, false)
+            }
+
+            3 -> {
+                decodeGrayscaleRLE(imageData, imageDataOffset)
+            }
+
+            9, 10 -> {
+                decodeRLE(imageData, imageDataOffset, false)
+            }
+
+            else -> {
+                throw RuntimeException("Unsupported TGA image type: $header!!.imageType")
+            }
         }
-    }
-
-    private fun load(path: String) {
-
     }
 
     private fun decodeUncompressed(data: ByteArray, offset: Int, flipped: Boolean) {
         val pixelSize = when (header!!.bits.toInt()) {
             24 -> 3
             32 -> 4
-            else -> throw IllegalArgumentException("Unsupported bit depth: ${header!!.bits}")
+            else -> {
+                throw RuntimeException("Unsupported bit depth: ${header!!.bits}")
+            }
         }
 
         val dest = if (flipped) ByteArray(data.size) else data
@@ -118,22 +121,22 @@ class Tga(path: String) : Image(0, 0) {
                 val g = dest[srcIdx + 1].toInt() and 0xFF
                 val r = dest[srcIdx + 2].toInt() and 0xFF
 
-                this.data[destIdx + 2] = r.toByte()
-                this.data[destIdx + 1] = g.toByte()
-                this.data[destIdx + 0] = b.toByte()
+                _data[destIdx + 2] = r.toByte()
+                _data[destIdx + 1] = g.toByte()
+                _data[destIdx + 0] = b.toByte()
 
                 if (components == 4) {
-                    this.data[destIdx + 3] = if (pixelSize == 4) dest[srcIdx + 3].toByte() else -1
+                    _data[destIdx + 3] = if (pixelSize == 4) dest[srcIdx + 3].toByte() else -1
                 }
             }
         }
     }
 
-    private fun decodeRunLengthEncoded(data: ByteArray, offset: Int, flipped: Boolean) {
+    private fun decodeRLE(data: ByteArray, offset: Int, flipped: Boolean) {
         val pixelSize = when (header!!.bits.toInt()) {
             24 -> 3
             32 -> 4
-            else -> throw IllegalArgumentException("Unsupported bit depth: ${header!!.bits}")
+            else -> throw RuntimeException("Unsupported bit depth: ${header!!.bits}")
         }
 
         var pixelIdx = 0
@@ -164,15 +167,15 @@ class Tga(path: String) : Image(0, 0) {
                     val destIdx = (y * width + x) * components
 
                     if (flipped) {
-                        this.data[destIdx + 2] = r.toByte()
-                        this.data[destIdx + 1] = g.toByte()
-                        this.data[destIdx + 0] = b.toByte()
-                        if (components == 4) this.data[destIdx + 3] = a.toByte()
+                        _data[destIdx + 2] = r.toByte()
+                        _data[destIdx + 1] = g.toByte()
+                        _data[destIdx + 0] = b.toByte()
+                        if (components == 4) _data[destIdx + 3] = a.toByte()
                     } else {
-                        this.data[destIdx + 2] = r.toByte()
-                        this.data[destIdx + 1] = g.toByte()
-                        this.data[destIdx + 0] = b.toByte()
-                        if (components == 4) this.data[destIdx + 3] = a.toByte()
+                        _data[destIdx + 2] = r.toByte()
+                        _data[destIdx + 1] = g.toByte()
+                        _data[destIdx + 0] = b.toByte()
+                        if (components == 4) _data[destIdx + 3] = a.toByte()
                     }
                     pixelIdx++
                 }
@@ -190,10 +193,10 @@ class Tga(path: String) : Image(0, 0) {
                     val x = pixelIdx % width
                     val destIdx = (y * width + x) * components
 
-                    this.data[destIdx + 2] = r.toByte()
-                    this.data[destIdx + 1] = g.toByte()
-                    this.data[destIdx + 0] = b.toByte()
-                    if (components == 4) this.data[destIdx + 3] = a.toByte()
+                    _data[destIdx + 2] = r.toByte()
+                    _data[destIdx + 1] = g.toByte()
+                    _data[destIdx + 0] = b.toByte()
+                    if (components == 4) _data[destIdx + 3] = a.toByte()
 
                     pixelIdx++
                 }
@@ -224,10 +227,10 @@ class Tga(path: String) : Image(0, 0) {
                     val x = pixelIdx % width
                     val destIdx = (y * width + x) * components
 
-                    this.data[destIdx + 0] = gray.toByte()
-                    this.data[destIdx + 1] = gray.toByte()
-                    this.data[destIdx + 2] = gray.toByte()
-                    this.data[destIdx + 3] = -1
+                    _data[destIdx + 0] = gray.toByte()
+                    _data[destIdx + 1] = gray.toByte()
+                    _data[destIdx + 2] = gray.toByte()
+                    _data[destIdx + 3] = -1
 
                     pixelIdx++
                 }
@@ -242,10 +245,10 @@ class Tga(path: String) : Image(0, 0) {
                     val x = pixelIdx % width
                     val destIdx = (y * width + x) * components
 
-                    this.data[destIdx + 0] = gray.toByte()
-                    this.data[destIdx + 1] = gray.toByte()
-                    this.data[destIdx + 2] = gray.toByte()
-                    this.data[destIdx + 3] = -1
+                    _data[destIdx + 0] = gray.toByte()
+                    _data[destIdx + 1] = gray.toByte()
+                    _data[destIdx + 2] = gray.toByte()
+                    _data[destIdx + 3] = -1
 
                     pixelIdx++
                 }

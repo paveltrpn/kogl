@@ -14,33 +14,45 @@ fun toSignedByte(value: Int): Byte {
     return value.toByte()
 }
 
-open class Image(protected val width: Int, protected val height: Int) {
-    // 32 bit per pixel RGBA image.
-    protected val components = 4
-    protected val byteSize = 8
-    protected val depth = components * byteSize
+// 32 bit per pixel RGBA image.
+abstract class Image {
+    protected var _width: Int
+    protected var _height: Int
+    protected var _data: ByteArray
 
-    var data = ByteArray(width * height * components)
+    protected val _components = 4
+    protected val _bits = 32
 
-    fun width(): Int {
-        return width
+    init {
+        _width = 0
+        _height = 0
+        _data = byteArrayOf()
     }
 
-    fun height(): Int {
-        return height
-    }
+    val width: Int
+        get() {
+            return _width
+        }
 
-    fun depth(): Int {
-        return depth
-    }
+    val height: Int
+        get() {
+            return _height
+        }
 
-    fun components(): Int {
-        return components
-    }
+    val components: Int
+        get() {
+            return _components
+        }
 
-    fun data(): ByteArray {
-        return data
-    }
+    val bits: Int
+        get() {
+            return _bits
+        }
+
+    val data: ByteArray
+        get() {
+            return _data
+        }
 
     fun asPPM(): String {
         var ppmImage = StringBuilder()
@@ -50,9 +62,9 @@ open class Image(protected val width: Int, protected val height: Int) {
         // Write body.
         for (j in 0..<(width * height)) {
             val base = j * components
-            val ir = toUnsignedValue(data[base + 0])
-            val ig = toUnsignedValue(data[base + 1])
-            val ib = toUnsignedValue(data[base + 2])
+            val ir = toUnsignedValue(_data[base + 0])
+            val ig = toUnsignedValue(_data[base + 1])
+            val ib = toUnsignedValue(_data[base + 2])
 
             // NOTE: no alpha in PPM.
             //val ia = toUnsignedValue(data[base + 3])
@@ -64,7 +76,6 @@ open class Image(protected val width: Int, protected val height: Int) {
     }
 
     fun save(path: String): Unit {
-
         try {
             val content = asPPM()
             File(path).writeText(content)

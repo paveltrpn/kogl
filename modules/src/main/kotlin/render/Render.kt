@@ -1,5 +1,8 @@
 package render
 
+import algebra.Vector2
+import kotlin.random.Random
+
 import org.lwjgl.opengl.GL46.*
 
 import algebra.Vector3
@@ -7,7 +10,7 @@ import config.Config
 import event.*
 import scene.*
 import mesh.*
-import kotlin.random.Random
+import ui.*
 
 class Render : EventObserver {
     private var _run: Boolean
@@ -54,8 +57,21 @@ class Render : EventObserver {
         // glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA)
 
-        _ui.label(0.0f, 0.0f, "test string")
-        _ui.label(0.0f, 2.3f, "test string111")
+        val l1 = Label()
+        l1.text = "test string"
+        l1.position = Vector3(0.0f, 0.0f, 0.5f)
+        l1.glyphGap = 0.1f
+
+        val l2 = Label()
+        l2.text = "test string"
+        l2.position = Vector3(0.0f, 2.5f, 0.5f)
+        l2.glyphGap = 0.2f
+
+        val b1 = Billboard()
+        b1.size = Vector2(10.0f, 10.0f)
+        b1.position = Vector3(-16.0f, 16.0f, 0.4f)
+
+        _ui.add(listOf(l1, l2, b1))
 
         _ui.flush()
 

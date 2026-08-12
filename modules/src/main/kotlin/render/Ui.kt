@@ -16,16 +16,19 @@ class UiGL : Ui() {
     }
 
     override fun flush(): Unit {
-        var nowOffset = 0
+        var labelBufOffset = 0
+        var billboardBufOffset = 0
 
         for (component in _componentsList) {
             when (component) {
                 is Billboard -> {
+                    _billboardBuffer.fill(billboardBufOffset, component.vertices, component.txcoords)
+                    billboardBufOffset += component.quadsCount
                 }
 
                 is Label -> {
-                    _labelBuffer.fill(nowOffset, component.vertices, component.txcoords)
-                    nowOffset += component.quadsCount
+                    _labelBuffer.fill(labelBufOffset, component.vertices, component.txcoords)
+                    labelBufOffset += component.quadsCount
                 }
             }
 
@@ -34,6 +37,7 @@ class UiGL : Ui() {
         _program.use()
 
         _labelBuffer.draw()
+        _billboardBuffer.draw()
 
         _componentsList.clear()
     }

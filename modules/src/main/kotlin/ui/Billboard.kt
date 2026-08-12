@@ -11,9 +11,7 @@ class Billboard : UiComponent() {
 
     // Colorf color_{};
 
-    private var _posX = 0.0f
-    private var _posY = 0.0f
-    private var _z = 0.0f
+    private var _position: Vector3 = Vector3()
 
     private var _width = 1.0f
     private var _height = 1.0f
@@ -22,115 +20,108 @@ class Billboard : UiComponent() {
 //        color_ = value;
 //    }
 
-    fun setPos(px: Float, py: Float): Unit {
-        _posX = px;
-        _posY = py;
-    }
-
-    fun setSize(width: Float, height: Float): Unit {
-        _width = width;
-        _height = height;
-    }
-
-    fun setZ(z: Float): Unit {
-        _z = z;
-    }
-
-    fun draw(): Unit {
-        val topLeftVt = Vector3(_posX, _posY, _z)
-        val topRightVt = Vector3(_posX + _width, _posY, _z)
-        val bottomRightVt = Vector3(_posX + _width, _posY - _height, _z)
-        val bottomLeftVt = Vector3(_posX, _posY - _height, _z)
-
-        for (i in 0..<3) {
-            _quadVerticies[0 + ((i * 3) + 0)] = topLeftVt.x
-            _quadVerticies[0 + ((i * 3) + 1)] = topLeftVt.y
-            _quadVerticies[0 + ((i * 3) + 2)] = topLeftVt.z
-
-            _quadVerticies[3 + ((i * 3) + 0)] = topRightVt.x
-            _quadVerticies[3 + ((i * 3) + 1)] = topRightVt.y
-            _quadVerticies[3 + ((i * 3) + 2)] = topRightVt.z
-
-            _quadVerticies[6 + ((i * 3) + 0)] = bottomRightVt.x
-            _quadVerticies[6 + ((i * 3) + 1)] = bottomRightVt.y
-            _quadVerticies[6 + ((i * 3) + 2)] = bottomRightVt.z
-
-            _quadVerticies[9 + ((i * 3) + 0)] = topLeftVt.x
-            _quadVerticies[9 + ((i * 3) + 1)] = topLeftVt.y
-            _quadVerticies[9 + ((i * 3) + 2)] = topLeftVt.z
-
-            _quadVerticies[12 + ((i * 3) + 0)] = bottomRightVt.x
-            _quadVerticies[12 + ((i * 3) + 1)] = bottomRightVt.y
-            _quadVerticies[12 + ((i * 3) + 2)] = bottomRightVt.z
-
-            _quadVerticies[15 + ((i * 3) + 0)] = bottomLeftVt.x
-            _quadVerticies[15 + ((i * 3) + 1)] = bottomLeftVt.y
-            _quadVerticies[15 + ((i * 3) + 2)] = bottomLeftVt.z
+    var size: Vector2
+        get(): Vector2 {
+            return Vector2(_width, height)
+        }
+        set(value) {
+            _width = value.x
+            _height = value.y
         }
 
-//        _quadVerticies[0] = topLeftVt
-//        _quadVerticies[1] = topRightVt;
-//        _quadVerticies[2] = bottomRightVt;
-//        _quadVerticies[3] = topLeftVt;
-//        _quadVerticies[4] = bottomRightVt;
-//        _quadVerticies[5] = bottomLeftVt;
+    var width: Float
+        get(): Float {
+            return _width
+        }
+        set(value) {
+            _width = value
+        }
 
+    var height: Float
+        get(): Float {
+            return _height
+        }
+        set(value) {
+            _height = value
+        }
+
+    var position: Vector3
+        get() :Vector3 {
+            return _position
+        }
+        set(value) {
+            _position = value
+        }
+
+    override fun draw(): Unit {
+        // Build quad vertices data.
+        val topLeftVt = Vector3(position.x, position.y, position.z)
+        val topRightVt = Vector3(position.x + _width, position.y, position.z)
+        val bottomRightVt = Vector3(position.x + _width, position.y - _height, position.z)
+        val bottomLeftVt = Vector3(position.x, position.y - _height, position.z)
+
+        // Fill vertices array.
+        _quadVerticies[0] = topLeftVt.x
+        _quadVerticies[1] = topLeftVt.y
+        _quadVerticies[2] = topLeftVt.z
+
+        _quadVerticies[3] = topRightVt.x
+        _quadVerticies[4] = topRightVt.y
+        _quadVerticies[5] = topRightVt.z
+
+        _quadVerticies[6] = bottomRightVt.x
+        _quadVerticies[7] = bottomRightVt.y
+        _quadVerticies[8] = bottomRightVt.z
+
+        _quadVerticies[9] = bottomRightVt.x
+        _quadVerticies[10] = bottomRightVt.y
+        _quadVerticies[11] = bottomRightVt.z
+
+        _quadVerticies[12] = bottomLeftVt.x
+        _quadVerticies[13] = bottomLeftVt.y
+        _quadVerticies[14] = bottomLeftVt.z
+
+        _quadVerticies[15] = topLeftVt.x
+        _quadVerticies[16] = topLeftVt.y
+        _quadVerticies[17] = topLeftVt.z
+
+        // Build quad texture coordinates data.
         val topLeftTc = Vector2(0.0f, 0.0f)
         val topRightTc = Vector2(1.0f, 0.0f)
         val bottomRightTc = Vector2(1.0f, 1.0f)
         val bottomLeftTc = Vector2(0.0f, 1.0f)
 
-        for (i in 0..<2) {
-            _quadVerticies[0 + ((i * 2) + 0)] = topLeftTc.x
-            _quadVerticies[0 + ((i * 2) + 1)] = topLeftTc.y
+        // Fill texture coordinates array.
+        _quadTexcrds[0] = topLeftTc.x
+        _quadTexcrds[1] = topLeftTc.y
 
-            _quadVerticies[2 + ((i * 2) + 0)] = topRightTc.x
-            _quadVerticies[2 + ((i * 2) + 1)] = topRightTc.y
+        _quadTexcrds[2] = topRightTc.x
+        _quadTexcrds[3] = topRightTc.y
 
-            _quadVerticies[4 + ((i * 2) + 0)] = bottomRightTc.x
-            _quadVerticies[4 + ((i * 2) + 1)] = bottomRightTc.y
+        _quadTexcrds[4] = bottomRightTc.x
+        _quadTexcrds[5] = bottomRightTc.y
 
-            _quadVerticies[6 + ((i * 2) + 0)] = bottomRightTc.x
-            _quadVerticies[6 + ((i * 2) + 1)] = bottomRightTc.y
+        _quadTexcrds[6] = bottomRightTc.x
+        _quadTexcrds[7] = bottomRightTc.y
 
-            _quadVerticies[8 + ((i * 2) + 0)] = bottomLeftTc.x
-            _quadVerticies[8 + ((i * 2) + 1)] = bottomLeftTc.y
+        _quadTexcrds[8] = bottomLeftTc.x
+        _quadTexcrds[9] = bottomLeftTc.y
 
-            _quadVerticies[10 + ((i * 2) + 0)] = topLeftTc.x
-            _quadVerticies[10 + ((i * 2) + 1)] = topLeftTc.y
-        }
+        _quadTexcrds[10] = topLeftTc.x
+        _quadTexcrds[11] = topLeftTc.y
 
-//        _quadTexcrds[0] = topLeftTc;
-//        _quadTexcrds[1] = topRightTc;
-//        _quadTexcrds[2] = bottomRightTc;
-//        _quadTexcrds[3] = bottomRightTc;
-//        _quadTexcrds[4] = bottomLeftTc;
-//        _quadTexcrds[5] = topLeftTc;
-
-        _quadsCount++;
+        _quadsCount++
     }
 
 
     val quadsCount: Int
         get(): Int {
-            return _quadsCount;
+            return _quadsCount
         }
-
-    fun bufferVerticesSize(): Int {
-        return quadsCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 3
-    }
-
-    fun bufferTexcrdsSize(): Int {
-        return quadsCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 2
-    }
-
-    fun bufferVertclrsSize(): Int {
-        return quadsCount * VERTICIES_PER_QUAD * Float.SIZE_BYTES * 4
-    }
 
     val vertices: FloatArray
         get(): FloatArray {
-            return _quadVerticies;
+            return _quadVerticies
         }
 
     val txcoords: FloatArray

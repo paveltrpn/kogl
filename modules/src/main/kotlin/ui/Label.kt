@@ -4,6 +4,8 @@ import algebra.*
 import kotlin.Float
 
 class Label : UiComponent() {
+    private var _text: String = ""
+
     // Size of "Letters buffer" - this is the number of all characters
     // from all draw() calls that can one instance of this class operates
     private val VERTICIES_PER_QUAD = 6
@@ -29,6 +31,14 @@ class Label : UiComponent() {
     private val _fontColumnCount = 32  // Количество столбцов символов в шрифте
     private val _fontRowCount = 8      // Количество строк символов в шрифте
 
+    var text: String
+        get():String {
+            return _text
+        }
+        set(value) {
+            _text = value
+        }
+
     // Colorf color_{}
 
     fun setGlyphWidth(value: Float): Unit {
@@ -40,16 +50,18 @@ class Label : UiComponent() {
     fun setGlyphScale(value: Float): Unit {
     }
 
-    fun setGlyphGap(value: Float): Unit {
-        _glyphGap = value
-    }
+
+    var glyphGap: Float
+        get():Float {
+            return _glyphGap
+        }
+        set(value) {
+            _glyphGap = value
+        }
 
 //    fun setColor( const Colorf &value ) : Unit{
 //        color_ = value
 //    }
-
-    fun resetStringParameters(): Unit {
-    }
 
     var position: Vector3
         get() :Vector3 {
@@ -59,13 +71,13 @@ class Label : UiComponent() {
             _position = value
         }
 
-    fun draw(string: String): Unit {
+    override fun draw(): Unit {
         // Размер ячейки с символом в долях текстурных координат по горизонтали
         val tcGapX = 1.0f / _fontColumnCount.toFloat()
         // Размер ячейки с символом в долях текстурных координат по вертикали
         val tcGapY = 1.0f / _fontRowCount.toFloat()
 
-        for ((i, element) in string.withIndex()) {
+        for ((i, element) in _text.withIndex()) {
             // Смещение квада с i-ым символом, зависит от ширины квадов и зазора между ними
             val offset = (_glyphQuadWdt + _glyphGap) * i.toFloat()
 

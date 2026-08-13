@@ -16,7 +16,7 @@ class Billboard : UiComponent() {
     private var _width = 1.0f
     private var _height = 1.0f
 
-    private var _color: Color = Color("#ffffffff")
+    private var _color: Color = Color(255, 255, 255, 255)
 
     var color: Color
         get(): Color {

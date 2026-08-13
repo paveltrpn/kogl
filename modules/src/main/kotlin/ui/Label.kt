@@ -27,7 +27,7 @@ class Label : UiComponent() {
     private val _fontColumnCount = 32  // Количество столбцов символов в шрифте
     private val _fontRowCount = 8      // Количество строк символов в шрифте
 
-    private var _color: Color = Color("#ffffffff")
+    private var _color: Color = Color(255, 255, 255, 255)
 
     var color: Color
         get(): Color {

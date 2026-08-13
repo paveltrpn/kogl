@@ -11,7 +11,7 @@ import event.*
 import scene.*
 import mesh.*
 import ui.*
-
+import image.*
 
 class Render : EventObserver {
     private var _run: Boolean
@@ -21,13 +21,15 @@ class Render : EventObserver {
     init {
         _run = true
 
+        val c = Color(255, 25, 255, 255)
+        println(" === ${c.asVec4.data[0]} ${c.asVec4.data[1]}")
         val sparseObjectsGraph = sparseObjectsGraph()
         val testBoxGraph = testCubesGraph()
 
         _scene = Scene()
 
         _scene.addStateGroup(sparseObjectsGraph)
-        _scene.addStateGroup(testBoxGraph)
+        // _scene.addStateGroup(testBoxGraph)
 
         _ui = UiGL()
     }
@@ -55,31 +57,35 @@ class Render : EventObserver {
         glDisable(GL_DEPTH_TEST)
 
         val TEXT_START_POS_X = -30.0f
-        val TEXT_START_POS_Y = 18.0f
-        val TEXT_PLANE_Z = 0.5f
+        val TEXT_START_POS_Y = 26.0f
+        val TEXT_PLANE_Z = 0.4f
 
         val l1 = Label()
         l1.text = "test string"
         l1.position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y)
         l1.z = TEXT_PLANE_Z
-        l1.letterSpace = 0.1f
+        l1.letterSpace = 0.0f
+        l1.color = Color(255, 255, 255, 255)
 
         val l2 = Label()
         l2.text = "test string"
         l2.position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y + 3.5f)
         l2.z = TEXT_PLANE_Z
-        l2.letterSpace = 0.2f
-        l2.letterScale = 1.8f
+        l2.letterSpace = 0.0f
+        l2.letterScale = 1.5f
+        l2.color = Color(128, 255, 128, 255)
 
         val b1 = Billboard()
         b1.size = Vector2(10.0f, 10.0f)
-        b1.position = Vector2(-30.0f, 16.0f)
+        b1.position = Vector2(-31.0f, 16.0f)
         b1.z = TEXT_PLANE_Z
+        b1.color = Color(255, 200, 128, 128)
 
         val b2 = Billboard()
         b2.size = Vector2(10.0f, 10.0f)
-        b2.position = Vector2(-30.0f, 32.0f)
+        b2.position = Vector2(-31.0f, 30.0f)
         b2.z = TEXT_PLANE_Z
+        b2.color = Color(128, 200, 255, 128)
 
         _ui.add(listOf(l1, l2, b1, b2))
 

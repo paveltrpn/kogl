@@ -5,45 +5,45 @@ import algebra.*
 fun Char.isHexDigit(): Boolean = this in '0'..'9' || this in 'a'..'f' || this in 'A'..'F'
 
 class Color() {
-    var data = ByteArray(4)
+    var data = IntArray(4)
 
     constructor(r: Int, g: Int, b: Int, a: Int) : this() {
-        data[0] = r.toByte()
-        data[1] = g.toByte()
-        data[2] = b.toByte()
-        data[3] = a.toByte()
+        data[0] = r
+        data[1] = g
+        data[2] = b
+        data[3] = a
     }
 
     constructor(color: String) : this() {
         fromHexString(color)
     }
 
-    var rb: Byte
-        get() : Byte {
+    var rb: Int
+        get() : Int {
             return data[0]
         }
         set(value) {
             data[0] = value
         }
 
-    var gb: Byte
-        get() : Byte {
+    var gb: Int
+        get() : Int {
             return data[1]
         }
         set(value) {
             data[1] = value
         }
 
-    var bb: Byte
-        get() : Byte {
+    var bb: Int
+        get() : Int {
             return data[2]
         }
         set(value) {
             data[2] = value
         }
 
-    var ab: Byte
-        get() : Byte {
+    var ab: Int
+        get() : Int {
             return data[3]
         }
         set(value) {
@@ -84,10 +84,10 @@ class Color() {
         }
 
     fun setColor(r: Int, g: Int, b: Int, a: Int): Unit {
-        data[0] = r.toByte()
-        data[1] = g.toByte()
-        data[2] = b.toByte()
-        data[3] = a.toByte()
+        data[0] = r
+        data[1] = g
+        data[2] = b
+        data[3] = a
     }
 
     fun fromHexString(color: String) {
@@ -100,10 +100,10 @@ class Color() {
             throw RuntimeException("Color string must contain exactly 8 valid hexadecimal digits after '#', got: $hex")
         }
 
-        data = ByteArray(4) { i ->
+        data = IntArray(4) { i ->
             val start = i * 2
             val hexPair = hex.substring(start, start + 2)
-            hexPair.toInt(radix = 16).toByte()
+            hexPair.toInt(radix = 16)
         }
     }
 }

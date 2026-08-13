@@ -1,24 +1,19 @@
 package render
 
 import org.lwjgl.opengl.GL46.*
-import algebra.*
-import config.Config
 import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.MemoryUtil
 import java.nio.ByteBuffer
-import kotlin.io.path.Path
-import kotlin.io.path.exists
-import kotlin.use
+import java.nio.IntBuffer
 
-enum class ShaderStageType {
-    UNKNOWN,
-    VERTEX,
-    FRAGMENT,
-    TESSELATION_EVAL,
-    TESSELATION_CTRL,
-    COMPUTE,
-    GEOMETRY,
-    MESH
-}
+import algebra.*
+import config.*
+
+data class UniformInfo(
+    val location: Int,
+    val type: Int,
+    val size: Int
+)
 
 class Program {
     private val _programName: String
@@ -52,6 +47,8 @@ class Program {
             val log = glGetProgramInfoLog(_programHandle, logLength)
             throw RuntimeException("Can't link program with trace:\n$log")
         }
+
+        reflectUniform(_programHandle)
     }
 
     private fun compile(stage: Int, source: String): Int {
@@ -70,11 +67,47 @@ class Program {
         return shHandle
     }
 
+    fun reflectUniform(programHandle: Int): Unit {
+        val uniformMap = mutableMapOf<String, UniformInfo>()
+
+        val numUniforms = glGetProgrami(programHandle, GL_ACTIVE_UNIFORMS)
+        val maxLength = glGetProgrami(programHandle, GL_ACTIVE_UNIFORM_MAX_LENGTH)
+
+        MemoryStack.stackPush().use { stack ->
+            val lengthBuf: IntBuffer = stack.mallocInt(1)
+            val sizeBuf: IntBuffer = stack.mallocInt(1)
+            val typeBuf: IntBuffer = stack.mallocInt(1)
+            val nameBuf: ByteBuffer = stack.malloc(maxLength)
+
+            for (i in 0 until numUniforms) {
+                glGetActiveUniform(programHandle, i, lengthBuf, sizeBuf, typeBuf, nameBuf)
+
+                val uniformName = MemoryUtil.memUTF8(nameBuf, lengthBuf.get(0))
+
+                val cleanName = if (uniformName.endsWith("]")) {
+                    val bracketIdx = uniformName.lastIndexOf('[')
+                    if (bracketIdx > 0) uniformName.substring(0, bracketIdx) else uniformName
+                } else {
+                    uniformName
+                }
+
+                println(" === $cleanName")
+
+                val size = sizeBuf.get(0)
+                val type = typeBuf.get(0)
+                
+                val location = glGetUniformLocation(_programHandle, cleanName)
+
+                uniformMap[cleanName] = UniformInfo(location, type, size)
+            }
+        }
+    }
+
     val handle: Int
         get(): Int {
             return _programHandle
         }
-    
+
     fun use() {
         glUseProgram(_programHandle)
     }
@@ -168,6 +201,51 @@ class Program {
             glUniformMatrix4fv(location, false, floatBuffer)
         }
     }
-
-
 }
+
+//// 1. Define your shader source segments
+//const char* versionSrc = "#version 330 core\n";
+//
+//const char* definesSrc = "#define USE_LIGHTING 1\n"
+//"#define MAX_LIGHTS 4\n";
+//
+//const char* shaderBodySrc =
+//"out vec4 FragColor;\n"
+//"void main() {\n"
+//"    #if USE_LIGHTING\n"
+//"        FragColor = vec4(1.0, 0.5, 0.2, 1.0);\n"
+//"    #else\n"
+//"        FragColor = vec4(0.5, 0.5, 0.5, 1.0);\n"
+//"    #endif\n"
+//"}";
+//
+//// 2. Put the string pointers into an array in the exact order needed
+//const char* sourceArray[] = { versionSrc, definesSrc, shaderBodySrc };
+//
+//// 3. Create the shader object
+//GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+//
+//// 4. Pass the array of 3 strings to OpenGL
+//glShaderSource(fragmentShader, 3, sourceArray, NULL);
+//
+//// 5. Compile as usual
+//glCompileShader(fragmentShader);
+
+// ==========================================================================================================================
+
+//#include <GL/glew.h> // Or any OpenGL loading library like glad/glad.h
+//#include <iostream>
+//#include <vector>
+//#include <string>
+//#include <unordered_map>
+//
+//// Structure to hold introspected uniform metadata
+
+//
+//std::unordered_map<std::string, UniformInfo> ReflectUniforms(GLuint programID) {
+//    std::unordered_map<std::string, UniformInfo> uniformMap;
+//
+
+//
+//    return uniformMap;
+//}

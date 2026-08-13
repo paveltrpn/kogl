@@ -7,8 +7,8 @@ gradlew.bat
 build
 
 apps/encode/build
-apps/kogl/build
-apps/kogl/*.log
+kogl/build
+kogl/*.log
 modules/build
 
 out/*

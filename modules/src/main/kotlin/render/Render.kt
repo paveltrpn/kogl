@@ -21,8 +21,6 @@ class Render : EventObserver {
     init {
         _run = true
 
-        val c = Color(255, 25, 255, 255)
-        println(" === ${c.asVec4.data[0]} ${c.asVec4.data[1]}")
         val sparseObjectsGraph = sparseObjectsGraph()
         val testBoxGraph = testCubesGraph()
 

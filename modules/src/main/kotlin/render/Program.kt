@@ -20,6 +20,10 @@ class Program {
     private var _programHandle: Int = 0
     private val _uniforms: MutableMap<String, UniformInfo> = mutableMapOf()
 
+    // Permanent buffer. Used to pass vector and matrix float
+    // data to shaders.
+    private val _floatBuffer = MemoryUtil.memAllocFloat(16)
+
     constructor(shaders: ShaderSource) {
         _programName = shaders.programName
 
@@ -103,77 +107,86 @@ class Program {
     }
 
     fun clean() {
+        MemoryUtil.memFree(_floatBuffer)
+
         if (_programHandle != 0) {
             glDeleteProgram(_programHandle)
             _programHandle = 0
         }
     }
 
-    private fun uniformLocation(name: String): Int? {
-        if (!_uniforms.containsKey(name)) {
-            println("Warning: program \"$name\" not contains uniform $name.")
-            return null
-        }
-        return _uniforms[name]!!.location
+    private fun uniformLocation(name: String): Int {
+        return _uniforms[name]?.location
+            ?: throw RuntimeException("Error: program \"$name\" not contains uniform $name.")
     }
 
     fun setScalarUniform(name: String, value: Float) {
-        val location = uniformLocation(name) ?: return
+        val location = uniformLocation(name)
         glUniform1f(location, value)
     }
 
     fun setScalarUniform(name: String, value: Double) {
-        val location = uniformLocation(name) ?: return
+        val location = uniformLocation(name)
         glUniform1d(location, value)
     }
 
     fun setScalarUniform(name: String, value: Int) {
-        val location = uniformLocation(name) ?: return
+        val location = uniformLocation(name)
         glUniform1i(location, value)
     }
 
     fun setScalarUniform(name: String, value: UInt) {
-        val location = uniformLocation(name) ?: return
+        val location = uniformLocation(name)
         glUniform1ui(location, value.toInt())
     }
 
+    fun setVectorUniform(id: String, value: Vector2) {
+        val location = uniformLocation(id)
+        _floatBuffer.clear().put(0, value.data, 0, 2).flip()
+        _floatBuffer.position(0).limit(2)
+        glUniform3fv(location, _floatBuffer)
+    }
+
     fun setVectorUniform(id: String, value: Vector3) {
-        val location = uniformLocation(id) ?: return
-        MemoryStack.stackPush().use { stack ->
-            val floatBuffer = stack.mallocFloat(3)
-            floatBuffer.put(value.data)
-            floatBuffer.flip()
-            glUniform3fv(location, floatBuffer)
-        }
+        val location = uniformLocation(id)
+        _floatBuffer.clear().put(0, value.data, 0, 3).flip()
+        _floatBuffer.position(0).limit(3)
+        glUniform3fv(location, _floatBuffer)
+    }
+
+    fun setVectorUniform(id: String, value: Vector4) {
+        val location = uniformLocation(id)
+        _floatBuffer.clear().put(0, value.data, 0, 4).flip()
+        _floatBuffer.position(0).limit(4)
+        glUniform3fv(location, _floatBuffer)
+    }
+
+    fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix2) {
+        val location = uniformLocation(id)
+        _floatBuffer.clear().put(0, value.data, 0, 4).flip()
+        _floatBuffer.position(0).limit(4)
+        glUniformMatrix2fv(location, transpose, _floatBuffer)
 
     }
 
-//    fun setVectorUniform(id: String, value: Vector4) {
-//        val location = getUniformLocation(id) ?: return fun setVectorUniform(id: String, value: Vector2) {
-//            val location = getUniformLocation(id) ?: return
-//            glUniform2fv(location, floatArrayOf(value.x, value.y))
-//        }
-//        glUniform4fv(location, floatArrayOf(value.x, value.y, value.z, value.w))
-//    }
+    fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix3) {
+        val location = uniformLocation(id)
+        _floatBuffer.clear().put(0, value.data, 0, 9).flip()
+        _floatBuffer.position(0).limit(9)
+        glUniformMatrix3fv(location, transpose, _floatBuffer)
 
-//    fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix2) {
-//        val location = getUniformLocation(id) ?: return
-//        glUniformMatrix2fv(location, transpose, value.data)
-//    }
-//
-//    fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix3) {
-//        val location = getUniformLocation(id) ?: return
-//        glUniformMatrix3fv(location, transpose, value.data)
-//    }
+//        MemoryStack.stackPush().use { stack ->
+//            val floatBuffer = stack.mallocFloat(9)
+//            floatBuffer.put(value.data)
+//            floatBuffer.flip()
+//            glUniformMatrix3fv(location, transpose, floatBuffer)
+//        }
+    }
 
     fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix4) {
-        val location = uniformLocation(id) ?: return
-        MemoryStack.stackPush().use { stack ->
-            val floatBuffer = stack.mallocFloat(16)
-            floatBuffer.put(value.data)
-            floatBuffer.flip()
-            glUniformMatrix4fv(location, false, floatBuffer)
-        }
+        val location = uniformLocation(id)
+        _floatBuffer.clear().put(value.data).flip()
+        glUniformMatrix4fv(location, transpose, _floatBuffer)
     }
 }
 

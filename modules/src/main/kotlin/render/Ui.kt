@@ -1,10 +1,13 @@
 package render
 
+import algebra.Vector4
 import org.lwjgl.opengl.GL46.*
 
 import ui.*
 import image.*
 import config.*
+import org.lwjgl.system.MemoryStack
+import kotlin.use
 
 class UiGL : Ui() {
     private val OUTPUT_QUADS_CAPACITY = 128
@@ -52,19 +55,35 @@ class UiGL : Ui() {
 
         _program.use()
 
-        val loc = glGetUniformLocation(_program.handle, "font")
-        glUniform1i(loc, 0)
+//        val colorLoc = glGetUniformLocation(_program.handle, "color")
+        val colorLoc = 3
+        val colorValue = Vector4(0.8f, 0.4f, 0.1f, 0.5f)
+        MemoryStack.stackPush().use { stack ->
+            val buf = stack.mallocFloat(4)
+            buf.put(colorValue.data)
+            buf.flip()
+            glUniform4fv(colorLoc, buf)
+        }
+
+        // val samplerLoc = glGetUniformLocation(_program.handle, "font")
+        val samplerLoc = 2
+        glUniform1i(samplerLoc, 0)
+
+        // val enableTextureLoc = glGetUniformLocation(_program.handle, "enableTexture")
+        val enableTextureLoc = 4
+        glUniform1i(enableTextureLoc, 1)
 
         _font.bind(0)
 
         _labelBuffer.draw()
 
-        glDisable(GL_TEXTURE_2D)
-
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        glUniform1i(enableTextureLoc, 0)
 
         _billboardBuffer.draw()
 
+        glDisable(GL_TEXTURE_2D)
         glDisable(GL_BLEND)
 
         _componentsList.clear()

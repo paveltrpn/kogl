@@ -18,13 +18,7 @@ data class UniformInfo(
 class Program {
     private val _programName: String
     private var _programHandle: Int = 0
-    private val _uniforms: MutableMap<String, Int> = mutableMapOf()
-
-    constructor(name: String, shaders: List<Pair<String, Int>>) {
-        _programName = name
-
-        // TODO
-    }
+    private val _uniforms: MutableMap<String, UniformInfo> = mutableMapOf()
 
     constructor(shaders: ShaderSource) {
         _programName = shaders.programName
@@ -48,7 +42,7 @@ class Program {
             throw RuntimeException("Can't link program with trace:\n$log")
         }
 
-        reflectUniform(_programHandle)
+        reflectUniforms(_programHandle)
     }
 
     private fun compile(stage: Int, source: String): Int {
@@ -67,9 +61,7 @@ class Program {
         return shHandle
     }
 
-    fun reflectUniform(programHandle: Int): Unit {
-        val uniformMap = mutableMapOf<String, UniformInfo>()
-
+    fun reflectUniforms(programHandle: Int): Unit {
         val numUniforms = glGetProgrami(programHandle, GL_ACTIVE_UNIFORMS)
         val maxLength = glGetProgrami(programHandle, GL_ACTIVE_UNIFORM_MAX_LENGTH)
 
@@ -91,14 +83,12 @@ class Program {
                     uniformName
                 }
 
-                println(" === $cleanName")
-
                 val size = sizeBuf.get(0)
                 val type = typeBuf.get(0)
-                
+
                 val location = glGetUniformLocation(_programHandle, cleanName)
 
-                uniformMap[cleanName] = UniformInfo(location, type, size)
+                _uniforms[cleanName] = UniformInfo(location, type, size)
             }
         }
     }
@@ -119,52 +109,36 @@ class Program {
         }
     }
 
-    private fun getUniformLocation(name: String): Int? {
+    private fun uniformLocation(name: String): Int? {
         if (!_uniforms.containsKey(name)) {
             println("Warning: program \"$name\" not contains uniform $name.")
             return null
         }
-        return _uniforms[name]!!
-    }
-
-    fun addUniform(name: String) {
-        if (_uniforms.containsKey(name)) {
-            println("Warning: program \"$name\" already contains uniform $name.")
-            return
-        }
-
-        val location = glGetUniformLocation(_programHandle, name)
-        _uniforms[name] = location
-    }
-
-    fun addUniform(names: List<String>) {
-        for (name in names) {
-            addUniform(name)
-        }
+        return _uniforms[name]!!.location
     }
 
     fun setScalarUniform(name: String, value: Float) {
-        val location = getUniformLocation(name) ?: return
+        val location = uniformLocation(name) ?: return
         glUniform1f(location, value)
     }
 
     fun setScalarUniform(name: String, value: Double) {
-        val location = getUniformLocation(name) ?: return
+        val location = uniformLocation(name) ?: return
         glUniform1d(location, value)
     }
 
     fun setScalarUniform(name: String, value: Int) {
-        val location = getUniformLocation(name) ?: return
+        val location = uniformLocation(name) ?: return
         glUniform1i(location, value)
     }
 
     fun setScalarUniform(name: String, value: UInt) {
-        val location = getUniformLocation(name) ?: return
+        val location = uniformLocation(name) ?: return
         glUniform1ui(location, value.toInt())
     }
 
     fun setVectorUniform(id: String, value: Vector3) {
-        val location = getUniformLocation(id) ?: return
+        val location = uniformLocation(id) ?: return
         MemoryStack.stackPush().use { stack ->
             val floatBuffer = stack.mallocFloat(3)
             floatBuffer.put(value.data)
@@ -193,7 +167,7 @@ class Program {
 //    }
 
     fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix4) {
-        val location = getUniformLocation(id) ?: return
+        val location = uniformLocation(id) ?: return
         MemoryStack.stackPush().use { stack ->
             val floatBuffer = stack.mallocFloat(16)
             floatBuffer.put(value.data)
@@ -231,21 +205,4 @@ class Program {
 //// 5. Compile as usual
 //glCompileShader(fragmentShader);
 
-// ==========================================================================================================================
 
-//#include <GL/glew.h> // Or any OpenGL loading library like glad/glad.h
-//#include <iostream>
-//#include <vector>
-//#include <string>
-//#include <unordered_map>
-//
-//// Structure to hold introspected uniform metadata
-
-//
-//std::unordered_map<std::string, UniformInfo> ReflectUniforms(GLuint programID) {
-//    std::unordered_map<std::string, UniformInfo> uniformMap;
-//
-
-//
-//    return uniformMap;
-//}

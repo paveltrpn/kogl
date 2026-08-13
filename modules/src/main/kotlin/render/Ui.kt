@@ -50,17 +50,17 @@ class UiGL : Ui() {
         glEnable(GL_TEXTURE_2D)
 
         glEnable(GL_BLEND)
-        // glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         _program.use()
 
-//        val colorLoc = glGetUniformLocation(_program.handle, "color")
+        // val colorLoc = glGetUniformLocation(_program.handle, "color")
         val colorLoc = 3
-        val colorValue = Vector4(0.8f, 0.4f, 0.1f, 0.5f)
+
         MemoryStack.stackPush().use { stack ->
+            val textColorValue = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
             val buf = stack.mallocFloat(4)
-            buf.put(colorValue.data)
+            buf.put(textColorValue.data)
             buf.flip()
             glUniform4fv(colorLoc, buf)
         }
@@ -80,6 +80,14 @@ class UiGL : Ui() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         glUniform1i(enableTextureLoc, 0)
+
+        MemoryStack.stackPush().use { stack ->
+            val textColorValue = Vector4(0.8f, 0.4f, 0.1f, 0.5f)
+            val buf = stack.mallocFloat(4)
+            buf.put(textColorValue.data)
+            buf.flip()
+            glUniform4fv(colorLoc, buf)
+        }
 
         _billboardBuffer.draw()
 

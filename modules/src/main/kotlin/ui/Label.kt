@@ -1,7 +1,9 @@
 package ui
 
-import algebra.*
 import kotlin.Float
+
+import image.*
+import algebra.*
 
 class Label : UiComponent() {
     private var _text: String = ""
@@ -25,6 +27,16 @@ class Label : UiComponent() {
     private val _fontColumnCount = 32  // Количество столбцов символов в шрифте
     private val _fontRowCount = 8      // Количество строк символов в шрифте
 
+    private var _color: Color = Color("#ffffffff")
+
+    var color: Color
+        get(): Color {
+            return _color
+        }
+        set(value) {
+            _color = value
+        }
+
     var text: String
         get():String {
             return _text
@@ -33,7 +45,6 @@ class Label : UiComponent() {
             _text = value
         }
 
-    // Colorf color_{}
 
     var letterScale: Float
         get():Float {

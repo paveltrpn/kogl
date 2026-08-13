@@ -1,5 +1,7 @@
 package image
 
+import algebra.*
+
 fun Char.isHexDigit(): Boolean = this in '0'..'9' || this in 'a'..'f' || this in 'A'..'F'
 
 class Color() {
@@ -71,6 +73,15 @@ class Color() {
             return data[3].toFloat() / 255.0f
         }
 
+    val asVec4: Vector4
+        get(): Vector4 {
+            return Vector4(rf, gf, bf, af)
+        }
+
+    val asVec3: Vector4
+        get(): Vector4 {
+            return Vector4(rf, gf, bf)
+        }
 
     fun setColor(r: Int, g: Int, b: Int, a: Int): Unit {
         data[0] = r.toByte()

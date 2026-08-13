@@ -3,6 +3,7 @@ package ui
 import kotlin.Float
 
 import algebra.*
+import image.Color
 
 class Billboard : UiComponent() {
     private val VERTICIES_PER_QUAD = 6
@@ -10,16 +11,20 @@ class Billboard : UiComponent() {
     private val _quadVerticies = FloatArray(1 * VERTICIES_PER_QUAD * 3) { 0.0f }
     private val _quadTexcrds = FloatArray(1 * VERTICIES_PER_QUAD * 2) { 0.0f }
 
-    // Colorf color_{}
-
     private var _position: Vector3 = Vector3()
 
     private var _width = 1.0f
     private var _height = 1.0f
 
-//    fun setColor( const Colorf &value ) : Unit {
-//        color_ = value;
-//    }
+    private var _color: Color = Color("#ffffffff")
+
+    var color: Color
+        get(): Color {
+            return _color
+        }
+        set(value) {
+            _color = value
+        }
 
     var size: Vector2
         get(): Vector2 {

@@ -6,13 +6,14 @@ import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryStack
 
 import image.*
-import java.nio.FloatBuffer
 
 class Texture(image: Image) {
-    private val _texure: Int
+    private val _texture: Int
 
     init {
-        _texure = glGenTextures()
+        _texture = glGenTextures()
+
+        glBindTexture(GL_TEXTURE_2D, _texture)
 
         glTexParameteri(
             GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -35,12 +36,12 @@ class Texture(image: Image) {
     }
 
     fun clean(): Unit {
-        glDeleteTextures(_texure)
+        glDeleteTextures(_texture)
     }
 
     fun bind(bpoint: Int): Unit {
         glActiveTexture(GL_TEXTURE0 + bpoint)
-        glBindTexture(GL_TEXTURE_2D, _texure)
+        glBindTexture(GL_TEXTURE_2D, _texture)
     }
 
 }

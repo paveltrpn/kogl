@@ -36,8 +36,6 @@ class Scene {
 
                     current.traverse()
 
-                    _currentProgram?.setMatrixUniform("view_matrix", false, _camera.matrix())
-
                     for (i in current.children.indices.reversed()) {
                         // Push children to the stack.
                         // We iterate in reverse so the left-most child is processed first.
@@ -78,6 +76,7 @@ class Scene {
                 next.applyTransform(_transformAccumulator)
 
                 // ...update shader uniform...
+                _currentProgram?.setMatrixUniform("view_matrix", false, _camera.matrix())
                 _currentProgram?.setMatrixUniform("drawable_matrix", false, next.combined)
                 _currentProgram?.setVectorUniform("color", next.color)
 

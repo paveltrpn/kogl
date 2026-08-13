@@ -42,5 +42,5 @@ void main() {
     TexCoord = txc;
     // Color = vec4(clr, 1.0);
 
-    Color = vec4(0.8, 0.5, 0.3, 0.8);
+    Color = vec4(1.0, 1.0, 1.0, 1.0);
 }

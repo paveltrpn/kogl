@@ -70,6 +70,11 @@ class Program {
         return shHandle
     }
 
+    val handle: Int
+        get(): Int {
+            return _programHandle
+        }
+    
     fun use() {
         glUseProgram(_programHandle)
     }

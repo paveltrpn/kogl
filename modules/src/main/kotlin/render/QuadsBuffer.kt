@@ -11,8 +11,6 @@ class QuadsBuffer(capacity: Int) {
     private val _vbo: Int
     private val _tbo: Int
 
-    private val _colorLocation = 3
-
     // Count of vertices in this buffer is possible count of quads
     // that can hold this buffer times vertex per quad.
     private var _vertexCount = capacity * 6
@@ -33,9 +31,6 @@ class QuadsBuffer(capacity: Int) {
         glBindBuffer(GL_ARRAY_BUFFER, _tbo)
         glBufferData(GL_ARRAY_BUFFER, (Float.SIZE_BYTES * 2 * _vertexCount).toLong(), GL_DYNAMIC_DRAW)
         glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0L)
-
-        glDisableVertexAttribArray(_colorLocation)
-        //glVertexAttribPointer(_colorLocation, 4, GL_FLOAT, false, 4 * Float.SIZE_BYTES, 0L)
 
         glBindVertexArray(0)
     }
@@ -83,16 +78,6 @@ class QuadsBuffer(capacity: Int) {
 //            pointer?.put(buffer)
 //        }
 //        glUnmapBuffer(GL_ARRAY_BUFFER)
-
-        // glDisableVertexAttribArray(_colorLocation)
-        // glVertexAttrib4f(_colorLocation, color.data[0], color.data[1], color.data[2], color.data[3])
-        MemoryStack.stackPush().use { stack ->
-            val buf = stack.mallocFloat(4)
-            val c = Vector4(1.0f, 0.0f, 0.0f, 1.0f)
-            buf.put(color.data)
-            buf.flip()
-            glVertexAttrib4fv(_colorLocation, buf)
-        }
 
         glBindVertexArray(0)
     }

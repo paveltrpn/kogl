@@ -7,6 +7,6 @@ out vec4 FragColor;
 uniform sampler2D font;
 
 void main() {
-    FragColor = texture(font, TexCoord) * Color;
-    // FragColor = Color;
+    // FragColor = texture(font, TexCoord) * Color;
+    FragColor = texture(font, TexCoord);
 }

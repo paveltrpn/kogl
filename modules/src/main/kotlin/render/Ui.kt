@@ -46,18 +46,26 @@ class UiGL : Ui() {
 
         glEnable(GL_TEXTURE_2D)
 
+        glEnable(GL_BLEND)
+        // glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
         _program.use()
 
         val loc = glGetUniformLocation(_program.handle, "font")
         glUniform1i(loc, 0)
 
-        // _font.bind(0)
+        _font.bind(0)
 
         _labelBuffer.draw()
 
         glDisable(GL_TEXTURE_2D)
 
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
         _billboardBuffer.draw()
+
+        glDisable(GL_BLEND)
 
         _componentsList.clear()
     }

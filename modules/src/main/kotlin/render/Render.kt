@@ -54,10 +54,6 @@ class Render : EventObserver {
 
         glDisable(GL_DEPTH_TEST)
 
-        glEnable(GL_BLEND)
-        // glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA)
-
         val TEXT_START_POS_X = -30.0f
         val TEXT_START_POS_Y = 18.0f
         val TEXT_PLANE_Z = 0.5f
@@ -88,8 +84,6 @@ class Render : EventObserver {
         _ui.add(listOf(l1, l2, b1, b2))
 
         _ui.flush()
-
-        glDisable(GL_BLEND)
     }
 
     fun postLoop(): Unit {

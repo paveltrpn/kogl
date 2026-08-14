@@ -42,9 +42,11 @@ class Scene {
             // Pop from the top.
             when (val next = stack.removeLast()) {
                 is StateGroup -> {
+                    // Reset current state group shader program...
                     _stateProgram = next.program
 
-                    next.callProgram()
+                    // ...and bind it.
+                    _stateProgram.use()
 
                     for (i in next.children.indices.reversed()) {
                         // Push children to the stack.
@@ -68,7 +70,7 @@ class Scene {
     // Recursive descend through Transforms list until
     // Drawable leaf node reached.
     private fun digIntoTransform(node: Transform): Unit {
-        // Aplly transformatuion matrix from this trnasform.
+        // Apply transformation matrix from this transform.
         node.accept(_transformAccumulator)
 
         when (val next = node.child!!) {

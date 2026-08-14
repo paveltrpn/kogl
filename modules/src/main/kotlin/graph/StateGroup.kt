@@ -22,6 +22,10 @@ open class StateGroup(program: Program) : Node {
         _program.use()
     }
 
+    override fun accept(visitor: Visitor): Unit {
+        visitor.apply(this)
+    }
+    
     fun addChild(child: Node): Unit {
         _children.addLast(child)
     }

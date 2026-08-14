@@ -10,6 +10,10 @@ open class Transform : Node {
     override fun traverse(): Unit {
     }
 
+    override fun accept(visitor: Visitor): Unit {
+        visitor.apply(this)
+    }
+    
     var child: Node?
         get(): Node? {
             return _child

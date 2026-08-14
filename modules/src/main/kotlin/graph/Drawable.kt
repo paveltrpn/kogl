@@ -34,6 +34,10 @@ abstract class Drawable(mesh: Mesh) : Node {
         _buffer?.draw()
     }
 
+    override fun accept(visitor: Visitor): Unit {
+        visitor.apply(this)
+    }
+
     abstract fun applyTransform(tr: Matrix4): Unit
 
     var combined: Matrix4

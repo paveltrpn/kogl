@@ -13,6 +13,7 @@ import render.*
 import event.*
 import mesh.*
 import image.*
+import map.*
 
 class Window {
     private var allocator: GLFWAllocator? = null

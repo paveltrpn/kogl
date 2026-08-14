@@ -1,4 +1,6 @@
-package mesh
+package map
+
+import mesh.*
 
 class BodyStorage private constructor(storagePath: String) {
     private var _storage: HashMap<String, Mesh>? = null

@@ -175,8 +175,12 @@ class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
 // ======================= DrawableTransformVisitor ===========================
 // ============================================================================
 
-class DrawableTransformVisitor(val delta: Float, modelMatrix: Matrix4, viewMatrix: Matrix4, program: Program) :
-    Visitor {
+class DrawableTransformVisitor(
+    delta: Float,
+    modelMatrix: Matrix4,
+    viewMatrix: Matrix4,
+    program: Program
+) : Visitor {
     private val _delta: Float
     private val _modelMatrix: Matrix4
     private val _viewMatrix: Matrix4
@@ -194,12 +198,12 @@ class DrawableTransformVisitor(val delta: Float, modelMatrix: Matrix4, viewMatri
         when (node) {
             is SpinableDrawable -> {
                 node.applyTransform(_modelMatrix)
-                node.update(delta)
+                node.update(_delta)
             }
 
             is FlyaroundDrawable -> {
                 node.applyTransform(_modelMatrix)
-                node.update(delta)
+                node.update(_delta)
             }
 
             is Drawable -> {

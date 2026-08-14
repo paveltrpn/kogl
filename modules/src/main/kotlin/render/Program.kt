@@ -64,9 +64,20 @@ class Program {
     }
 
     private fun parseDefines(defines: List<Pair<Int, String>>): Map<Int, String> {
-        return mapOf()
+        val result = mutableMapOf<Int, String>()
+
+        for ((stage, label) in defines) {
+            val existing = result[stage]
+            if (existing != null) {
+                result[stage] = "$existing\n#define $label"
+            } else {
+                result[stage] = "#define $label"
+            }
+        }
+
+        return result
     }
-    
+
     fun cleanDefines(): Unit {
         _defines.clear()
     }
@@ -101,6 +112,10 @@ class Program {
     private fun compile(stage: Int, source: String): Int {
         val shHandle = glCreateShader(stage)
 
+        val defines = parseDefines(_defines)
+        val thisStageDefines = defines[stage]
+
+        println(" === $thisStageDefines")
 
         glShaderSource(shHandle, versionString, source)
 

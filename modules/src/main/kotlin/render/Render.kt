@@ -123,6 +123,8 @@ class Render : EventObserver {
         val colorShaderSource = ShaderSource("flatshade")
         val colorProgram = Program().apply {
             source(colorShaderSource)
+            define(GL_VERTEX_SHADER, "DUMMY_ONE")
+            define(GL_VERTEX_SHADER, "DUMMY_TWO")
             build()
         }
 

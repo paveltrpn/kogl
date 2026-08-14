@@ -29,9 +29,11 @@ class Window {
         // Place to init all singletons.
         Config.init()
         GlobalEventEmitter.init()
-        BodyStorage.init("")
 
-        println("Base path is ${Config.instance().basePath}")
+        val basePath = Config.instance().basePath
+        BodyStorage.init(basePath)
+
+        println("base path is ${basePath}")
 
         _width = Config.instance().konfig.window_width
         _height = Config.instance().konfig.window_height

@@ -4,11 +4,32 @@ import graph.*
 import algebra.*
 import render.*
 
+class AccumulateTransformVisitor : Visitor {
+    private var _accumulatedMatrix: Matrix4
+
+    init {
+        _accumulatedMatrix = Matrix4()
+        _accumulatedMatrix.idtt()
+    }
+
+    val matrix: Matrix4
+        get(): Matrix4 {
+            return _accumulatedMatrix
+        }
+
+    override fun apply(node: Transform): Unit {
+        _accumulatedMatrix = _accumulatedMatrix.multiply(node.matrix)
+    }
+}
+
 class Scene {
     private var _graph: MutableList<StateGroup> = mutableListOf()
-    private var _transformAccumulator = Matrix4()
     private var _currentProgram: Program? = null
     private var _camera = Flycam()
+
+    // Accumulate transformations from every Transform
+    // on the path.
+    private var _matrixAccumulator = AccumulateTransformVisitor()
 
     init {
         _camera.fov = 45.0f
@@ -45,8 +66,7 @@ class Scene {
                 }
 
                 is Transform -> {
-                    // Reset this Transforms branch state.
-                    _transformAccumulator = Matrix4()
+                    _matrixAccumulator = AccumulateTransformVisitor()
 
                     // Recursive traverse over transforms list until
                     // reach some Drawable.
@@ -59,9 +79,7 @@ class Scene {
     // Recursive descend through Transforms list until
     // Drawable leaf node reached.
     private fun digIntoTransform(node: Transform): Unit {
-        // Accumulate transformations from every Transform
-        // on the path.
-        _transformAccumulator = _transformAccumulator.multiply(node.matrix)
+        node.accept(_matrixAccumulator)
 
         when (val next = node.child!!) {
             is Transform -> {
@@ -72,7 +90,7 @@ class Scene {
             // Reach Drawable leaf node...
             is Drawable -> {
                 // ...perform transformation...
-                next.applyTransform(_transformAccumulator)
+                next.applyTransform(_matrixAccumulator.matrix)
 
                 // ...update shader uniform...
                 _currentProgram?.setMatrixUniform("view_matrix", false, _camera.matrix())

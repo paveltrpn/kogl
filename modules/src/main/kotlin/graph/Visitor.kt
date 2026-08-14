@@ -1,7 +1,5 @@
 package  graph
 
-import algebra.rotation
-
 interface Visitor {
     fun apply(node: Node) = Unit
     fun apply(node: Drawable) = Unit

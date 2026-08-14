@@ -22,24 +22,19 @@ private class AccumulateTransformVisitor : Visitor {
     }
 }
 
-class SpinVisitor : Visitor {
+private class SpinableVisitor : Visitor {
     override fun apply(node: Drawable): Unit {
         when (node) {
             is SpinableDrawable -> {
-//                node._angl += node._anglSpeed
-//
-//                if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
-//
-//                val spin = rotation(_axis, _angl)
-//
-//                // Why transpose?
-//                tr.transpose()
-//
-//                _combined = spin.multiply(tr)
+                node.update(1.0f)
             }
         }
     }
 }
+
+// ============================================================================
+// ======================= Scene ==============================================
+// ============================================================================
 
 class Scene {
     private var _graph: MutableList<StateGroup> = mutableListOf()
@@ -108,6 +103,9 @@ class Scene {
 
             // Reach Drawable leaf node...
             is Drawable -> {
+                val spin = SpinableVisitor()
+                next.accept(spin)
+
                 // ...perform transformation...
                 next.applyTransform(_matrixAccumulator.matrix)
 

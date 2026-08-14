@@ -69,9 +69,9 @@ class Program {
         for ((stage, label) in defines) {
             val existing = result[stage]
             if (existing != null) {
-                result[stage] = "$existing\n#define $label"
+                result[stage] = "$existing#define $label\n"
             } else {
-                result[stage] = "#define $label"
+                result[stage] = "#define $label\n"
             }
         }
 
@@ -125,7 +125,10 @@ class Program {
         val shHandle = glCreateShader(stage)
 
         val defines = parseDefines(_defines)
-        val thisStageDefines = defines[stage] ?: "#pragma"
+        val thisStageDefines = defines[stage] ?: ""
+
+//        val fullSource = versionString + thisStageDefines + source
+//        println("$fullSource")
 
         glShaderSource(shHandle, versionString, thisStageDefines, source)
 

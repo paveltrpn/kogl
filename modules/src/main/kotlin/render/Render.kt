@@ -23,12 +23,14 @@ class Render : EventObserver {
         _run = true
 
         val sparseObjectsGraph = sparseObjectsGraph()
-        val testBoxGraph = testCubesGraph()
+        //val testBoxGraph = testCubesGraph()
+        val flyAroundGraph = testFlyaroundsGraph()
 
         _scene = Scene()
 
         _scene.addStateGroup(sparseObjectsGraph)
-        _scene.addStateGroup(testBoxGraph)
+        //_scene.addStateGroup(testBoxGraph)
+        _scene.addStateGroup(flyAroundGraph)
 
         _ui = UiGL()
     }
@@ -131,7 +133,7 @@ class Render : EventObserver {
 
         flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
 
-        val colorStateGroup = StateGroup(flatshadeProgram)
+        val rootStateGroup = StateGroup(flatshadeProgram)
 
         val sum: (Int, Int) -> Int = { a: Int, b: Int ->
             val result = a + b
@@ -164,7 +166,7 @@ class Render : EventObserver {
 
             scale.addChild(item)
             offset.addChild(scale)
-            colorStateGroup.addChild(offset)
+            rootStateGroup.addChild(offset)
         }
 
         for (i in 0..16) {
@@ -184,7 +186,7 @@ class Render : EventObserver {
 
             scale.addChild(item)
             offset.addChild(scale)
-            colorStateGroup.addChild(offset)
+            rootStateGroup.addChild(offset)
         }
 
         for (i in 0..16) {
@@ -204,10 +206,49 @@ class Render : EventObserver {
 
             scale.addChild(item)
             offset.addChild(scale)
-            colorStateGroup.addChild(offset)
+            rootStateGroup.addChild(offset)
         }
 
-        return colorStateGroup
+        return rootStateGroup
+    }
+
+    private fun testFlyaroundsGraph(): StateGroup {
+        val pathPrefix = Config.instance().basePath
+
+        val diamondObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/diamond.obj")
+        val diamondMesh = SeparatedArraysMesh(diamondObj)
+
+        // =================================================
+
+        val flatshadeSource = ShaderSource("flatshade")
+        val flatshadeProgram = Program().apply {
+            source(flatshadeSource)
+            build()
+        }
+
+        flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
+
+        val rootStateGroup = StateGroup(flatshadeProgram)
+
+        // =================================================
+
+        val item = FlyaroundDrawable(diamondMesh)
+        item.color = Vector3(0.0f, 0.0f, 1.0f)
+        item.axis = Vector3(0.0f, 0.0f, 1.0f).normalize()
+        item.anglSpeed = 0.7f
+        item.origin = Vector3(1.5f, 0.0f, 0.0f)
+
+        val scale = Transform()
+        scale.matrix = algebra.scale(0.5f, 0.5f, 0.5f)
+
+        val offset = Transform()
+        offset.matrix = algebra.offset(0.0f, 0.0f, 0.0f)
+
+        scale.addChild(item)
+        offset.addChild(scale)
+        rootStateGroup.addChild(offset)
+
+        return rootStateGroup
     }
 
     private fun testCubesGraph(): StateGroup {
@@ -343,7 +384,7 @@ class Render : EventObserver {
 
         flatshadeProgram.setVectorUniform("color", Vector3(0.0f, 1.0f, 0.0f))
 
-        val colorStateGroup = StateGroup(flatshadeProgram)
+        val rootStateGroup = StateGroup(flatshadeProgram)
 
         // =================================================
 
@@ -354,12 +395,12 @@ class Render : EventObserver {
         scale.matrix = algebra.scale(1.0f, 1.0f, 1.0f)
 
         val offset = Transform()
-        offset.matrix = algebra.offset(0.0f, 0.0f, 0.0f);
+        offset.matrix = algebra.offset(0.0f, 0.0f, 0.0f)
 
         scale.addChild(item)
         offset.addChild(scale)
-        colorStateGroup.addChild(offset)
+        rootStateGroup.addChild(offset)
 
-        return colorStateGroup
+        return rootStateGroup
     }
 }

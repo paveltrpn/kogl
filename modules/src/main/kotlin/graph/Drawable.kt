@@ -45,7 +45,7 @@ open class Drawable(mesh: Mesh) : Node {
         _buffer?.draw()
     }
 
-    open fun applyTransform(tr: Matrix4): Unit {
+    fun applyTransform(tr: Matrix4): Unit {
         tr.transpose()
         _combined = tr
     }
@@ -113,6 +113,65 @@ class SpinableDrawable(mesh: Mesh) : Drawable(mesh) {
 }
 
 // ============================================================================
+// ======================= FlyaroundDrawable ===================================
+// ============================================================================
+
+class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
+    private var _origin = Vector3()
+    private var _axis = Vector3()
+    private var _angl = 0.0f
+    private var _anglSpeed = 0.0f
+
+    var origin: Vector3
+        get(): Vector3 {
+            return _origin
+        }
+        set(value) {
+            _origin = value
+        }
+
+    var axis: Vector3
+        get(): Vector3 {
+            return _axis
+        }
+        set(value: Vector3) {
+            _axis = value
+            _axis.normalizeSelf()
+        }
+
+    var angl: Float
+        get(): Float {
+            return _angl
+        }
+        set(value) {
+            _angl = value
+        }
+
+    var anglSpeed: Float
+        get(): Float {
+            return _anglSpeed
+        }
+        set(value: Float) {
+            _anglSpeed = value
+        }
+
+    fun update(dt: Float): Unit {
+        angl += anglSpeed * dt
+
+        if (angl > 360.0f || angl < -360.0f) angl = 0.0f
+
+        val spin = rotation(axis, angl)
+
+        val offset = algebra.offset(_origin)
+        offset.transpose()
+
+        val tmp = _combined.multiply(offset)
+
+        _combined = tmp.multiply(spin)
+    }
+}
+
+// ============================================================================
 // ======================= DrawableTransformVisitor ===========================
 // ============================================================================
 
@@ -134,6 +193,11 @@ class DrawableTransformVisitor(val delta: Float, modelMatrix: Matrix4, viewMatri
         // Perform transformations...
         when (node) {
             is SpinableDrawable -> {
+                node.applyTransform(_modelMatrix)
+                node.update(delta)
+            }
+
+            is FlyaroundDrawable -> {
                 node.applyTransform(_modelMatrix)
                 node.update(delta)
             }

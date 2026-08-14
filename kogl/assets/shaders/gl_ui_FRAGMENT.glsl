@@ -1,5 +1,3 @@
-#version 450 core
-
 in vec2 TexCoord;
 in vec4 color;
 

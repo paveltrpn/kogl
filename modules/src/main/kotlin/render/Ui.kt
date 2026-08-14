@@ -20,8 +20,11 @@ class UiGL : Ui() {
     private val _billboardBuffer = QuadsBuffer(OUTPUT_QUADS_CAPACITY)
 
     init {
-        val programSource = ShaderSource("ui")
-        _program = Program(programSource)
+        val uiProgramSource = ShaderSource("ui")
+        _program = Program().apply {
+            source(uiProgramSource)
+            build()
+        }
 
         val path = "${Config.instance().basePath}/assets/fonts/Consolas-1024-512-32-64-alpha.tga"
         val fontImage = Tga(path)

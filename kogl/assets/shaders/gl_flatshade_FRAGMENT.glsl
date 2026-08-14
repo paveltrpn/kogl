@@ -1,5 +1,3 @@
-#version 450 core
-
 in vec3 newColor;
 in vec3 vLighting;
 

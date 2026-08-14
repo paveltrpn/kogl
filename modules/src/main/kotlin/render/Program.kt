@@ -16,7 +16,11 @@ data class UniformInfo(
 )
 
 class Program {
-    private val _programName: String
+    private var _shaderSources: ShaderSource? = null
+
+    private val _defines: MutableList<Pair<Int, String>> = mutableListOf()
+
+    private var _programName: String = ""
     private var _programHandle: Int = 0
     private val _uniforms: MutableMap<String, UniformInfo> = mutableMapOf()
 
@@ -24,12 +28,57 @@ class Program {
     // data to shaders.
     private val _floatBuffer = MemoryUtil.memAllocFloat(16)
 
-    constructor(shaders: ShaderSource) {
-        _programName = shaders.programName
+    val versionString = "#version 450 core\n\n"
+
+//    constructor(shaders: ShaderSource) {
+//        _programName = shaders.programName
+//
+//        _programHandle = glCreateProgram()
+//
+//        for (shader in shaders.shadersList) {
+//            val (source, stage) = shader
+//            val compiled = compile(stage, source)
+//
+//            glAttachShader(_programHandle, compiled)
+//        }
+//
+//        glLinkProgram(_programHandle)
+//
+//        val success = glGetProgrami(_programHandle, GL_LINK_STATUS)
+//
+//        if (success == GL_FALSE) {
+//            val logLength = glGetProgrami(_programHandle, GL_INFO_LOG_LENGTH)
+//            val log = glGetProgramInfoLog(_programHandle, logLength)
+//            throw RuntimeException("Can't link program with trace:\n$log")
+//        }
+//
+//        reflectUniforms(_programHandle)
+//    }
+
+    fun source(src: ShaderSource): Unit {
+        _shaderSources = src
+    }
+
+    fun define(stage: Int, label: String): Unit {
+        _defines.addLast(Pair(stage, label))
+    }
+
+    private fun parseDefines(defines: List<Pair<Int, String>>): Map<Int, String> {
+        return mapOf()
+    }
+    
+    fun cleanDefines(): Unit {
+        _defines.clear()
+    }
+
+
+    fun build(): Unit {
+        val shadersList = _shaderSources?.shadersList ?: throw RuntimeException("Set shader sources before build!")
+        _programName = _shaderSources!!.programName
 
         _programHandle = glCreateProgram()
 
-        for (shader in shaders.shadersList) {
+        for (shader in shadersList) {
             val (source, stage) = shader
             val compiled = compile(stage, source)
 
@@ -51,7 +100,10 @@ class Program {
 
     private fun compile(stage: Int, source: String): Int {
         val shHandle = glCreateShader(stage)
-        glShaderSource(shHandle, source)
+
+
+        glShaderSource(shHandle, versionString, source)
+
         glCompileShader(shHandle)
 
         val success = glGetShaderi(shHandle, GL_COMPILE_STATUS)
@@ -65,7 +117,7 @@ class Program {
         return shHandle
     }
 
-    fun reflectUniforms(programHandle: Int): Unit {
+    private fun reflectUniforms(programHandle: Int): Unit {
         val numUniforms = glGetProgrami(programHandle, GL_ACTIVE_UNIFORMS)
         val maxLength = glGetProgrami(programHandle, GL_ACTIVE_UNIFORM_MAX_LENGTH)
 

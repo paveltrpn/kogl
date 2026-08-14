@@ -121,7 +121,10 @@ class Render : EventObserver {
         // =================================================
 
         val colorShaderSource = ShaderSource("flatshade")
-        val colorProgram = Program(colorShaderSource)
+        val colorProgram = Program().apply {
+            source(colorShaderSource)
+            build()
+        }
 
         colorProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
 
@@ -331,7 +334,10 @@ class Render : EventObserver {
         // =================================================
 
         val colorShaderSource = ShaderSource("flatshade")
-        val colorProgram = Program(colorShaderSource)
+        val colorProgram = Program().apply {
+            source(colorShaderSource)
+            build()
+        }
 
         colorProgram.setVectorUniform("color", Vector3(0.0f, 1.0f, 0.0f))
 

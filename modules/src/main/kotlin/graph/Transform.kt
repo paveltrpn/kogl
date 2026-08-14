@@ -39,3 +39,24 @@ open class Transform : Node {
     }
 }
 
+// ============================================================================
+// ======================= TransformAccumulateVisitor =========================
+// ============================================================================
+
+class TransformAccumulateVisitor : Visitor {
+    private var _accumulatedMatrix: Matrix4
+
+    init {
+        _accumulatedMatrix = Matrix4().idtt()
+    }
+
+    val matrix: Matrix4
+        get(): Matrix4 {
+            return _accumulatedMatrix
+        }
+
+    override fun apply(node: Transform): Unit {
+        _accumulatedMatrix = _accumulatedMatrix.multiply(node.matrix)
+    }
+}
+

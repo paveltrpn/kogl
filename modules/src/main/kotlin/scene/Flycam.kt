@@ -157,18 +157,19 @@ class Flycam {
         _eye.z += velocity.z * 0.5f
     }
 
-    fun matrix(): Matrix4 {
-        val projection = Matrix4().perspective(_fov, _aspect, _ncp, _fcp)
+    val matrix: Matrix4
+        get(): Matrix4 {
+            val projection = Matrix4().perspective(_fov, _aspect, _ncp, _fcp)
 
-        val ar = Matrix4().rotate(_zenith, _azimuth)
-        _right = ar.vecMultiply(Vector3(1.0f, 0.0f, 0.0f))
+            val ar = Matrix4().rotate(_zenith, _azimuth)
+            _right = ar.vecMultiply(Vector3(1.0f, 0.0f, 0.0f))
 
-        val er = Matrix4().rotate(_right, _elevation)
-        _look = er.vecMultiply(_right.cross(_zenith))
+            val er = Matrix4().rotate(_right, _elevation)
+            _look = er.vecMultiply(_right.cross(_zenith))
 
-        val offset = Matrix4().offset(_eye)
-        offset.transpose()
+            val offset = Matrix4().offset(_eye)
+            offset.transpose()
 
-        return offset.multiply(er).multiply(ar).multiply(projection)
-    }
+            return offset.multiply(er).multiply(ar).multiply(projection)
+        }
 }

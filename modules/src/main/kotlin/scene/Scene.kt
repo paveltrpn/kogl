@@ -4,46 +4,20 @@ import graph.*
 import algebra.*
 import render.*
 
-private class AccumulateTransformVisitor : Visitor {
-    private var _accumulatedMatrix: Matrix4
-
-    init {
-        _accumulatedMatrix = Matrix4()
-        _accumulatedMatrix.idtt()
-    }
-
-    val matrix: Matrix4
-        get(): Matrix4 {
-            return _accumulatedMatrix
-        }
-
-    override fun apply(node: Transform): Unit {
-        _accumulatedMatrix = _accumulatedMatrix.multiply(node.matrix)
-    }
-}
-
-private class SpinableVisitor : Visitor {
-    override fun apply(node: Drawable): Unit {
-        when (node) {
-            is SpinableDrawable -> {
-                node.update(1.0f)
-            }
-        }
-    }
-}
-
 // ============================================================================
 // ======================= Scene ==============================================
 // ============================================================================
 
 class Scene {
     private var _graph: MutableList<StateGroup> = mutableListOf()
-    private var _currentProgram: Program? = null
     private var _camera = Flycam()
 
-    // Accumulate transformations from every Transform
-    // on the path.
-    private var _matrixAccumulator = AccumulateTransformVisitor()
+    // Each StateGroup branch data - store current state group shader program
+    // and accumulate transformations from every transform on the path.
+    //
+    // This data reset on every next StateGroup traversal begin.
+    private var _transformAccumulator = TransformAccumulateVisitor()
+    private var _stateProgram = Program()
 
     init {
         _camera.fov = 45.0f
@@ -66,25 +40,26 @@ class Scene {
 
         while (stack.isNotEmpty()) {
             // Pop from the top.
-            when (val current = stack.removeLast()) {
+            when (val next = stack.removeLast()) {
                 is StateGroup -> {
-                    _currentProgram = current.program
+                    _stateProgram = next.program
 
-                    current.callProgram()
+                    next.callProgram()
 
-                    for (i in current.children.indices.reversed()) {
+                    for (i in next.children.indices.reversed()) {
                         // Push children to the stack.
                         // We iterate in reverse so the left-most child is processed first.
-                        stack.addLast(current.children[i])
+                        stack.addLast(next.children[i])
                     }
                 }
 
                 is Transform -> {
-                    _matrixAccumulator = AccumulateTransformVisitor()
+                    // Reset transform accumulator.
+                    _transformAccumulator = TransformAccumulateVisitor()
 
                     // Recursive traverse over transforms list until
                     // reach some Drawable.
-                    digIntoTransform(current)
+                    digIntoTransform(next)
                 }
             }
         }
@@ -93,7 +68,8 @@ class Scene {
     // Recursive descend through Transforms list until
     // Drawable leaf node reached.
     private fun digIntoTransform(node: Transform): Unit {
-        node.accept(_matrixAccumulator)
+        // Aplly transformatuion matrix from this trnasform.
+        node.accept(_transformAccumulator)
 
         when (val next = node.child!!) {
             is Transform -> {
@@ -103,19 +79,12 @@ class Scene {
 
             // Reach Drawable leaf node...
             is Drawable -> {
-                val spin = SpinableVisitor()
-                next.accept(spin)
+                val modelMatrix = _transformAccumulator.matrix
+                val viewMatrix = _camera.matrix
 
-                // ...perform transformation...
-                next.applyTransform(_matrixAccumulator.matrix)
-
-                // ...update shader uniform...
-                _currentProgram?.setMatrixUniform("view_matrix", false, _camera.matrix())
-                _currentProgram?.setMatrixUniform("drawable_matrix", false, next.combined)
-                _currentProgram?.setVectorUniform("color", next.color)
-
-                // ...applying and draw call.
-                next.draw()
+                // Perform transformation and draw.
+                val update = DrawableTransformVisitor(1.0f, modelMatrix, viewMatrix, _stateProgram)
+                next.accept(update)
             }
 
             else -> {

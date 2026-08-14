@@ -47,7 +47,7 @@ open class Drawable(mesh: Mesh) : Node {
 
     open fun applyTransform(tr: Matrix4): Unit {
         tr.transpose()
-        _combined = _combined.multiply(tr)
+        _combined = tr
     }
 
     var combined: Matrix4
@@ -108,6 +108,47 @@ class SpinableDrawable(mesh: Mesh) : Drawable(mesh) {
 
         val spin = rotation(axis, angl)
 
-        _combined = spin
+        _combined = spin.multiply(_combined)
+    }
+}
+
+// ============================================================================
+// ======================= DrawableTransformVisitor ===========================
+// ============================================================================
+
+class DrawableTransformVisitor(val delta: Float, modelMatrix: Matrix4, viewMatrix: Matrix4, program: Program) :
+    Visitor {
+    private val _delta: Float
+    private val _modelMatrix: Matrix4
+    private val _viewMatrix: Matrix4
+    private val _program: Program
+
+    init {
+        _delta = delta
+        _modelMatrix = modelMatrix
+        _viewMatrix = viewMatrix
+        _program = program
+    }
+
+    override fun apply(node: Drawable): Unit {
+        // Perform transformations...
+        when (node) {
+            is SpinableDrawable -> {
+                node.applyTransform(_modelMatrix)
+                node.update(delta)
+            }
+
+            is Drawable -> {
+                node.applyTransform(_modelMatrix)
+            }
+        }
+
+        // ...update shader uniform...
+        _program.setMatrixUniform("view_matrix", false, _viewMatrix)
+        _program.setMatrixUniform("drawable_matrix", false, node.combined)
+        _program.setVectorUniform("color", node.color)
+
+        // ...and draw call.
+        node.draw()
     }
 }

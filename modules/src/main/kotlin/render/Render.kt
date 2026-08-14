@@ -121,9 +121,9 @@ class Render : EventObserver {
 
         // =================================================
 
-        val flatshadeShaderSource = ShaderSource("flatshade")
+        val flatshadeSource = ShaderSource("flatshade")
         val flatshadeProgram = Program().apply {
-            source(flatshadeShaderSource)
+            source(flatshadeSource)
             define(GL_VERTEX_SHADER, "DUMMY_ONE 1")
             define(GL_VERTEX_SHADER, "DUMMY_TWO 2")
             build()
@@ -131,8 +131,7 @@ class Render : EventObserver {
 
         flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
 
-        val colorStateGroup = StateGroup()
-        colorStateGroup.setProgram(flatshadeProgram)
+        val colorStateGroup = StateGroup(flatshadeProgram)
 
         val sum: (Int, Int) -> Int = { a: Int, b: Int ->
             val result = a + b
@@ -336,16 +335,15 @@ class Render : EventObserver {
 
         // =================================================
 
-        val colorShaderSource = ShaderSource("flatshade")
-        val colorProgram = Program().apply {
-            source(colorShaderSource)
+        val flatshadeSource = ShaderSource("flatshade")
+        val flatshadeProgram = Program().apply {
+            source(flatshadeSource)
             build()
         }
 
-        colorProgram.setVectorUniform("color", Vector3(0.0f, 1.0f, 0.0f))
+        flatshadeProgram.setVectorUniform("color", Vector3(0.0f, 1.0f, 0.0f))
 
-        val colorStateGroup = StateGroup()
-        colorStateGroup.setProgram(colorProgram)
+        val colorStateGroup = StateGroup(flatshadeProgram)
 
         // =================================================
 

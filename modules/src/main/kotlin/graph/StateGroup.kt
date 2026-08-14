@@ -1,10 +1,14 @@
 package graph
 
-import render.Program
+import render.*
 
-open class StateGroup : Node {
+open class StateGroup(program: Program) : Node {
     private var _children: MutableList<Node> = mutableListOf()
-    private var _program: Program? = null
+    private var _program: Program
+
+    init {
+        _program = program
+    }
 
     var children: MutableList<Node>
         get(): MutableList<Node> {
@@ -15,7 +19,7 @@ open class StateGroup : Node {
         }
 
     override fun traverse(): Unit {
-        _program?.use()
+        _program.use()
     }
 
     fun addChild(child: Node): Unit {
@@ -26,8 +30,8 @@ open class StateGroup : Node {
         _program = program
     }
 
-    val program: Program?
-        get(): Program? {
+    val program: Program
+        get(): Program {
             return _program
         }
 }

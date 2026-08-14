@@ -3,7 +3,8 @@ package map
 import mesh.*
 
 class BodyStorage private constructor(storagePath: String) {
-    private var _storage: HashMap<String, Mesh>? = null
+    private val _bodyStorage: HashMap<String, Mesh>? = null
+    private val _materialStorage: HashMap<String, Material>? = null
 
     companion object {
         @Volatile

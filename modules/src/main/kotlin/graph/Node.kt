@@ -1,4 +1,4 @@
-package scene
+package graph
 
 interface Node {
     abstract fun traverse(): Unit

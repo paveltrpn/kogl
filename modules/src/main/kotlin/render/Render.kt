@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL46.*
 import algebra.Vector3
 import config.Config
 import event.*
+import graph.*
 import scene.*
 import mesh.*
 import ui.*
@@ -120,18 +121,18 @@ class Render : EventObserver {
 
         // =================================================
 
-        val colorShaderSource = ShaderSource("flatshade")
-        val colorProgram = Program().apply {
-            source(colorShaderSource)
+        val flatshadeShaderSource = ShaderSource("flatshade")
+        val flatshadeProgram = Program().apply {
+            source(flatshadeShaderSource)
             define(GL_VERTEX_SHADER, "DUMMY_ONE 1")
             define(GL_VERTEX_SHADER, "DUMMY_TWO 2")
             build()
         }
 
-        colorProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
+        flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
 
         val colorStateGroup = StateGroup()
-        colorStateGroup.setProgram(colorProgram)
+        colorStateGroup.setProgram(flatshadeProgram)
 
         val sum: (Int, Int) -> Int = { a: Int, b: Int ->
             val result = a + b

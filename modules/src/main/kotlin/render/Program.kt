@@ -60,6 +60,11 @@ class Program {
     }
 
     fun define(stage: Int, label: String): Unit {
+        if (glGetProgrami(_programHandle, GL_LINK_STATUS) == GL_TRUE) {
+            println("It meaningless to add defines to already linked program \"$_programName\"!")
+            return
+        }
+
         _defines.addLast(Pair(stage, label))
     }
 
@@ -81,7 +86,6 @@ class Program {
     fun cleanDefines(): Unit {
         _defines.clear()
     }
-
 
     fun build(): Unit {
         val shadersList = _shaderSources?.shadersList ?: throw RuntimeException("Set shader sources before build!")
@@ -269,33 +273,3 @@ class Program {
         glUniformMatrix4fv(location, transpose, _floatBuffer)
     }
 }
-
-//// 1. Define your shader source segments
-//const char* versionSrc = "#version 330 core\n";
-//
-//const char* definesSrc = "#define USE_LIGHTING 1\n"
-//"#define MAX_LIGHTS 4\n";
-//
-//const char* shaderBodySrc =
-//"out vec4 FragColor;\n"
-//"void main() {\n"
-//"    #if USE_LIGHTING\n"
-//"        FragColor = vec4(1.0, 0.5, 0.2, 1.0);\n"
-//"    #else\n"
-//"        FragColor = vec4(0.5, 0.5, 0.5, 1.0);\n"
-//"    #endif\n"
-//"}";
-//
-//// 2. Put the string pointers into an array in the exact order needed
-//const char* sourceArray[] = { versionSrc, definesSrc, shaderBodySrc };
-//
-//// 3. Create the shader object
-//GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-//
-//// 4. Pass the array of 3 strings to OpenGL
-//glShaderSource(fragmentShader, 3, sourceArray, NULL);
-//
-//// 5. Compile as usual
-//glCompileShader(fragmentShader);
-
-

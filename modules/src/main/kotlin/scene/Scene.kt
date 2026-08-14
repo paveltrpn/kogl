@@ -1,7 +1,8 @@
 package scene
 
+import graph.*
 import algebra.*
-import render.Program
+import render.*
 
 class Scene {
     private var _graph: MutableList<StateGroup> = mutableListOf()

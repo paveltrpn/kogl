@@ -35,7 +35,7 @@ class Scene {
                 is StateGroup -> {
                     _currentProgram = current.program
 
-                    current.traverse()
+                    current.callProgram()
 
                     for (i in current.children.indices.reversed()) {
                         // Push children to the stack.
@@ -59,8 +59,6 @@ class Scene {
     // Recursive descend through Transforms list until
     // Drawable leaf node reached.
     private fun digIntoTransform(node: Transform): Unit {
-        node.traverse()
-
         // Accumulate transformations from every Transform
         // on the path.
         _transformAccumulator = _transformAccumulator.multiply(node.matrix)
@@ -82,7 +80,7 @@ class Scene {
                 _currentProgram?.setVectorUniform("color", next.color)
 
                 // ...applying and draw call.
-                next.traverse()
+                next.draw()
             }
 
             else -> {

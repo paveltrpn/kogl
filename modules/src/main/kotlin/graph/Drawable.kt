@@ -30,12 +30,19 @@ abstract class Drawable(mesh: Mesh) : Node {
         }
     }
 
-    override fun traverse(): Unit {
-        _buffer?.draw()
-    }
-
     override fun accept(visitor: Visitor): Unit {
         visitor.apply(this)
+    }
+
+    override fun ascend(visitor: Visitor): Unit {
+    }
+
+    override fun traverse(visitor: Visitor): Unit {
+
+    }
+
+    fun draw(): Unit {
+        _buffer?.draw()
     }
 
     abstract fun applyTransform(tr: Matrix4): Unit

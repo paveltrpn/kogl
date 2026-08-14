@@ -7,13 +7,16 @@ open class Transform : Node {
 
     private var _matrix = Matrix4()
 
-    override fun traverse(): Unit {
-    }
-
     override fun accept(visitor: Visitor): Unit {
         visitor.apply(this)
     }
-    
+
+    override fun ascend(visitor: Visitor): Unit {
+    }
+
+    override fun traverse(visitor: Visitor): Unit {
+    }
+
     var child: Node?
         get(): Node? {
             return _child

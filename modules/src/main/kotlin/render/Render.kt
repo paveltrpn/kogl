@@ -28,7 +28,7 @@ class Render : EventObserver {
         _scene = Scene()
 
         _scene.addStateGroup(sparseObjectsGraph)
-        // _scene.addStateGroup(testBoxGraph)
+        _scene.addStateGroup(testBoxGraph)
 
         _ui = UiGL()
     }
@@ -347,7 +347,7 @@ class Render : EventObserver {
 
         // =================================================
 
-        val item = StaticDrawable(boxMesh)
+        val item = Drawable(boxMesh)
         item.color = Vector3(0.0f, 0.0f, 1.0f)
 
         val scale = Transform()

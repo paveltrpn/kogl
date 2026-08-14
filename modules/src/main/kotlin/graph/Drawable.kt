@@ -8,7 +8,7 @@ import mesh.*
 // ======================= Drawable ===========================================
 // ============================================================================
 
-abstract class Drawable(mesh: Mesh) : Node {
+open class Drawable(mesh: Mesh) : Node {
     private var _buffer: MeshBuffer? = null
 
     protected var _color = Vector3(1.0f, 1.0f, 1.0f)
@@ -45,7 +45,12 @@ abstract class Drawable(mesh: Mesh) : Node {
         _buffer?.draw()
     }
 
-    abstract fun applyTransform(tr: Matrix4): Unit
+    open fun applyTransform(tr: Matrix4): Unit {
+        // Why transpose?
+        tr.transpose()
+
+        _combined = tr
+    }
 
     var combined: Matrix4
         get(): Matrix4 {
@@ -62,19 +67,6 @@ abstract class Drawable(mesh: Mesh) : Node {
         set(value: Vector3) {
             _color = value
         }
-}
-
-// ============================================================================
-// ======================= StaticDrawable =====================================
-// ============================================================================
-
-class StaticDrawable(mesh: Mesh) : Drawable(mesh) {
-    override fun applyTransform(tr: Matrix4): Unit {
-        // Why transpose?
-        tr.transpose()
-
-        _combined = tr
-    }
 }
 
 // ============================================================================

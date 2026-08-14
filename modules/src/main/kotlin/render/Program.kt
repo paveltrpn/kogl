@@ -103,21 +103,31 @@ class Program {
         if (success == GL_FALSE) {
             val logLength = glGetProgrami(_programHandle, GL_INFO_LOG_LENGTH)
             val log = glGetProgramInfoLog(_programHandle, logLength)
-            throw RuntimeException("Can't link program with trace:\n$log")
+            throw RuntimeException("Can't link program  \"$_programName\"!\ntrace:\n$log")
         }
 
         reflectUniforms(_programHandle)
+    }
+
+    private val stageToString: (Int) -> String = { stage ->
+        when (stage) {
+            GL_VERTEX_SHADER -> "VERTEX"
+            GL_FRAGMENT_SHADER -> "FRAGMENT"
+            GL_GEOMETRY_SHADER -> "GEOMETRY"
+            GL_TESS_CONTROL_SHADER -> "TESS_CONTROL"
+            GL_TESS_EVALUATION_SHADER -> "TESS_EVALUATION"
+            GL_COMPUTE_SHADER -> "COMPUTE"
+            else -> "UNKNOWN"
+        }
     }
 
     private fun compile(stage: Int, source: String): Int {
         val shHandle = glCreateShader(stage)
 
         val defines = parseDefines(_defines)
-        val thisStageDefines = defines[stage]
+        val thisStageDefines = defines[stage] ?: "#pragma"
 
-        println(" === $thisStageDefines")
-
-        glShaderSource(shHandle, versionString, source)
+        glShaderSource(shHandle, versionString, thisStageDefines, source)
 
         glCompileShader(shHandle)
 
@@ -126,7 +136,7 @@ class Program {
         if (success == GL_FALSE) {
             val logLength = glGetShaderi(shHandle, GL_INFO_LOG_LENGTH)
             val log = glGetShaderInfoLog(shHandle, logLength)
-            throw RuntimeException("Can't compile program with trace:\n$log")
+            throw RuntimeException("Can't compile program \"$_programName\" stage \"${stageToString(stage)}\"!\ntrace:\n$log")
         }
 
         return shHandle

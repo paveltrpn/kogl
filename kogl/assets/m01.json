@@ -43,7 +43,8 @@
                         "payload": {
                           "mesh": "box",
                           "material": "mat1",
-                          "data": []
+                          "axis": [],
+                          "angl": 0.0
                         }
                       }
                     }
@@ -73,10 +74,13 @@
                             "transform_type": "offset",
                             "data": [],
                             "child": {
-                              "node": "drawable",
+                              "node": "flyable_drawable",
                               "payload": {
                                 "mesh": "box",
-                                "material": "mat1"
+                                "material": "mat1",
+                                "origin": [],
+                                "axis": [],
+                                "angl": 0.0
                               }
                             }
                           }
@@ -93,7 +97,8 @@
                               "node": "drawable",
                               "payload": {
                                 "mesh": "box",
-                                "material": "mat1"
+                                "material": "mat1",
+                                "data": []
                               }
                             }
                           }
@@ -105,7 +110,11 @@
                           "payload": {
                             "matrix": [],
                             "transform_type": "offset",
-                            "data": [],
+                            "data": [
+                              0.0,
+                              0.0,
+                              0.0
+                            ],
                             "child": {
                               "node": "drawable",
                               "payload": {
@@ -126,12 +135,19 @@
                   "payload": {
                     "matrix": [],
                     "type": "offset",
-                    "data": [],
+                    "data": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
                     "child": {
-                      "node": "drawable",
+                      "node": "flyable_drawable",
                       "payload": {
                         "mesh": "box",
-                        "material": "mat1"
+                        "material": "mat1",
+                        "origin": [],
+                        "axis": [],
+                        "angl": 0.0
                       }
                     }
                   }

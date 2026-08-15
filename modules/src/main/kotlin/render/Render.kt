@@ -171,9 +171,11 @@ class Render : EventObserver {
 
         for (i in 0..64) {
             val item = SpinableDrawable(diamondMesh)
-            item.color = randomVector3(0.1f, 0.9f)
-            item.axis = randomVector3(-0.6f, 0.6f).normalize()
-            item.anglSpeed = randomFloat(-1.0f, 1.0f)
+            item.apply {
+                color = randomVector3(0.1f, 0.9f)
+                axis = randomVector3(-0.6f, 0.6f).normalize()
+                anglSpeed = randomFloat(-1.0f, 1.0f)
+            }
 
             val scale = Transform()
             val sf = randomFloat(0.2f, 0.6f)
@@ -253,10 +255,12 @@ class Render : EventObserver {
         // =================================================
 
         val item = FlyaroundDrawable(diamondMesh)
-        item.color = Vector3(0.0f, 0.0f, 1.0f)
-        item.axis = Vector3(0.0f, 0.0f, 1.0f).normalize()
-        item.anglSpeed = 0.7f
-        item.origin = Vector3(1.5f, 0.0f, 0.0f)
+        item.apply {
+            color = Vector3(0.0f, 0.0f, 1.0f)
+            axis = Vector3(0.0f, 0.0f, 1.0f).normalize()
+            anglSpeed = 0.7f
+            origin = Vector3(1.5f, 0.0f, 0.0f)
+        }
 
         val scale = Transform()
         scale.matrix = algebra.scale(0.5f, 0.5f, 0.5f)

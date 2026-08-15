@@ -13,6 +13,14 @@ open class Group : Node() {
         }
     }
 
+    var children: MutableList<Node>
+        get(): MutableList<Node> {
+            return _children
+        }
+        set(value) {
+            _children = value
+        }
+    
     fun addChild(child: Node): Unit {
         _children.addLast(child)
     }

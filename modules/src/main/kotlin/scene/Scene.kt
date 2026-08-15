@@ -55,6 +55,14 @@ class Scene {
                     }
                 }
 
+                is Group -> {
+                    for (i in next.children.indices.reversed()) {
+                        // Push children to the stack.
+                        // We iterate in reverse so the left-most child is processed first.
+                        stack.addLast(next.children[i])
+                    }
+                }
+
                 is Transform -> {
                     // Reset transform accumulator.
                     _transformAccumulator = TransformAccumulateVisitor()
@@ -77,6 +85,26 @@ class Scene {
             is Transform -> {
                 // Recursive dig into Transform chain.
                 digIntoTransform(next)
+            }
+
+            is Group -> {
+                // Traverse Group children.
+                for (child in next.children) {
+                    child.accept(_transformAccumulator)
+                    when (child) {
+                        is Transform -> {
+                            digIntoTransform(child)
+                        }
+
+                        is Drawable -> {
+                            val modelMatrix = _transformAccumulator.matrix
+                            val viewMatrix = _camera.matrix
+                            
+                            val update = DrawableTransformVisitor(1.0f, modelMatrix, viewMatrix, _stateProgram)
+                            child.accept(update)
+                        }
+                    }
+                }
             }
 
             // Reach Drawable leaf node...

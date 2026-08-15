@@ -15,7 +15,7 @@ data class TransformPayload(
     val child: NodeData
 ) {}
 
-data class DrawablePayload(val mesh: String, val material: String) {}
+data class DrawablePayload(val mesh: String, val material: String, val data: FloatArray) {}
 
 // ============================================================================
 // ======================= Data ===============================================

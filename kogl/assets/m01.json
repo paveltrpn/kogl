@@ -32,10 +32,10 @@
               },
               {
                 "node": {
-                  "type": "trnasform",
+                  "type": "transform",
                   "payload": {
                     "matrix": [],
-                    "trnasform_type": "offset",
+                    "transform_type": "offset",
                     "data": [],
                     "child": {
                       "node": {

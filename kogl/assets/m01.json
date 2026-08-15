@@ -9,7 +9,7 @@
         "node": {
           "type": "state_group",
           "payload": {
-            "program": "dummy",
+            "program": "flatshade",
             "children": [
               {
                 "node": {
@@ -58,7 +58,7 @@
         "node": {
           "type": "state_group",
           "payload": {
-            "program": "dummy",
+            "program": "flatshade",
             "children": [
               {
                 "node": {
@@ -67,17 +67,53 @@
                     "children": [
                       {
                         "node": {
-                          "type": "transform"
+                          "type": "transform",
+                          "payload": {
+                            "matrix": [],
+                            "transform_type": "offset",
+                            "data": [],
+                            "child": {
+                              "node": "drawable",
+                              "payload": {
+                                "mesh": "box",
+                                "material": "mat1"
+                              }
+                            }
+                          }
                         }
                       },
                       {
                         "node": {
-                          "type": "transform"
+                          "type": "transform",
+                          "payload": {
+                            "matrix": [],
+                            "transform_type": "offset",
+                            "data": [],
+                            "child": {
+                              "node": "drawable",
+                              "payload": {
+                                "mesh": "box",
+                                "material": "mat1"
+                              }
+                            }
+                          }
                         }
                       },
                       {
                         "node": {
-                          "type": "transform"
+                          "type": "transform",
+                          "payload": {
+                            "matrix": [],
+                            "transform_type": "offset",
+                            "data": [],
+                            "child": {
+                              "node": "drawable",
+                              "payload": {
+                                "mesh": "box",
+                                "material": "mat1"
+                              }
+                            }
+                          }
                         }
                       }
                     ]

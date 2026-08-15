@@ -13,6 +13,7 @@ import mesh.*
 import ui.*
 import image.*
 import map.*
+import java.io.File
 
 class PrintTypeVisitor : Visitor {
     override fun apply(node: StateGroup): Unit {
@@ -52,7 +53,15 @@ class Render : EventObserver {
 //        val printtype = PrintTypeVisitor()
 //        sparseObjectsGraph.accept(printtype)
 
-        val map = parseMapJson("/mnt/main/code/kogl/kogl/assets/m01.json")
+
+        // TEST
+        val file = File("/mnt/main/code/kogl/kogl/assets/m01.json")
+        val jsonString = file.readText()
+        val map = parseMapJson(jsonString)
+
+        println("${map.toString()}")
+
+        //
 
         _ui = UiGL()
     }

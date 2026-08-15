@@ -29,6 +29,17 @@ data class NodeWrapper(
     val payload: JsonObject?
 )
 
+class DummyNodeData : NodeData("dummy")
+
+class GenericNodeData(override val type: String) : NodeData(type)
+
+data class MapData(
+    val name: String,
+    val graph: List<NodeData>,
+    val lights: List<JsonElement>,
+    val cameras: List<JsonElement>
+)
+
 fun parseMapJson(jsonString: String): MapData {
     val parser = Json { ignoreUnknownKeys = true }
     val root = parser.decodeFromString<Root>(jsonString)
@@ -114,14 +125,3 @@ fun JsonObject.parseNodeWrapper(): NodeWrapper {
     val payload = this["payload"]?.jsonObject
     return NodeWrapper(type, payload)
 }
-
-class DummyNodeData : NodeData("dummy")
-
-class GenericNodeData(override val type: String) : NodeData(type)
-
-data class MapData(
-    val name: String,
-    val graph: List<NodeData>,
-    val lights: List<JsonElement>,
-    val cameras: List<JsonElement>
-)

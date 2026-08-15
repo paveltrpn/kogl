@@ -44,7 +44,7 @@
                           "mesh": "box",
                           "material": "mat1",
                           "axis": [],
-                          "angl": 0.0
+                          "anglSpeed": 0.0
                         }
                       }
                     }
@@ -80,7 +80,7 @@
                                 "material": "mat1",
                                 "origin": [],
                                 "axis": [],
-                                "angl": 0.0
+                                "anglSpeed": 0.0
                               }
                             }
                           }
@@ -147,7 +147,7 @@
                         "material": "mat1",
                         "origin": [],
                         "axis": [],
-                        "angl": 0.0
+                        "anglSpeed": 0.0
                       }
                     }
                   }

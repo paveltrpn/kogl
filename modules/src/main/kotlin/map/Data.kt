@@ -21,25 +21,22 @@ data class TransformPayload(
 ) {}
 
 @Serializable
-data class DrawablePayload(val mesh: String, val material: String, val data: FloatArray) {}
+data class DrawablePayload(val mesh: String, val material: String) {}
 
 @Serializable
 data class SpinableDrawablePayload(
     val mesh: String,
     val material: String,
-    val data: FloatArray,
     val axis: FloatArray,
-    val angl: Float
+    val anglSpeed: Float
 ) {}
 
 @Serializable
 data class FlyaroundDrawablePayload(
     val mesh: String,
     val material: String,
-    val data: FloatArray,
     val origin: FloatArray,
     val axis: FloatArray,
-    val angl: Float,
     val anglSpeed: Float
 ) {}
 

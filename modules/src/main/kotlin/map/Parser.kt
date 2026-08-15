@@ -134,11 +134,10 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             val payload = payloadJson.jsonObject
             val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""
             val material = payload["material"]?.jsonPrimitive?.content ?: ""
-            val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
 
             DrawableData(
                 type = nodeWrapper.type,
-                payload = DrawablePayload(mesh, material, data)
+                payload = DrawablePayload(mesh, material)
             )
         }
 
@@ -146,13 +145,12 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             val payload = payloadJson.jsonObject
             val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""
             val material = payload["material"]?.jsonPrimitive?.content ?: ""
-            val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
             val axis = payload["axis"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
-            val angl = payload["angl"]?.jsonPrimitive?.float ?: 0.0f
+            val anglSpeed = payload["anglSpeed"]?.jsonPrimitive?.float ?: 0.0f
 
             SpinableDrawableData(
                 type = nodeWrapper.type,
-                payload = SpinableDrawablePayload(mesh, material, data, axis, angl)
+                payload = SpinableDrawablePayload(mesh, material, axis, anglSpeed)
             )
         }
 
@@ -160,15 +158,13 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             val payload = payloadJson.jsonObject
             val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""
             val material = payload["material"]?.jsonPrimitive?.content ?: ""
-            val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
             val origin = payload["origin"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
             val axis = payload["axis"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
-            val angl = payload["angl"]?.jsonPrimitive?.float ?: 0.0f
             val anglSpeed = payload["anglSpeed"]?.jsonPrimitive?.float ?: 0.0f
 
             FlyaroundDrawableData(
                 type = nodeWrapper.type,
-                payload = FlyaroundDrawablePayload(mesh, material, data, origin, axis, angl, anglSpeed)
+                payload = FlyaroundDrawablePayload(mesh, material, origin, axis, anglSpeed)
             )
         }
 

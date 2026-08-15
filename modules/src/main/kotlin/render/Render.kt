@@ -84,6 +84,22 @@ class Render : EventObserver {
                     println("${indent}  material: ${node.payload.material}")
                     println("${indent}  data: ${node.payload.data.contentToString()}")
                 }
+                is SpinableDrawableData -> {
+                    println("${indent}  mesh: ${node.payload.mesh}")
+                    println("${indent}  material: ${node.payload.material}")
+                    println("${indent}  data: ${node.payload.data.contentToString()}")
+                    println("${indent}  axis: ${node.payload.axis.contentToString()}")
+                    println("${indent}  angl: ${node.payload.angl}")
+                }
+                is FlyaroundDrawableData -> {
+                    println("${indent}  mesh: ${node.payload.mesh}")
+                    println("${indent}  material: ${node.payload.material}")
+                    println("${indent}  data: ${node.payload.data.contentToString()}")
+                    println("${indent}  origin: ${node.payload.origin.contentToString()}")
+                    println("${indent}  axis: ${node.payload.axis.contentToString()}")
+                    println("${indent}  angl: ${node.payload.angl}")
+                    println("${indent}  anglSpeed: ${node.payload.anglSpeed}")
+                }
                 is GenericNodeData -> {
                     // Generic node with no payload
                 }

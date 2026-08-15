@@ -99,7 +99,7 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             val transformType =
                 payload["transform_type"]?.jsonPrimitive?.content ?: payload["type"]?.jsonPrimitive?.content ?: ""
             val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
-            
+
             val child = when (val childVal = payload["child"]) {
                 is JsonObject -> {
                     val nodeVal = childVal["node"]
@@ -107,16 +107,20 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
                         is JsonObject -> {
                             parseNode(nodeVal.parseNodeWrapper())
                         }
+
                         is JsonPrimitive -> {
                             // child.node is a string like "drawable"
                             GenericNodeData(nodeVal.jsonPrimitive.content)
                         }
+
                         else -> DummyNodeData()
                     }
                 }
+
                 is JsonPrimitive -> {
                     GenericNodeData(childVal.jsonPrimitive.content)
                 }
+
                 else -> DummyNodeData()
             }
 
@@ -126,7 +130,7 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             )
         }
 
-        "drawable", "spinable_drawable" -> {
+        "drawable" -> {
             val payload = payloadJson.jsonObject
             val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""
             val material = payload["material"]?.jsonPrimitive?.content ?: ""
@@ -135,6 +139,36 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             DrawableData(
                 type = nodeWrapper.type,
                 payload = DrawablePayload(mesh, material, data)
+            )
+        }
+
+        "spinable_drawable" -> {
+            val payload = payloadJson.jsonObject
+            val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""
+            val material = payload["material"]?.jsonPrimitive?.content ?: ""
+            val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val axis = payload["axis"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val angl = payload["angl"]?.jsonPrimitive?.float ?: 0.0f
+
+            SpinableDrawableData(
+                type = nodeWrapper.type,
+                payload = SpinableDrawablePayload(mesh, material, data, axis, angl)
+            )
+        }
+
+        "flyaround_drawable" -> {
+            val payload = payloadJson.jsonObject
+            val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""
+            val material = payload["material"]?.jsonPrimitive?.content ?: ""
+            val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val origin = payload["origin"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val axis = payload["axis"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val angl = payload["angl"]?.jsonPrimitive?.float ?: 0.0f
+            val anglSpeed = payload["anglSpeed"]?.jsonPrimitive?.float ?: 0.0f
+
+            FlyaroundDrawableData(
+                type = nodeWrapper.type,
+                payload = FlyaroundDrawablePayload(mesh, material, data, origin, axis, angl, anglSpeed)
             )
         }
 

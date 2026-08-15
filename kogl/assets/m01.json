@@ -74,7 +74,7 @@
                             "transform_type": "offset",
                             "data": [],
                             "child": {
-                              "node": "flyable_drawable",
+                              "node": "flyaround_drawable",
                               "payload": {
                                 "mesh": "box",
                                 "material": "mat1",
@@ -141,7 +141,7 @@
                       0.0
                     ],
                     "child": {
-                      "node": "flyable_drawable",
+                      "node": "flyaround_drawable",
                       "payload": {
                         "mesh": "box",
                         "material": "mat1",

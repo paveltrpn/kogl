@@ -2,8 +2,7 @@ package graph
 
 import render.*
 
-open class StateGroup(program: Program) : Node {
-    private var _children: MutableList<Node> = mutableListOf()
+open class StateGroup(program: Program) : Group() {
     private var _program: Program
 
     init {
@@ -27,10 +26,6 @@ open class StateGroup(program: Program) : Node {
 
     override fun traverse(visitor: Visitor): Unit {
 
-    }
-
-    fun addChild(child: Node): Unit {
-        _children.addLast(child)
     }
 
     val program: Program

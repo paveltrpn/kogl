@@ -12,6 +12,7 @@ import scene.*
 import mesh.*
 import ui.*
 import image.*
+import map.*
 
 class PrintTypeVisitor : Visitor {
     override fun apply(node: StateGroup): Unit {
@@ -50,6 +51,8 @@ class Render : EventObserver {
 
 //        val printtype = PrintTypeVisitor()
 //        sparseObjectsGraph.accept(printtype)
+
+        val map = parseMapJson("/mnt/main/code/kogl/kogl/assets/m01.json")
 
         _ui = UiGL()
     }

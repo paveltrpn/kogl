@@ -1,13 +1,18 @@
 package map
 
+import kotlinx.serialization.Serializable
+
 // ============================================================================
 // ======================= Payload ============================================
 // ============================================================================
 
+@Serializable
 data class GroupPayload(val children: MutableList<NodeData>) {}
 
+@Serializable
 data class StateGroupPayload(val program: String, val children: MutableList<NodeData>) {}
 
+@Serializable
 data class TransformPayload(
     val trnasform_type: String,
     val matrix: FloatArray,
@@ -15,12 +20,14 @@ data class TransformPayload(
     val child: NodeData
 ) {}
 
+@Serializable
 data class DrawablePayload(val mesh: String, val material: String, val data: FloatArray) {}
 
 // ============================================================================
 // ======================= Data ===============================================
 // ============================================================================
 
+@Serializable
 open class NodeData(open val type: String) {}
 
 data class GroupData(override val type: String, val payload: GroupPayload) :
@@ -32,7 +39,7 @@ data class StateGroupData(override val type: String, val payload: StateGroupPayl
 data class TransformData(override val type: String, val payload: TransformPayload) :
     NodeData(type) {}
 
-data class Drawable(override val type: String, val payload: DrawablePayload) :
+data class DrawableData(override val type: String, val payload: DrawablePayload) :
     NodeData(type) {}
 
 

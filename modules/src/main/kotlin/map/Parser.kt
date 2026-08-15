@@ -1,8 +1,12 @@
 package map
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 
+@Serializable
 data class Meta(val version: Int)
+
+@Serializable
 data class MapJson(
     val name: String,
     val graph: List<GraphEntry>,
@@ -10,12 +14,16 @@ data class MapJson(
     val cameras: List<JsonElement>
 )
 
+@Serializable
 data class Root(
     val meta: Meta,
     val map: MapJson
 )
 
+@Serializable
 data class GraphEntry(val node: NodeWrapper)
+
+@Serializable
 data class NodeWrapper(
     val type: String,
     val payload: JsonObject?
@@ -89,7 +97,7 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             val material = payload["material"]?.jsonPrimitive?.content ?: ""
             val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
 
-            Drawable(
+            DrawableData(
                 type = nodeWrapper.type,
                 payload = DrawablePayload(mesh, material, data)
             )

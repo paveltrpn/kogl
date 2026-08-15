@@ -115,7 +115,6 @@ private fun buildFlyaroundDrawable(flyaroundData: FlyaroundDrawableData, meshSto
         flyaround.axis = Vector3(axisArray[0], axisArray[1], axisArray[2])
     }
 
-    flyaround.angl = flyaroundData.payload.angl
     flyaround.anglSpeed = flyaroundData.payload.anglSpeed
 
     return flyaround

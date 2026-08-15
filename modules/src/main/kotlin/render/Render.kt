@@ -1,12 +1,11 @@
 package render
 
-import algebra.Vector2
 import kotlin.random.Random
 
 import org.lwjgl.opengl.GL46.*
 
-import algebra.Vector3
-import config.Config
+import algebra.*
+import config.*
 import event.*
 import graph.*
 import scene.*

@@ -21,13 +21,6 @@ open class StateGroup(program: Program) : Group() {
         visitor.apply(this)
     }
 
-    override fun ascend(visitor: Visitor): Unit {
-    }
-
-    override fun traverse(visitor: Visitor): Unit {
-
-    }
-
     val program: Program
         get(): Program {
             return _program

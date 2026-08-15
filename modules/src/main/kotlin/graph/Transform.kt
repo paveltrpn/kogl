@@ -2,7 +2,7 @@ package graph
 
 import algebra.*
 
-open class Transform : Node {
+open class Transform : Node() {
     private var _child: Node? = null
 
     private var _matrix = Matrix4()
@@ -11,10 +11,8 @@ open class Transform : Node {
         visitor.apply(this)
     }
 
-    override fun ascend(visitor: Visitor): Unit {
-    }
-
     override fun traverse(visitor: Visitor): Unit {
+        _child?.accept(visitor)
     }
 
     var child: Node?
@@ -33,7 +31,7 @@ open class Transform : Node {
             _matrix = value
         }
 
-    // NOTE: Must accept Transform or Drawable.
+    // NOTE: Must accept Transform, Group or Drawable.
     fun addChild(child: Node): Unit {
         _child = child
     }

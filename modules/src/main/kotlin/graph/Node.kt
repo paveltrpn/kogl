@@ -1,7 +1,9 @@
 package graph
 
-interface Node {
-    abstract fun accept(visitor: Visitor): Unit
-    abstract fun ascend(visitor: Visitor): Unit
-    abstract fun traverse(visitor: Visitor): Unit
+abstract class Node {
+    open fun accept(visitor: Visitor): Unit {
+        visitor.apply(this)
+    }
+
+    open fun traverse(visitor: Visitor): Unit {}
 }

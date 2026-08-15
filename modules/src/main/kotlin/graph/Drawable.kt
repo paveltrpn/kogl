@@ -8,7 +8,7 @@ import mesh.*
 // ======================= Drawable ===========================================
 // ============================================================================
 
-open class Drawable(mesh: Mesh) : Node {
+open class Drawable(mesh: Mesh) : Node() {
     private var _buffer: MeshBuffer? = null
 
     protected var _color = Vector3(1.0f, 1.0f, 1.0f)
@@ -34,11 +34,8 @@ open class Drawable(mesh: Mesh) : Node {
         visitor.apply(this)
     }
 
-    override fun ascend(visitor: Visitor): Unit {
-    }
-
     override fun traverse(visitor: Visitor): Unit {
-
+        // NOTE: noop.
     }
 
     fun draw(): Unit {

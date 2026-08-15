@@ -10,6 +10,8 @@ val lwjglVersion = "3.3.6"
 val lwjglNatives = "natives-linux"
 
 dependencies {
+    implementation(kotlin("reflect"))
+    
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 

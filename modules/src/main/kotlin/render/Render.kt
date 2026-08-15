@@ -14,6 +14,23 @@ import mesh.*
 import ui.*
 import image.*
 
+class PrintTypeVisitor : Visitor {
+    override fun apply(node: StateGroup): Unit {
+        println("my type is ${node::class}")
+        node.traverse(this)
+    }
+
+    override fun apply(node: Transform): Unit {
+        println("my type is ${node::class}")
+        node.traverse(this)
+    }
+
+    override fun apply(node: Drawable): Unit {
+        println("my type is ${node::class}")
+        node.traverse(this)
+    }
+}
+
 class Render : EventObserver {
     private var _run: Boolean
     private val _scene: Scene
@@ -31,6 +48,9 @@ class Render : EventObserver {
         _scene.addStateGroup(sparseObjectsGraph)
         //_scene.addStateGroup(testBoxGraph)
         _scene.addStateGroup(flyAroundGraph)
+
+//        val printtype = PrintTypeVisitor()
+//        sparseObjectsGraph.accept(printtype)
 
         _ui = UiGL()
     }

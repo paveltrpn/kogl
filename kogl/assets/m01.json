@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "version": 1
+  },
+  "map": {
+    "graph": [
+      {
+        "node": {
+          "type": "state_group",
+          "payload": {
+            "program": "dummy",
+            "children": [
+              {
+                "node": {
+                  "type": "transform",
+                  "payload": {
+                  }
+                }
+              },
+              {
+                "node": {
+                  "type": "trnasform",
+                  "payload": {
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "node": {
+          "type": "state_group",
+          "payload": {
+            "program": "dummy"
+          }
+        }
+      }
+    ],
+    "lights": [
+    ],
+    "cameras": [
+    ]
+  }
+}

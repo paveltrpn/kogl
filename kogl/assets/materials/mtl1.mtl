@@ -1,1 +1,5 @@
-
+newmtl TexturedWood
+Ka 1.0 1.0 1.0
+Kd 0.9 0.9 0.9
+Ks 0.1 0.1 0.1
+map_Kd wood_texture.jpg

@@ -68,35 +68,40 @@ class Render : EventObserver {
                         printNode(child, indent + "  ")
                     }
                 }
+
                 is GroupData -> {
                     for (child in node.payload.children) {
                         printNode(child, indent + "  ")
                     }
                 }
+
                 is TransformData -> {
                     println("${indent}  transform_type: ${node.payload.trnasform_type}")
                     println("${indent}  matrix: ${node.payload.matrix.contentToString()}")
                     println("${indent}  data: ${node.payload.data.contentToString()}")
                     printNode(node.payload.child, indent + "  ")
                 }
+
                 is DrawableData -> {
                     println("${indent}  mesh: ${node.payload.mesh}")
                     println("${indent}  material: ${node.payload.material}")
                 }
+
                 is SpinableDrawableData -> {
                     println("${indent}  mesh: ${node.payload.mesh}")
                     println("${indent}  material: ${node.payload.material}")
                     println("${indent}  axis: ${node.payload.axis.contentToString()}")
                     println("${indent}  anglSpeed: ${node.payload.anglSpeed}")
                 }
+
                 is FlyaroundDrawableData -> {
                     println("${indent}  mesh: ${node.payload.mesh}")
                     println("${indent}  material: ${node.payload.material}")
                     println("${indent}  origin: ${node.payload.origin.contentToString()}")
                     println("${indent}  axis: ${node.payload.axis.contentToString()}")
-                    println("${indent}  angl: ${node.payload.angl}")
                     println("${indent}  anglSpeed: ${node.payload.anglSpeed}")
                 }
+
                 is GenericNodeData -> {
                     // Generic node with no payload
                 }
@@ -196,13 +201,13 @@ class Render : EventObserver {
     private fun sparseObjectsGraph(): StateGroup {
         val pathPrefix = Config.instance().basePath
 
-        val frameObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/frame.obj")
+        val frameObj = readWavefrontObjFile("${pathPrefix}/assets/bodies/frame.obj")
         val frameMesh = InterleavedMesh(frameObj)
 
-        val diamondObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/diamond.obj")
+        val diamondObj = readWavefrontObjFile("${pathPrefix}/assets/bodies/diamond.obj")
         val diamondMesh = SeparatedArraysMesh(diamondObj)
 
-        val arch01dObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/arch01.obj")
+        val arch01dObj = readWavefrontObjFile("${pathPrefix}/assets/bodies/arch01.obj")
         val arch01dMesh = SeparatedArraysMesh(arch01dObj)
 
         // =================================================
@@ -301,7 +306,7 @@ class Render : EventObserver {
     private fun testFlyaroundsGraph(): StateGroup {
         val pathPrefix = Config.instance().basePath
 
-        val diamondObj = readWavefrontObjFile("${pathPrefix}/assets/bodystorage/diamond.obj")
+        val diamondObj = readWavefrontObjFile("${pathPrefix}/assets/bodies/diamond.obj")
         val diamondMesh = SeparatedArraysMesh(diamondObj)
 
         // =================================================

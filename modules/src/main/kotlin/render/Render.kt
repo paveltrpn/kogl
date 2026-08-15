@@ -68,24 +68,24 @@ class Render : EventObserver {
                         printNode(child, indent + "  ")
                     }
                 }
-
                 is GroupData -> {
                     for (child in node.payload.children) {
                         printNode(child, indent + "  ")
                     }
                 }
-
                 is TransformData -> {
                     println("${indent}  transform_type: ${node.payload.trnasform_type}")
                     println("${indent}  matrix: ${node.payload.matrix.contentToString()}")
                     println("${indent}  data: ${node.payload.data.contentToString()}")
                     printNode(node.payload.child, indent + "  ")
                 }
-
                 is DrawableData -> {
                     println("${indent}  mesh: ${node.payload.mesh}")
                     println("${indent}  material: ${node.payload.material}")
                     println("${indent}  data: ${node.payload.data.contentToString()}")
+                }
+                is GenericNodeData -> {
+                    // Generic node with no payload
                 }
             }
         }

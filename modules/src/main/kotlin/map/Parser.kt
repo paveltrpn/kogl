@@ -61,8 +61,13 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
         "state_group" -> {
             val payload = payloadJson.jsonObject
             val program = payload["program"]?.jsonPrimitive?.content ?: ""
-            val children = payload["children"]?.jsonArray?.map {
-                parseNode(it.jsonObject.parseNodeWrapper())
+            val children = payload["children"]?.jsonArray?.map { childElem ->
+                val nodeObj = (childElem as? JsonObject)?.get("node") as? JsonObject
+                if (nodeObj != null) {
+                    parseNode(nodeObj.parseNodeWrapper())
+                } else {
+                    GenericNodeData("unknown")
+                }
             }?.toMutableList() ?: mutableListOf()
 
             StateGroupData(
@@ -73,8 +78,13 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
 
         "group" -> {
             val payload = payloadJson.jsonObject
-            val children = payload["children"]?.jsonArray?.map {
-                parseNode(it.jsonObject.parseNodeWrapper())
+            val children = payload["children"]?.jsonArray?.map { childElem ->
+                val nodeObj = (childElem as? JsonObject)?.get("node") as? JsonObject
+                if (nodeObj != null) {
+                    parseNode(nodeObj.parseNodeWrapper())
+                } else {
+                    GenericNodeData("unknown")
+                }
             }?.toMutableList() ?: mutableListOf()
 
             GroupData(
@@ -89,13 +99,27 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             val transformType =
                 payload["transform_type"]?.jsonPrimitive?.content ?: payload["type"]?.jsonPrimitive?.content ?: ""
             val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
-            val childWrapper = payload["child"]?.jsonObject?.parseNodeWrapper()
-                ?: return TransformData(
-                    nodeWrapper.type,
-                    TransformPayload(transformType, matrix, data, DummyNodeData())
-                )
+            
+            val child = when (val childVal = payload["child"]) {
+                is JsonObject -> {
+                    val nodeVal = childVal["node"]
+                    when (nodeVal) {
+                        is JsonObject -> {
+                            parseNode(nodeVal.parseNodeWrapper())
+                        }
+                        is JsonPrimitive -> {
+                            // child.node is a string like "drawable"
+                            GenericNodeData(nodeVal.jsonPrimitive.content)
+                        }
+                        else -> DummyNodeData()
+                    }
+                }
+                is JsonPrimitive -> {
+                    GenericNodeData(childVal.jsonPrimitive.content)
+                }
+                else -> DummyNodeData()
+            }
 
-            val child = parseNode(childWrapper)
             TransformData(
                 type = nodeWrapper.type,
                 payload = TransformPayload(transformType, matrix, data, child)

@@ -124,8 +124,7 @@ private fun parseTriangleString(str: String): ObjTriangleIndices {
 
     val triangle = ObjTriangleIndices()
 
-    var i = 0
-    for (indexString in indicesString) {
+    for ((i, indexString) in indicesString.withIndex()) {
         val indices = split(indexString, '/')
         val v = indices[0].toInt()
         val t = indices[1].toInt()
@@ -136,7 +135,6 @@ private fun parseTriangleString(str: String): ObjTriangleIndices {
         triangle.normalIndex[i] = n - 1
         triangle.texCoordIndex[i] = t - 1
 
-        i++
     }
 
     return triangle

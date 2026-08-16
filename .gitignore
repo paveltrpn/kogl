@@ -1,12 +1,12 @@
-.idea
-.gradle
+.idea/
+.gradle/
+.run/
+.kotlin/
+build/
 gradle/*
 gradlew
 gradlew.bat
-.kotlin
-build
 
-apps/encode/build
 kogl/build
 kogl/*.log
 modules/build

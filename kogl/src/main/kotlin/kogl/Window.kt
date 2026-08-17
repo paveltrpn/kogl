@@ -112,13 +112,13 @@ class Window {
             throw RuntimeException("Failed to create the GLFW window")
         }
 
-        glfwMakeContextCurrent(_window);
+        glfwMakeContextCurrent(_window)
 
-        createCapabilities();
+        createCapabilities()
 
         glfwSetWindowSizeLimits(_window, _width, _height, GLFW_DONT_CARE, GLFW_DONT_CARE)
 
-        //glfwSetWindowAspectRatio(window, 1, 1);
+        //glfwSetWindowAspectRatio(window, 1, 1)
         val monitor = glfwGetPrimaryMonitor()
 
         val vidmode: GLFWVidMode = glfwGetVideoMode(monitor) ?: throw RuntimeException("VideoMode is undefined!")
@@ -133,12 +133,12 @@ class Window {
         )
 
         glfwSetKeyCallback(_window, { window, key, scancode, action, mods ->
-            if (key == GLFW_KEY_ESCAPE) {
+            if (action == GLFW_PRESS) {
                 val event = EventKey(KeyAction.PRESS, key)
                 GlobalEventEmitter.instance().notify(event)
             }
 
-            if (key == GLFW_RELEASE) {
+            if (action == GLFW_RELEASE) {
                 val event = EventKey(KeyAction.RELEASE, key)
                 GlobalEventEmitter.instance().notify(event)
             }

@@ -84,7 +84,24 @@ class Vector3 {
 
     operator fun get(id: Int): Float {
         require(id >= 0 && id < 4)
+
         return _data[id]
+    }
+
+    operator fun plus(other: Vector3): Vector3 {
+        x += other.x
+        y += other.y
+        z += other.z
+
+        return this
+    }
+
+    operator fun minus(other: Vector3): Vector3 {
+        x -= other.x
+        y -= other.y
+        z -= other.z
+
+        return this
     }
 
     fun dot(other: Vector4): Float {
@@ -115,6 +132,10 @@ class Vector3 {
         } else {
             Vector3()
         }
+    }
+
+    fun inversed(): Vector3 {
+        return Vector3(-x, -y, -z)
     }
 
     fun normalizeSelf() {

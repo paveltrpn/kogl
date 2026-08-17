@@ -132,9 +132,51 @@ class Render : EventObserver {
     override fun handleEvent(event: EventBase) {
         if (event is EventKey) {
             if (event.keyAction == KeyAction.PRESS) {
+                //println("=== ${event.key}")
                 when (event.key) {
                     256 -> {
                         run = false
+                    }
+
+                    // w
+                    87 -> {
+                        _scene._camera.setMoveBit(FlycamMoveBits.FORWARD)
+                    }
+
+                    // a
+                    65 -> {
+                        _scene._camera.setMoveBit(FlycamMoveBits.LEFT)
+                    }
+
+                    // s
+                    83 -> {
+                        _scene._camera.setMoveBit(FlycamMoveBits.BACKWARD)
+                    }
+
+                    // d
+                    68 -> {
+                        _scene._camera.setMoveBit(FlycamMoveBits.RIGHT)
+                    }
+                }
+            }
+
+            if (event.keyAction == KeyAction.RELEASE) {
+                //println("=== ${event.key}")
+                when (event.key) {
+                    87 -> {
+                        _scene._camera.unsetMoveBit(FlycamMoveBits.FORWARD)
+                    }
+
+                    65 -> {
+                        _scene._camera.unsetMoveBit(FlycamMoveBits.LEFT)
+                    }
+
+                    83 -> {
+                        _scene._camera.unsetMoveBit(FlycamMoveBits.BACKWARD)
+                    }
+
+                    68 -> {
+                        _scene._camera.unsetMoveBit(FlycamMoveBits.RIGHT)
                     }
                 }
             }

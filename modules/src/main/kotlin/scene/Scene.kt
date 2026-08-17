@@ -10,27 +10,32 @@ import render.*
 
 class Scene {
     private var _graph: MutableList<StateGroup> = mutableListOf()
-    private var _camera = Flycam()
 
     // Each StateGroup branch data - store current state group shader program
     // and accumulate transformations from every transform on the path.
     //
     // This data reset on every next StateGroup traversal begin.
     private var _transformAccumulator = TransformAccumulateVisitor()
+
     private var _stateProgram = Program()
 
-    init {
-        _camera.fov = 45.0f
-        _camera.aspect = 16.0f / 9.0f
-        _camera.ncp = 0.1f
-        _camera.fcp = 100.0f
+    var _camera = Flycam()
 
-        _camera.eye = Vector3(0.0f, 0.0f, -4.0f)
+    init {
+        _camera.apply {
+            fov = 45.0f
+            aspect = 16.0f / 9.0f
+            ncp = 0.1f
+            fcp = 100.0f
+            eye = Vector3(0.0f, 0.0f, -4.0f)
+        }
     }
 
     // Iterative traverse over all available state groups and
     // attached nodes. Must be depth-first traversal.
     fun walk(): Unit {
+        _camera.traverse()
+
         val stack = ArrayDeque<Node>()
 
         // Push all state groups to the stack.
@@ -99,7 +104,7 @@ class Scene {
                         is Drawable -> {
                             val modelMatrix = _transformAccumulator.matrix
                             val viewMatrix = _camera.matrix
-                            
+
                             val update = DrawableTransformVisitor(1.0f, modelMatrix, viewMatrix, _stateProgram)
                             child.accept(update)
                         }

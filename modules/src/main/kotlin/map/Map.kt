@@ -40,14 +40,37 @@ private fun buildStateGroup(nodeData: NodeData, meshStorage: Map<String, Mesh>):
 
 private fun buildNode(nodeData: NodeData, meshStorage: Map<String, Mesh>): Node? {
     return when (nodeData) {
-        is GroupData -> buildGroup(nodeData, meshStorage)
-        is TransformData -> buildTransform(nodeData, meshStorage)
-        is DrawableData -> buildDrawable(nodeData, meshStorage)
-        is SpinableDrawableData -> buildSpinableDrawable(nodeData, meshStorage)
-        is FlyaroundDrawableData -> buildFlyaroundDrawable(nodeData, meshStorage)
-        is GenericNodeData -> null
-        is StateGroupData -> null
-        else -> null
+        is GroupData -> {
+            buildGroup(nodeData, meshStorage)
+        }
+
+        is TransformData -> {
+            buildTransform(nodeData, meshStorage)
+        }
+
+        is DrawableData -> {
+            buildDrawable(nodeData, meshStorage)
+        }
+
+        is SpinableDrawableData -> {
+            buildSpinableDrawable(nodeData, meshStorage)
+        }
+
+        is FlyaroundDrawableData -> {
+            buildFlyaroundDrawable(nodeData, meshStorage)
+        }
+
+        is GenericNodeData -> {
+            null
+        }
+
+        is StateGroupData -> {
+            null
+        }
+
+        else -> {
+            null
+        }
     }
 }
 

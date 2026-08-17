@@ -37,7 +37,7 @@ class Render : EventObserver {
 //            addStateGroup(testgraph.testCubesGraph())
             // addStateGroup(testgraph.testFlyaroundsGraph())
             addStateGroup(sg[0])
-            // addStateGroup(sg[1])
+            //addStateGroup(sg[1])
         }
 
 //        class PrintTypeVisitor : Visitor {

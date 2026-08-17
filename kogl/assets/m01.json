@@ -115,21 +115,23 @@
                                     0.0
                                   ],
                                   "child": {
-                                    "node": "flyaround_drawable",
-                                    "payload": {
-                                      "mesh": "box",
-                                      "material": "mat1",
-                                      "origin": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                      ],
-                                      "axis": [
-                                        0.0,
-                                        1.0,
-                                        0.0
-                                      ],
-                                      "anglSpeed": 0.2
+                                    "node": {
+                                      "type": "flyaround_drawable",
+                                      "payload": {
+                                        "mesh": "box",
+                                        "material": "mat1",
+                                        "origin": [
+                                          0.0,
+                                          0.0,
+                                          0.0
+                                        ],
+                                        "axis": [
+                                          0.0,
+                                          1.0,
+                                          0.0
+                                        ],
+                                        "anglSpeed": 0.2
+                                      }
                                     }
                                   }
                                 }
@@ -147,10 +149,12 @@
                                     0.0
                                   ],
                                   "child": {
-                                    "node": "drawable",
-                                    "payload": {
-                                      "mesh": "box",
-                                      "material": "mat1"
+                                    "node": {
+                                      "type": "drawable",
+                                      "payload": {
+                                        "mesh": "box",
+                                        "material": "mat1"
+                                      }
                                     }
                                   }
                                 }
@@ -168,10 +172,12 @@
                                     0.0
                                   ],
                                   "child": {
-                                    "node": "drawable",
-                                    "payload": {
-                                      "mesh": "box",
-                                      "material": "mat1"
+                                    "node": {
+                                      "type": "drawable",
+                                      "payload": {
+                                        "mesh": "box",
+                                        "material": "mat1"
+                                      }
                                     }
                                   }
                                 }
@@ -196,21 +202,23 @@
                       0.0
                     ],
                     "child": {
-                      "node": "flyaround_drawable",
-                      "payload": {
-                        "mesh": "box",
-                        "material": "mat1",
-                        "origin": [
-                          0.0,
-                          0.0,
-                          0.0
-                        ],
-                        "axis": [
-                          0.0,
-                          1.0,
-                          0.0
-                        ],
-                        "anglSpeed": 0.2
+                      "node": {
+                        "type": "flyaround_drawable",
+                        "payload": {
+                          "mesh": "box",
+                          "material": "mat1",
+                          "origin": [
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "axis": [
+                            0.0,
+                            1.0,
+                            0.0
+                          ],
+                          "anglSpeed": 0.2
+                        }
                       }
                     }
                   }

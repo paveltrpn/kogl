@@ -44,12 +44,12 @@ class Render : EventObserver {
         val jsonString = file.readText()
         val mapData = parseMapJson(jsonString)
 
-//        println("Map name: ${mapData.name}")
-//        println("Graph entries: ${mapData.graph.size}")
-//        for ((index, node) in mapData.graph.withIndex()) {
-//            println("Graph[$index]:")
-//            printNode(node, "  ")
-//        }
+        println("Map name: ${mapData.name}")
+        println("Graph entries: ${mapData.graph.size}")
+        for ((index, node) in mapData.graph.withIndex()) {
+            println("Graph[$index]:")
+            printNode(node, "  ")
+        }
 
         val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
 

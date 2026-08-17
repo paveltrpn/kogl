@@ -23,7 +23,7 @@ class Render : EventObserver {
         _run = true
 
         val basePath = Config.instance().basePath
-        
+
         val file = File("${basePath}/assets/m01.json")
         val jsonString = file.readText()
         val mapData = parseMapJson(jsonString)
@@ -35,7 +35,7 @@ class Render : EventObserver {
         _scene = Scene().apply {
             addStateGroup(testgraph.sparseObjectsGraph())
 //            addStateGroup(testgraph.testCubesGraph())
-            addStateGroup(testgraph.testFlyaroundsGraph())
+            // addStateGroup(testgraph.testFlyaroundsGraph())
             addStateGroup(sg[0])
             // addStateGroup(sg[1])
         }
@@ -82,7 +82,7 @@ class Render : EventObserver {
         glEnable(GL_DEPTH_TEST)
         glDepthFunc(GL_LESS)
 
-        _scene.walk()
+        _scene.walk2()
 
         glDisable(GL_DEPTH_TEST)
 

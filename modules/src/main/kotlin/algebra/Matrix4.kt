@@ -15,6 +15,10 @@ class Matrix4 {
         _data = other._data
     }
 
+    constructor(other: FloatArray) {
+        _data = other
+    }
+
     val data: FloatArray
         get(): FloatArray {
             return _data

@@ -2,10 +2,14 @@ package graph
 
 import algebra.*
 
-open class Transform : Node() {
+open class Transform() : Node() {
     private var _child: Node? = null
 
     private var _matrix = Matrix4()
+
+    constructor(other: FloatArray) : this() {
+        matrix = Matrix4(other)
+    }
 
     override fun accept(visitor: Visitor): Unit {
         visitor.apply(this)

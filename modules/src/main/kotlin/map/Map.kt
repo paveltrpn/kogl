@@ -18,7 +18,7 @@ fun buildStateGroups(mapData: MapData, meshStorage: Map<String, Mesh>): List<Sta
 
 private fun buildStateGroup(nodeData: NodeData, meshStorage: Map<String, Mesh>): StateGroup {
     if (nodeData !is StateGroupData) {
-        throw IllegalArgumentException("Expected StateGroupData, got ${nodeData.type}")
+        throw RuntimeException("Expected StateGroupData, got ${nodeData.type}")
     }
 
     val programSource = ShaderSource(nodeData.payload.program)
@@ -69,6 +69,52 @@ private fun buildTransform(transformData: TransformData, meshStorage: Map<String
     val payload = transformData.payload
 
     val matrixArray = payload.matrix
+
+    fun constructTransform(type: String, rawMatrix: FloatArray, rawData: FloatArray): Transform {
+        if (!rawMatrix.isEmpty()) {
+            if (rawMatrix.size == 16) {
+                println("Transform node read warn - raw matrix wrong size!")
+                return Transform()
+            }
+            return Transform(rawMatrix)
+        }
+
+        when (type) {
+            "offset" -> {
+                val m = algebra.offset(rawData[0], rawData[1], rawData[2])
+                return Transform().apply {
+                    matrix = m
+                }
+            }
+
+            "rotateEuler" -> {
+                val m = algebra.rotation(rawData[0], rawData[1], rawData[2])
+                return Transform().apply {
+                    matrix = m
+                }
+            }
+
+            "rotateAxisAngl" -> {
+                val ax = Vector3(rawData[0], rawData[1], rawData[2])
+                val an = rawData[3]
+                val m = algebra.rotation(ax, an)
+                return Transform().apply {
+                    matrix = m
+                }
+            }
+
+            "scale" -> {
+                val m = algebra.scale(rawData[0], rawData[1], rawData[2])
+                return Transform().apply {
+                    matrix = m
+                }
+            }
+
+        }
+        
+        return Transform()
+    }
+
     if (matrixArray.size == 16) {
         val matrix = Matrix4()
         val data = matrix.data

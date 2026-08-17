@@ -21,7 +21,11 @@ private fun buildStateGroup(nodeData: NodeData, meshStorage: Map<String, Mesh>):
         throw IllegalArgumentException("Expected StateGroupData, got ${nodeData.type}")
     }
 
-    val program = Program()
+    val programSource = ShaderSource(nodeData.payload.program)
+    val program = Program().apply {
+        source(programSource)
+        build()
+    }
     val stateGroup = StateGroup(program)
 
     for (childData in nodeData.payload.children) {

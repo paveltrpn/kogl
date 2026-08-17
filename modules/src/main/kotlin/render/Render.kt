@@ -7,6 +7,7 @@ import java.math.RoundingMode
 import org.lwjgl.opengl.GL46.*
 
 import algebra.*
+import config.Config
 import event.*
 import scene.*
 import ui.*
@@ -21,7 +22,9 @@ class Render : EventObserver {
     init {
         _run = true
 
-        val file = File("/mnt/main/code/kogl/kogl/assets/m01.json")
+        val basePath = Config.instance().basePath
+        
+        val file = File("${basePath}/assets/m01.json")
         val jsonString = file.readText()
         val mapData = parseMapJson(jsonString)
 

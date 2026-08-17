@@ -40,13 +40,13 @@ private fun buildStateGroup(nodeData: NodeData, meshStorage: Map<String, Mesh>):
 
 private fun buildNode(nodeData: NodeData, meshStorage: Map<String, Mesh>): Node? {
     return when (nodeData) {
-        is StateGroupData -> null
         is GroupData -> buildGroup(nodeData, meshStorage)
         is TransformData -> buildTransform(nodeData, meshStorage)
         is DrawableData -> buildDrawable(nodeData, meshStorage)
         is SpinableDrawableData -> buildSpinableDrawable(nodeData, meshStorage)
         is FlyaroundDrawableData -> buildFlyaroundDrawable(nodeData, meshStorage)
         is GenericNodeData -> null
+        is StateGroupData -> null
         else -> null
     }
 }
@@ -126,34 +126,86 @@ private fun buildDrawable(drawableData: DrawableData, meshStorage: Map<String, M
 }
 
 private fun buildSpinableDrawable(spinableData: SpinableDrawableData, meshStorage: Map<String, Mesh>): Drawable? {
-    val mesh = meshStorage[spinableData.payload.mesh] ?: return null
-    val spinable = SpinableDrawable(mesh)
+    val p = spinableData.payload
 
-    val axisArray = spinableData.payload.axis
-    if (axisArray.size >= 3) {
-        spinable.axis = Vector3(axisArray[0], axisArray[1], axisArray[2])
+    if (meshStorage[p.mesh] == null) {
+        throw RuntimeException("SpinableDrawable no such mesh - \"${p.mesh}\"!")
     }
 
-    spinable.anglSpeed = spinableData.payload.anglSpeed
+    val axisArray = p.axis
+    if (axisArray.size != 3) throw RuntimeException("SpinableDrawable axis array wrong size - \"${axisArray.size}\"!")
 
-    return spinable
+    return SpinableDrawable(meshStorage[p.mesh]!!).apply {
+        axis = Vector3(axisArray[0], axisArray[1], axisArray[2])
+        anglSpeed = p.anglSpeed
+    }
 }
 
 private fun buildFlyaroundDrawable(flyaroundData: FlyaroundDrawableData, meshStorage: Map<String, Mesh>): Drawable? {
-    val mesh = meshStorage[flyaroundData.payload.mesh] ?: return null
-    val flyaround = FlyaroundDrawable(mesh)
+    val p = flyaroundData.payload
 
-    val originArray = flyaroundData.payload.origin
-    if (originArray.size >= 3) {
-        flyaround.origin = Vector3(originArray[0], originArray[1], originArray[2])
+    if (meshStorage[p.mesh] == null) {
+        throw RuntimeException("FlyaroundDrawable no such mesh - \"${p.mesh}\"!")
     }
 
-    val axisArray = flyaroundData.payload.axis
-    if (axisArray.size >= 3) {
-        flyaround.axis = Vector3(axisArray[0], axisArray[1], axisArray[2])
+    val originArray = p.origin
+    if (originArray.size != 3) throw RuntimeException("FlyaroundDrawable origin array wrong size - \"${originArray.size}\"!")
+
+    val axisArray = p.axis
+    if (axisArray.size != 3) throw RuntimeException("FlyaroundDrawable axis array wrong size - \"${axisArray.size}\"!")
+
+    return FlyaroundDrawable(meshStorage[p.mesh]!!).apply {
+        origin = Vector3(originArray[0], originArray[1], originArray[2])
+        axis = Vector3(axisArray[0], axisArray[1], axisArray[2])
+        anglSpeed = p.anglSpeed
     }
+}
 
-    flyaround.anglSpeed = flyaroundData.payload.anglSpeed
+fun printNode(node: NodeData, indent: String = "") {
+    println("${indent}type=${node.type}")
+    when (node) {
+        is StateGroupData -> {
+            println("${indent}  program: ${node.payload.program}")
+            for (child in node.payload.children) {
+                printNode(child, indent + "  ")
+            }
+        }
 
-    return flyaround
+        is GroupData -> {
+            for (child in node.payload.children) {
+                printNode(child, indent + "  ")
+            }
+        }
+
+        is TransformData -> {
+            println("${indent}  transform_type: ${node.payload.trnasform_type}")
+            println("${indent}  matrix: ${node.payload.matrix.contentToString()}")
+            println("${indent}  data: ${node.payload.data.contentToString()}")
+            printNode(node.payload.child, indent + "  ")
+        }
+
+        is DrawableData -> {
+            println("${indent}  mesh: ${node.payload.mesh}")
+            println("${indent}  material: ${node.payload.material}")
+        }
+
+        is SpinableDrawableData -> {
+            println("${indent}  mesh: ${node.payload.mesh}")
+            println("${indent}  material: ${node.payload.material}")
+            println("${indent}  axis: ${node.payload.axis.contentToString()}")
+            println("${indent}  anglSpeed: ${node.payload.anglSpeed}")
+        }
+
+        is FlyaroundDrawableData -> {
+            println("${indent}  mesh: ${node.payload.mesh}")
+            println("${indent}  material: ${node.payload.material}")
+            println("${indent}  origin: ${node.payload.origin.contentToString()}")
+            println("${indent}  axis: ${node.payload.axis.contentToString()}")
+            println("${indent}  anglSpeed: ${node.payload.anglSpeed}")
+        }
+
+        is GenericNodeData -> {
+            // Generic node with no payload
+        }
+    }
 }

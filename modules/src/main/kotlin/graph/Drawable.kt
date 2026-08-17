@@ -70,8 +70,14 @@ open class Drawable(mesh: Mesh) : Node() {
 
 class SpinableDrawable(mesh: Mesh) : Drawable(mesh) {
     private var _axis = Vector3()
-    private var _angl = 0.0f
     private var _anglSpeed = 0.0f
+
+    private var _angl = 0.0f
+
+    constructor(mesh: Mesh, ax: Vector3, anglSpeed: Float) : this(mesh) {
+        _axis = ax
+        _anglSpeed = anglSpeed
+    }
 
     var axis: Vector3
         get(): Vector3 {
@@ -82,28 +88,20 @@ class SpinableDrawable(mesh: Mesh) : Drawable(mesh) {
             _axis.normalizeSelf()
         }
 
-    var angl: Float
-        get(): Float {
-            return _angl
-        }
-        set(value) {
-            _angl = value
-        }
-
     var anglSpeed: Float
         get(): Float {
             return _anglSpeed
         }
-        set(value: Float) {
+        set(value) {
             _anglSpeed = value
         }
 
     fun update(dt: Float): Unit {
-        angl += anglSpeed * dt
+        _angl += anglSpeed * dt
 
-        if (angl > 360.0f || angl < -360.0f) angl = 0.0f
+        if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
 
-        val spin = rotation(axis, angl)
+        val spin = rotation(_axis, _angl)
 
         _combined = spin.multiply(_combined)
     }
@@ -116,8 +114,9 @@ class SpinableDrawable(mesh: Mesh) : Drawable(mesh) {
 class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
     private var _origin = Vector3()
     private var _axis = Vector3()
-    private var _angl = 0.0f
     private var _anglSpeed = 0.0f
+
+    private var _angl = 0.0f
 
     var origin: Vector3
         get(): Vector3 {
@@ -136,28 +135,20 @@ class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
             _axis.normalizeSelf()
         }
 
-    var angl: Float
-        get(): Float {
-            return _angl
-        }
-        set(value) {
-            _angl = value
-        }
-
     var anglSpeed: Float
         get(): Float {
             return _anglSpeed
         }
-        set(value: Float) {
+        set(value) {
             _anglSpeed = value
         }
 
     fun update(dt: Float): Unit {
-        angl += anglSpeed * dt
+        _angl += anglSpeed * dt
 
-        if (angl > 360.0f || angl < -360.0f) angl = 0.0f
+        if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
 
-        val spin = rotation(axis, angl)
+        val spin = rotation(_axis, _angl)
 
         val offset = algebra.offset(_origin)
         offset.transpose()

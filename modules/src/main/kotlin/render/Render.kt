@@ -44,73 +44,6 @@ class Render : EventObserver {
         val jsonString = file.readText()
         val mapData = parseMapJson(jsonString)
 
-        val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
-
-        _scene = Scene().apply {
-            addStateGroup(testgraph.sparseObjectsGraph())
-            // addStateGroup(testgraph.testCubesGraph())
-            addStateGroup(testgraph.testFlyaroundsGraph())
-            addStateGroup(sg[0])
-        }
-
-//        val printtype = PrintTypeVisitor()
-//        sparseObjectsGraph.accept(printtype)
-
-
-        // TEST
-//        val file = File("/mnt/main/code/kogl/kogl/assets/m01.json")
-//        val jsonString = file.readText()
-//        val mapData = parseMapJson(jsonString)
-//
-//        fun printNode(node: NodeData, indent: String = "") {
-//            println("${indent}type=${node.type}")
-//            when (node) {
-//                is StateGroupData -> {
-//                    println("${indent}  program: ${node.payload.program}")
-//                    for (child in node.payload.children) {
-//                        printNode(child, indent + "  ")
-//                    }
-//                }
-//
-//                is GroupData -> {
-//                    for (child in node.payload.children) {
-//                        printNode(child, indent + "  ")
-//                    }
-//                }
-//
-//                is TransformData -> {
-//                    println("${indent}  transform_type: ${node.payload.trnasform_type}")
-//                    println("${indent}  matrix: ${node.payload.matrix.contentToString()}")
-//                    println("${indent}  data: ${node.payload.data.contentToString()}")
-//                    printNode(node.payload.child, indent + "  ")
-//                }
-//
-//                is DrawableData -> {
-//                    println("${indent}  mesh: ${node.payload.mesh}")
-//                    println("${indent}  material: ${node.payload.material}")
-//                }
-//
-//                is SpinableDrawableData -> {
-//                    println("${indent}  mesh: ${node.payload.mesh}")
-//                    println("${indent}  material: ${node.payload.material}")
-//                    println("${indent}  axis: ${node.payload.axis.contentToString()}")
-//                    println("${indent}  anglSpeed: ${node.payload.anglSpeed}")
-//                }
-//
-//                is FlyaroundDrawableData -> {
-//                    println("${indent}  mesh: ${node.payload.mesh}")
-//                    println("${indent}  material: ${node.payload.material}")
-//                    println("${indent}  origin: ${node.payload.origin.contentToString()}")
-//                    println("${indent}  axis: ${node.payload.axis.contentToString()}")
-//                    println("${indent}  anglSpeed: ${node.payload.anglSpeed}")
-//                }
-//
-//                is GenericNodeData -> {
-//                    // Generic node with no payload
-//                }
-//            }
-//        }
-//
 //        println("Map name: ${mapData.name}")
 //        println("Graph entries: ${mapData.graph.size}")
 //        for ((index, node) in mapData.graph.withIndex()) {
@@ -118,7 +51,19 @@ class Render : EventObserver {
 //            printNode(node, "  ")
 //        }
 
-        //
+        val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
+
+        _scene = Scene().apply {
+//            addStateGroup(testgraph.sparseObjectsGraph())
+//            addStateGroup(testgraph.testCubesGraph())
+//            addStateGroup(testgraph.testFlyaroundsGraph())
+            addStateGroup(sg[0])
+            // addStateGroup(sg[1])
+        }
+
+//        val printtype = PrintTypeVisitor()
+//        sparseObjectsGraph.accept(printtype)
+
 
         _ui = UiGL()
     }

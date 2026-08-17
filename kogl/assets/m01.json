@@ -51,8 +51,12 @@
                         "payload": {
                           "mesh": "box",
                           "material": "mat1",
-                          "axis": [],
-                          "anglSpeed": 0.0
+                          "axis": [
+                            0.0,
+                            1.0,
+                            0.0
+                          ],
+                          "anglSpeed": 0.4
                         }
                       }
                     }
@@ -90,8 +94,16 @@
                               "payload": {
                                 "mesh": "box",
                                 "material": "mat1",
-                                "origin": [],
-                                "axis": [],
+                                "origin": [
+                                  0.0,
+                                  0.0,
+                                  0.0
+                                ],
+                                "axis": [
+                                  0.0,
+                                  1.0,
+                                  0.0
+                                ],
                                 "anglSpeed": 0.0
                               }
                             }

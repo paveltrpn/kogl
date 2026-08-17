@@ -28,7 +28,7 @@ class Program {
     // data to shaders.
     private val _floatBuffer = MemoryUtil.memAllocFloat(16)
 
-    val versionString = "#version 450 core\n\n"
+    private val _versionString = "#version 450 core\n\n"
 
 //    constructor(shaders: ShaderSource) {
 //        _programName = shaders.programName
@@ -134,7 +134,7 @@ class Program {
 //        val fullSource = versionString + thisStageDefines + source
 //        println("$fullSource")
 
-        glShaderSource(shHandle, versionString, thisStageDefines, source)
+        glShaderSource(shHandle, _versionString, thisStageDefines, source)
 
         glCompileShader(shHandle)
 

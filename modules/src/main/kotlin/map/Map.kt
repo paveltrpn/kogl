@@ -135,8 +135,13 @@ private fun buildSpinableDrawable(spinableData: SpinableDrawableData, meshStorag
     val axisArray = p.axis
     if (axisArray.size != 3) throw RuntimeException("SpinableDrawable axis array wrong size - \"${axisArray.size}\"!")
 
+    val ax = Vector3(axisArray[0], axisArray[1], axisArray[2])
+    if (ax.length() == 0.0f) throw RuntimeException("SpinableDrawable axis length is zero!")
+
+    ax.normalize()
+
     return SpinableDrawable(meshStorage[p.mesh]!!).apply {
-        axis = Vector3(axisArray[0], axisArray[1], axisArray[2])
+        axis = ax
         anglSpeed = p.anglSpeed
     }
 }
@@ -154,9 +159,14 @@ private fun buildFlyaroundDrawable(flyaroundData: FlyaroundDrawableData, meshSto
     val axisArray = p.axis
     if (axisArray.size != 3) throw RuntimeException("FlyaroundDrawable axis array wrong size - \"${axisArray.size}\"!")
 
+    val ax = Vector3(axisArray[0], axisArray[1], axisArray[2])
+    if (ax.length() == 0.0f) throw RuntimeException("FlyaroundDrawable axis length is zero!")
+
+    ax.normalize()
+
     return FlyaroundDrawable(meshStorage[p.mesh]!!).apply {
         origin = Vector3(originArray[0], originArray[1], originArray[2])
-        axis = Vector3(axisArray[0], axisArray[1], axisArray[2])
+        axis = ax
         anglSpeed = p.anglSpeed
     }
 }

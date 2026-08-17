@@ -7,16 +7,11 @@ import java.math.RoundingMode
 import org.lwjgl.opengl.GL46.*
 
 import algebra.*
-import config.*
 import event.*
-import graph.*
 import scene.*
-import mesh.*
 import ui.*
 import image.*
 import map.*
-import testgraph.*
-
 
 class Render : EventObserver {
     private var _run: Boolean
@@ -37,7 +32,7 @@ class Render : EventObserver {
         _scene = Scene().apply {
             addStateGroup(testgraph.sparseObjectsGraph())
 //            addStateGroup(testgraph.testCubesGraph())
-//            addStateGroup(testgraph.testFlyaroundsGraph())
+            addStateGroup(testgraph.testFlyaroundsGraph())
             addStateGroup(sg[0])
             // addStateGroup(sg[1])
         }
@@ -114,7 +109,7 @@ class Render : EventObserver {
         }
 
         val b1 = Billboard().apply {
-            size = Vector2(17.0f, 2.5f)
+            size = Vector2(18.0f, 2.5f)
             position = Vector2(-30.5f, 30.5f)
             z = TEXT_PLANE_Z
             color = Color(255, 200, 128, 128)

@@ -55,6 +55,8 @@ class Window {
         _render.preLoop()
 
         while (_render.run) {
+            glfwSetCursorPos(_window, 500.0, 500.0)
+
             glfwPollEvents()
 
             _render.frame()
@@ -96,9 +98,9 @@ class Window {
         }
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
 
         _window = glfwCreateWindow(
             _width,
@@ -132,6 +134,13 @@ class Window {
             (vidmode.height() - _height) / 2
         )
 
+        glfwSetWindowPos(
+            _window,
+            100, 100
+        )
+
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN)
+
         glfwSetKeyCallback(_window, { window, key, scancode, action, mods ->
             if (action == GLFW_PRESS) {
                 val event = EventKey(KeyAction.PRESS, key)
@@ -142,6 +151,14 @@ class Window {
                 val event = EventKey(KeyAction.RELEASE, key)
                 GlobalEventEmitter.instance().notify(event)
             }
+        })
+
+        glfwSetCursorPosCallback(_window, { window, xpos, ypos ->
+            val xoffset = 500.0 - xpos
+            val yoffset = 500.0 - ypos
+
+            val event = EventMouse(0.0, 0.0, xoffset, yoffset, KeyAction.RELEASE, 0)
+            GlobalEventEmitter.instance().notify(event)
         })
 
         glfwShowWindow(_window)

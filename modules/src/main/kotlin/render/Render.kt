@@ -1,6 +1,8 @@
 package render
 
 import java.io.File
+import java.text.DecimalFormat
+import java.math.RoundingMode
 
 import org.lwjgl.opengl.GL46.*
 
@@ -14,6 +16,7 @@ import ui.*
 import image.*
 import map.*
 import testgraph.*
+
 
 class Render : EventObserver {
     private var _run: Boolean
@@ -32,11 +35,11 @@ class Render : EventObserver {
         val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
 
         _scene = Scene().apply {
-//            addStateGroup(testgraph.sparseObjectsGraph())
+            addStateGroup(testgraph.sparseObjectsGraph())
 //            addStateGroup(testgraph.testCubesGraph())
 //            addStateGroup(testgraph.testFlyaroundsGraph())
             addStateGroup(sg[0])
-            addStateGroup(sg[1])
+            // addStateGroup(sg[1])
         }
 
 //        class PrintTypeVisitor : Visitor {
@@ -86,41 +89,38 @@ class Render : EventObserver {
         glDisable(GL_DEPTH_TEST)
 
         val TEXT_START_POS_X = -30.0f
-        val TEXT_START_POS_Y = 26.0f
+        val TEXT_START_POS_Y = 30.0f
         val TEXT_PLANE_Z = 0.4f
 
         val l1 = Label().apply {
-            text = "test string"
+            val df = DecimalFormat("0.000").apply {
+                // Truncates instead of rounding up.
+                roundingMode = RoundingMode.DOWN
+            }
+
+            val cx = df.format(_scene.camera.eye.x)
+            val cy = df.format(_scene.camera.eye.y)
+            val cz = df.format(_scene.camera.eye.z)
+            val az = df.format(_scene.camera.azimuth)
+            val el = df.format(_scene.camera.elevation)
+
+            text = "pos: ${cx} ${cy} ${cz} ${az} ${el}"
+
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y)
             z = TEXT_PLANE_Z - 0.1f
             letterSpace = 0.0f
+            letterScale = 1.0f
             color = Color(255, 255, 255, 255)
         }
 
-        val l2 = Label().apply {
-            text = "test string"
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y + 3.5f)
-            z = TEXT_PLANE_Z - 0.1f
-            letterSpace = 0.0f
-            letterScale = 1.5f
-            color = Color(128, 255, 128, 255)
-        }
-
         val b1 = Billboard().apply {
-            size = Vector2(10.0f, 10.0f)
-            position = Vector2(-31.0f, 16.0f)
+            size = Vector2(17.0f, 2.5f)
+            position = Vector2(-30.5f, 30.5f)
             z = TEXT_PLANE_Z
             color = Color(255, 200, 128, 128)
         }
 
-        val b2 = Billboard().apply {
-            size = Vector2(10.0f, 10.0f)
-            position = Vector2(-31.0f, 30.0f)
-            z = TEXT_PLANE_Z
-            color = Color(128, 200, 255, 128)
-        }
-
-        _ui.add(listOf(l1, l2, b1, b2))
+        _ui.add(listOf(l1, b1))
 
         _ui.flush()
     }
@@ -132,7 +132,7 @@ class Render : EventObserver {
     override fun handleEvent(event: EventBase) {
         if (event is EventKey) {
             if (event.keyAction == KeyAction.PRESS) {
-                //println("=== ${event.key}")
+//                println("=== ${event.key}")
                 when (event.key) {
                     256 -> {
                         run = false
@@ -140,46 +140,60 @@ class Render : EventObserver {
 
                     // w
                     87 -> {
-                        _scene._camera.setMoveBit(FlycamMoveBits.FORWARD)
+                        _scene.camera.setMoveBit(FlycamMoveBits.FORWARD)
                     }
 
                     // a
                     65 -> {
-                        _scene._camera.setMoveBit(FlycamMoveBits.LEFT)
+                        _scene.camera.setMoveBit(FlycamMoveBits.LEFT)
                     }
 
                     // s
                     83 -> {
-                        _scene._camera.setMoveBit(FlycamMoveBits.BACKWARD)
+                        _scene.camera.setMoveBit(FlycamMoveBits.BACKWARD)
                     }
 
                     // d
                     68 -> {
-                        _scene._camera.setMoveBit(FlycamMoveBits.RIGHT)
+                        _scene.camera.setMoveBit(FlycamMoveBits.RIGHT)
+                    }
+
+                    // c
+                    67 -> {
+
+                    }
+
+                    // g
+                    71 -> {
+
                     }
                 }
             }
 
             if (event.keyAction == KeyAction.RELEASE) {
-                //println("=== ${event.key}")
                 when (event.key) {
                     87 -> {
-                        _scene._camera.unsetMoveBit(FlycamMoveBits.FORWARD)
+                        _scene.camera.unsetMoveBit(FlycamMoveBits.FORWARD)
                     }
 
                     65 -> {
-                        _scene._camera.unsetMoveBit(FlycamMoveBits.LEFT)
+                        _scene.camera.unsetMoveBit(FlycamMoveBits.LEFT)
                     }
 
                     83 -> {
-                        _scene._camera.unsetMoveBit(FlycamMoveBits.BACKWARD)
+                        _scene.camera.unsetMoveBit(FlycamMoveBits.BACKWARD)
                     }
 
                     68 -> {
-                        _scene._camera.unsetMoveBit(FlycamMoveBits.RIGHT)
+                        _scene.camera.unsetMoveBit(FlycamMoveBits.RIGHT)
                     }
                 }
             }
+        }
+
+        if (event is EventMouse) {
+            val SENSIVITY = 0.005f
+            _scene.camera.rotate(event.xoffst.toFloat() * SENSIVITY, event.yoffst.toFloat() * SENSIVITY)
         }
     }
 }

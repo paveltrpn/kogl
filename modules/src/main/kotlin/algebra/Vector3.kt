@@ -104,6 +104,22 @@ class Vector3 {
         return this
     }
 
+    operator fun plus(other: Vector4): Vector3 {
+        x += other.x
+        y += other.y
+        z += other.z
+
+        return this
+    }
+
+    operator fun minus(other: Vector4): Vector3 {
+        x -= other.x
+        y -= other.y
+        z -= other.z
+
+        return this
+    }
+
     fun dot(other: Vector4): Float {
         return _data[0] * other[0] + _data[1] * other[1] +
                 _data[2] * other[2]

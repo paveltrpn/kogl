@@ -25,6 +25,8 @@ class Flycam {
 
     private var _name: String = ""
 
+    private val _elevationBound = 80.0f
+
     var fov: Float
         get() = _fov
         set(value) {
@@ -126,7 +128,9 @@ class Flycam {
         _roll = 0.0f
     }
 
-    constructor() : this(Vector3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f)
+    constructor() : this(Vector3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f) {
+
+    }
 
     fun setMoveBit(bit: FlycamMoveBits) {
         _moveMask = _moveMask or (1 shl bit.ordinal)
@@ -147,9 +151,8 @@ class Flycam {
 
         _elevation += elevationOffset
 
-        val elevationBound = 80.0f
-        if (_elevation > elevationBound) _elevation = elevationBound
-        if (_elevation < -elevationBound) _elevation = -elevationBound
+        if (_elevation > _elevationBound) _elevation = _elevationBound
+        if (_elevation < -_elevationBound) _elevation = -_elevationBound
     }
 
     fun traverse() {
@@ -189,4 +192,9 @@ class Flycam {
 
             return offset.multiply(er).multiply(ar).multiply(projection)
         }
+
+    fun printCameraProperties(): Unit {
+        println(" === eye: ${_eye.x} ${_eye.y} ${_eye.z}")
+        println(" === azimuth: ${_azimuth} elevation${_elevation}")
+    }
 }

@@ -19,7 +19,7 @@ class Scene {
 
     private var _stateProgram = Program()
 
-    var _camera = Flycam()
+    private var _camera = Flycam()
 
     init {
         _camera.apply {
@@ -27,9 +27,17 @@ class Scene {
             aspect = 16.0f / 9.0f
             ncp = 0.1f
             fcp = 100.0f
-            eye = Vector3(0.0f, 0.0f, -4.0f)
+
+            eye = Vector3(-4.0f, -6.2f, -7.4f)
+            azimuth = 32.0f
+            elevation = -36.3f
         }
     }
+
+    val camera: Flycam
+        get(): Flycam {
+            return _camera
+        }
 
     // Iterative traverse over all available state groups and
     // attached nodes. Must be depth-first traversal.

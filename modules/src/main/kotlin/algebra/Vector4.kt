@@ -99,8 +99,58 @@ class Vector4 {
 
     operator fun get(id: Int): Float {
         require(id >= 0 && id < 5)
+
         return _data[id]
     }
+
+    operator fun plus(other: Vector2): Vector4 {
+        x += other.x
+        y += other.y
+
+        return this
+    }
+
+    operator fun minus(other: Vector2): Vector4 {
+        x -= other.x
+        y -= other.y
+
+        return this
+    }
+
+    operator fun plus(other: Vector3): Vector4 {
+        x += other.x
+        y += other.y
+        z += other.z
+
+        return this
+    }
+
+    operator fun minus(other: Vector3): Vector4 {
+        x -= other.x
+        y -= other.y
+        z -= other.z
+
+        return this
+    }
+
+    operator fun plus(other: Vector4): Vector4 {
+        x += other.x
+        y += other.y
+        z += other.z
+        w += other.w
+
+        return this
+    }
+
+    operator fun minus(other: Vector4): Vector4 {
+        x -= other.x
+        y -= other.y
+        z -= other.z
+        w -= other.w
+
+        return this
+    }
+
 
     fun dot(other: Vector4): Float {
         return _data[0] * other[0] + _data[1] * other[1] +

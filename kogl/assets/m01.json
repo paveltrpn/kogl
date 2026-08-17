@@ -47,16 +47,30 @@
                     ],
                     "child": {
                       "node": {
-                        "type": "spinable_drawable",
+                        "type": "transform",
                         "payload": {
-                          "mesh": "box",
-                          "material": "mat1",
-                          "axis": [
-                            0.0,
+                          "matrix": [],
+                          "transform_type": "scale",
+                          "data": [
                             1.0,
-                            0.0
+                            0.5,
+                            1.0
                           ],
-                          "anglSpeed": 0.4
+                          "child": {
+                            "node": {
+                              "type": "spinable_drawable",
+                              "payload": {
+                                "mesh": "box",
+                                "material": "mat1",
+                                "axis": [
+                                  0.0,
+                                  1.0,
+                                  0.0
+                                ],
+                                "anglSpeed": 0.4
+                              }
+                            }
+                          }
                         }
                       }
                     }
@@ -75,85 +89,98 @@
             "children": [
               {
                 "node": {
-                  "type": "group",
+                  "type": "transform",
                   "payload": {
-                    "children": [
-                      {
-                        "node": {
-                          "type": "transform",
-                          "payload": {
-                            "matrix": [],
-                            "transform_type": "offset",
-                            "data": [
-                              -2.0,
-                              0.0,
-                              0.0
-                            ],
-                            "child": {
-                              "node": "flyaround_drawable",
-                              "payload": {
-                                "mesh": "box",
-                                "material": "mat1",
-                                "origin": [
-                                  0.0,
-                                  0.0,
-                                  0.0
-                                ],
-                                "axis": [
-                                  0.0,
-                                  1.0,
-                                  0.0
-                                ],
-                                "anglSpeed": 0.0
+                    "matrix": [],
+                    "transform_type": "offset",
+                    "data": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "child": {
+                      "node": {
+                        "type": "group",
+                        "payload": {
+                          "children": [
+                            {
+                              "node": {
+                                "type": "transform",
+                                "payload": {
+                                  "matrix": [],
+                                  "transform_type": "offset",
+                                  "data": [
+                                    -2.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "child": {
+                                    "node": "flyaround_drawable",
+                                    "payload": {
+                                      "mesh": "box",
+                                      "material": "mat1",
+                                      "origin": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "axis": [
+                                        0.0,
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "anglSpeed": 0.2
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "node": {
+                                "type": "transform",
+                                "payload": {
+                                  "matrix": [],
+                                  "transform_type": "offset",
+                                  "data": [
+                                    -2.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "child": {
+                                    "node": "drawable",
+                                    "payload": {
+                                      "mesh": "box",
+                                      "material": "mat1"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "node": {
+                                "type": "transform",
+                                "payload": {
+                                  "matrix": [],
+                                  "transform_type": "offset",
+                                  "data": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "child": {
+                                    "node": "drawable",
+                                    "payload": {
+                                      "mesh": "box",
+                                      "material": "mat1"
+                                    }
+                                  }
+                                }
                               }
                             }
-                          }
-                        }
-                      },
-                      {
-                        "node": {
-                          "type": "transform",
-                          "payload": {
-                            "matrix": [],
-                            "transform_type": "offset",
-                            "data": [
-                              -2.0,
-                              0.0,
-                              0.0
-                            ],
-                            "child": {
-                              "node": "drawable",
-                              "payload": {
-                                "mesh": "box",
-                                "material": "mat1",
-                                "data": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "node": {
-                          "type": "transform",
-                          "payload": {
-                            "matrix": [],
-                            "transform_type": "offset",
-                            "data": [
-                              0.0,
-                              0.0,
-                              0.0
-                            ],
-                            "child": {
-                              "node": "drawable",
-                              "payload": {
-                                "mesh": "box",
-                                "material": "mat1"
-                              }
-                            }
-                          }
+                          ]
                         }
                       }
-                    ]
+                    }
                   }
                 }
               },
@@ -173,9 +200,17 @@
                       "payload": {
                         "mesh": "box",
                         "material": "mat1",
-                        "origin": [],
-                        "axis": [],
-                        "anglSpeed": 0.0
+                        "origin": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "axis": [
+                          0.0,
+                          1.0,
+                          0.0
+                        ],
+                        "anglSpeed": 0.2
                       }
                     }
                   }

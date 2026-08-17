@@ -2,21 +2,21 @@ package map
 
 import mesh.*
 
-class BodyStorage private constructor(storagePath: String) {
+class Storage private constructor(storagePath: String) {
     private val _bodyStorage: HashMap<String, Mesh>? = null
     private val _materialStorage: HashMap<String, Material>? = null
 
     companion object {
         @Volatile
-        private var instance: BodyStorage? = null
+        private var instance: Storage? = null
 
-        fun init(storagePath: String): BodyStorage {
+        fun init(storagePath: String): Storage {
             return instance ?: synchronized(this) {
-                instance ?: BodyStorage(storagePath).also { instance = it }
+                instance ?: Storage(storagePath).also { instance = it }
             }
         }
 
-        fun instance(): BodyStorage {
+        fun instance(): Storage {
             return instance ?: throw IllegalStateException(
                 "BodyStorage must be initialized by calling init() first."
             )

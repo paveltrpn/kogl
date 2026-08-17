@@ -11,7 +11,6 @@ import org.lwjgl.system.MemoryUtil
 import config.*
 import render.*
 import event.*
-import mesh.*
 import image.*
 import map.*
 
@@ -31,7 +30,7 @@ class Window {
         GlobalEventEmitter.init()
 
         val basePath = Config.instance().basePath
-        BodyStorage.init(basePath)
+        Storage.init(basePath)
 
         println("base path is ${basePath}")
 

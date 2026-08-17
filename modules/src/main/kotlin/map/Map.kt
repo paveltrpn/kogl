@@ -65,66 +65,54 @@ private fun buildGroup(groupData: GroupData, meshStorage: Map<String, Mesh>): Gr
 }
 
 private fun buildTransform(transformData: TransformData, meshStorage: Map<String, Mesh>): Transform {
-    val transform = Transform()
-    val payload = transformData.payload
-
-    val matrixArray = payload.matrix
-
     fun constructTransform(type: String, rawMatrix: FloatArray, rawData: FloatArray): Transform {
         if (!rawMatrix.isEmpty()) {
-            if (rawMatrix.size == 16) {
-                println("Transform node read warn - raw matrix wrong size!")
-                return Transform()
-            }
+            if (rawMatrix.size != 16) throw RuntimeException("Transform matrix array wrong size - \"${rawMatrix.size}\"!")
             return Transform(rawMatrix)
         }
 
+        // TODO: Add rawData size checks!!!
         when (type) {
             "offset" -> {
-                val m = algebra.offset(rawData[0], rawData[1], rawData[2])
+                if (rawData.size != 3) throw RuntimeException("Transform data array wrong size - \"${rawData.size}\"!")
                 return Transform().apply {
-                    matrix = m
+                    matrix = algebra.offset(rawData[0], rawData[1], rawData[2])
                 }
             }
 
             "rotateEuler" -> {
-                val m = algebra.rotation(rawData[0], rawData[1], rawData[2])
+                if (rawData.size != 3) throw RuntimeException("Transform data array wrong size - \"${rawData.size}\"!")
                 return Transform().apply {
-                    matrix = m
+                    matrix = algebra.rotation(rawData[0], rawData[1], rawData[2])
                 }
             }
 
             "rotateAxisAngl" -> {
+                if (rawData.size != 4) throw RuntimeException("Transform data array wrong size - \"${rawData.size}\"!")
                 val ax = Vector3(rawData[0], rawData[1], rawData[2])
                 val an = rawData[3]
-                val m = algebra.rotation(ax, an)
                 return Transform().apply {
-                    matrix = m
+                    matrix = algebra.rotation(ax, an)
                 }
             }
 
             "scale" -> {
-                val m = algebra.scale(rawData[0], rawData[1], rawData[2])
+                if (rawData.size != 3) throw RuntimeException("Transform data array wrong size - \"${rawData.size}\"!")
                 return Transform().apply {
-                    matrix = m
+                    matrix = algebra.scale(rawData[0], rawData[1], rawData[2])
                 }
             }
 
         }
-        
+
         return Transform()
     }
 
-    if (matrixArray.size == 16) {
-        val matrix = Matrix4()
-        val data = matrix.data
-        for (i in 0..15) {
-            data[i] = matrixArray[i]
-        }
-        transform.matrix = matrix
-    }
+    val p = transformData.payload
 
-    val childNode = buildNode(payload.child, meshStorage)
+    val transform = constructTransform(p.trnasform_type, p.matrix, p.data)
+
+    val childNode = buildNode(p.child, meshStorage)
     if (childNode != null) {
         transform.addChild(childNode)
     }

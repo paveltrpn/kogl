@@ -17,12 +17,16 @@
                   "payload": {
                     "matrix": [],
                     "type": "offset",
-                    "data": [],
+                    "data": [
+                      1.0,
+                      0.0,
+                      0.0
+                    ],
                     "child": {
                       "node": {
                         "type": "drawable",
                         "payload": {
-                          "mesh": "box",
+                          "mesh": "frame",
                           "material": "mat1"
                         }
                       }
@@ -36,7 +40,11 @@
                   "payload": {
                     "matrix": [],
                     "transform_type": "offset",
-                    "data": [],
+                    "data": [
+                      -2.0,
+                      0.0,
+                      0.0
+                    ],
                     "child": {
                       "node": {
                         "type": "spinable_drawable",
@@ -72,7 +80,11 @@
                           "payload": {
                             "matrix": [],
                             "transform_type": "offset",
-                            "data": [],
+                            "data": [
+                              -2.0,
+                              0.0,
+                              0.0
+                            ],
                             "child": {
                               "node": "flyaround_drawable",
                               "payload": {
@@ -92,7 +104,11 @@
                           "payload": {
                             "matrix": [],
                             "transform_type": "offset",
-                            "data": [],
+                            "data": [
+                              -2.0,
+                              0.0,
+                              0.0
+                            ],
                             "child": {
                               "node": "drawable",
                               "payload": {

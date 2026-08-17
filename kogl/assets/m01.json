@@ -95,7 +95,7 @@
                     "transform_type": "offset",
                     "data": [
                       0.0,
-                      0.0,
+                      1.0,
                       0.0
                     ],
                     "child": {
@@ -110,8 +110,8 @@
                                   "matrix": [],
                                   "transform_type": "offset",
                                   "data": [
-                                    -2.0,
                                     0.0,
+                                    1.5,
                                     0.0
                                   ],
                                   "child": {
@@ -144,7 +144,7 @@
                                   "matrix": [],
                                   "transform_type": "offset",
                                   "data": [
-                                    -2.0,
+                                    0.0,
                                     0.0,
                                     0.0
                                   ],
@@ -168,7 +168,7 @@
                                   "transform_type": "offset",
                                   "data": [
                                     0.0,
-                                    0.0,
+                                    -1.5,
                                     0.0
                                   ],
                                   "child": {

@@ -71,7 +71,6 @@ private fun buildTransform(transformData: TransformData, meshStorage: Map<String
             return Transform(rawMatrix)
         }
 
-        // TODO: Add rawData size checks!!!
         when (type) {
             "offset" -> {
                 if (rawData.size != 3) throw RuntimeException("Transform data array wrong size - \"${rawData.size}\"!")
@@ -217,5 +216,14 @@ fun printNode(node: NodeData, indent: String = "") {
         is GenericNodeData -> {
             // Generic node with no payload
         }
+    }
+}
+
+fun printMapStructure(mapData: MapData): Unit {
+    println("Map name: ${mapData.name}")
+    println("Graph entries: ${mapData.graph.size}")
+    for ((index, node) in mapData.graph.withIndex()) {
+        println("Graph[$index]:")
+        printNode(node, "  ")
     }
 }

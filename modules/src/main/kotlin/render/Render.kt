@@ -15,23 +15,6 @@ import image.*
 import map.*
 import testgraph.*
 
-class PrintTypeVisitor : Visitor {
-    override fun apply(node: StateGroup): Unit {
-        println("my type is ${node::class}")
-        node.traverse(this)
-    }
-
-    override fun apply(node: Transform): Unit {
-        println("my type is ${node::class}")
-        node.traverse(this)
-    }
-
-    override fun apply(node: Drawable): Unit {
-        println("my type is ${node::class}")
-        node.traverse(this)
-    }
-}
-
 class Render : EventObserver {
     private var _run: Boolean
     private val _scene: Scene
@@ -44,12 +27,7 @@ class Render : EventObserver {
         val jsonString = file.readText()
         val mapData = parseMapJson(jsonString)
 
-        println("Map name: ${mapData.name}")
-        println("Graph entries: ${mapData.graph.size}")
-        for ((index, node) in mapData.graph.withIndex()) {
-            println("Graph[$index]:")
-            printNode(node, "  ")
-        }
+//        printMapStructure(mapData)
 
         val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
 
@@ -57,9 +35,26 @@ class Render : EventObserver {
 //            addStateGroup(testgraph.sparseObjectsGraph())
 //            addStateGroup(testgraph.testCubesGraph())
 //            addStateGroup(testgraph.testFlyaroundsGraph())
+            addStateGroup(sg[0])
             addStateGroup(sg[1])
-            // addStateGroup(sg[1])
         }
+
+//        class PrintTypeVisitor : Visitor {
+//            override fun apply(node: StateGroup): Unit {
+//                println("my type is ${node::class}")
+//                node.traverse(this)
+//            }
+//
+//            override fun apply(node: Transform): Unit {
+//                println("my type is ${node::class}")
+//                node.traverse(this)
+//            }
+//
+//            override fun apply(node: Drawable): Unit {
+//                println("my type is ${node::class}")
+//                node.traverse(this)
+//            }
+//        }
 
 //        val printtype = PrintTypeVisitor()
 //        sparseObjectsGraph.accept(printtype)
@@ -97,7 +92,7 @@ class Render : EventObserver {
         val l1 = Label().apply {
             text = "test string"
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y)
-            z = TEXT_PLANE_Z
+            z = TEXT_PLANE_Z - 0.1f
             letterSpace = 0.0f
             color = Color(255, 255, 255, 255)
         }
@@ -105,7 +100,7 @@ class Render : EventObserver {
         val l2 = Label().apply {
             text = "test string"
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y + 3.5f)
-            z = TEXT_PLANE_Z
+            z = TEXT_PLANE_Z - 0.1f
             letterSpace = 0.0f
             letterScale = 1.5f
             color = Color(128, 255, 128, 255)

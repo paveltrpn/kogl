@@ -1,10 +1,11 @@
 package render
 
+import kotlin.use
+
 import algebra.*
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryStack
 import java.nio.FloatBuffer
-import kotlin.use
 
 class QuadsBuffer(capacity: Int) {
     private var _vao: Int

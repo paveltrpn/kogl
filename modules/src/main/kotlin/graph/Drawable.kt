@@ -153,8 +153,6 @@ class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
         val offset = algebra.offset(_origin)
         offset.transpose()
 
-        val tmp = _combined.multiply(offset)
-
-        _combined = tmp.multiply(spin)
+        _combined = offset.multiply(spin).multiply(_combined)
     }
 }

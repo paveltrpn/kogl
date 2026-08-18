@@ -8,11 +8,6 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
     private val _delta: Float
     private var _viewMatrix: Matrix4
 
-    // Each StateGroup branch data - store current state group shader program
-    // and accumulate transformations from every transform on the path.
-    //
-    // This data reset on every next StateGroup traversal begin.
-    // private var _modelMatrix: Matrix4 = Matrix4().idtt()
     private var _program: Program = Program()
     private var _modelMatrixStack = MatrixStack()
 

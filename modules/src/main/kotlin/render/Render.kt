@@ -36,7 +36,7 @@ class Render : EventObserver {
             addStateGroup(testgraph.sparseObjectsGraph())
 //            addStateGroup(testgraph.testCubesGraph())
             // addStateGroup(testgraph.testFlyaroundsGraph())
-            // addStateGroup(sg[0])
+            addStateGroup(sg[0])
             addStateGroup(sg[1])
         }
 

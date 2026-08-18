@@ -43,7 +43,6 @@ open class Drawable(mesh: Mesh) : Node() {
     }
 
     fun applyTransform(tr: Matrix4): Unit {
-        // tr.transpose()
         _combined = tr
     }
 
@@ -59,7 +58,7 @@ open class Drawable(mesh: Mesh) : Node() {
         get(): Vector3 {
             return _color
         }
-        set(value: Vector3) {
+        set(value) {
             _color = value
         }
 }

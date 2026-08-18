@@ -172,9 +172,9 @@ class Matrix4 {
         // Normalize if w is different from 1.0 (convert from homogeneous to Cartesian
         // coordinates).
         if (w != 1.0f) {
-            rx /= w;
-            ry /= w;
-            rz /= w;
+            rx /= w
+            ry /= w
+            rz /= w
         }
 
         return Vector3(rx, ry, rz)
@@ -210,32 +210,32 @@ class Matrix4 {
     fun fromAxisAngle(ax: Vector3, phi: Float): Matrix4 {
         val cosphi = kotlin.math.cos(toRadians(phi));
         val sinphi = kotlin.math.sin(toRadians(phi));
-        val vxvy = ax.x * ax.y;
-        val vxvz = ax.x * ax.z;
-        val vyvz = ax.y * ax.z;
-        val vx = ax.x;
-        val vy = ax.y;
-        val vz = ax.z;
+        val vxvy = ax.x * ax.y
+        val vxvz = ax.x * ax.z
+        val vyvz = ax.y * ax.z
+        val vx = ax.x
+        val vy = ax.y
+        val vz = ax.z
 
-        _data[0] = cosphi + (1.0f - cosphi) * vx * vx;
-        _data[1] = (1.0f - cosphi) * vxvy - sinphi * vz;
-        _data[2] = (1.0f - cosphi) * vxvz + sinphi * vy;
-        _data[3] = 0.0f;
+        _data[0] = cosphi + (1.0f - cosphi) * vx * vx
+        _data[1] = (1.0f - cosphi) * vxvy - sinphi * vz
+        _data[2] = (1.0f - cosphi) * vxvz + sinphi * vy
+        _data[3] = 0.0f
 
-        _data[4] = (1.0f - cosphi) * vxvy + sinphi * vz;
-        _data[5] = cosphi + (1.0f - cosphi) * vy * vy;
-        _data[6] = (1.0f - cosphi) * vyvz - sinphi * vx;
-        _data[7] = 0.0f;
+        _data[4] = (1.0f - cosphi) * vxvy + sinphi * vz
+        _data[5] = cosphi + (1.0f - cosphi) * vy * vy
+        _data[6] = (1.0f - cosphi) * vyvz - sinphi * vx
+        _data[7] = 0.0f
 
-        _data[8] = (1.0f - cosphi) * vxvz - sinphi * vy;
-        _data[9] = (1.0f - cosphi) * vyvz + sinphi * vx;
-        _data[10] = cosphi + (1.0f - cosphi) * vz * vz;
-        _data[11] = 0.0f;
+        _data[8] = (1.0f - cosphi) * vxvz - sinphi * vy
+        _data[9] = (1.0f - cosphi) * vyvz + sinphi * vx
+        _data[10] = cosphi + (1.0f - cosphi) * vz * vz
+        _data[11] = 0.0f
 
-        _data[12] = 0.0f;
-        _data[13] = 0.0f;
-        _data[14] = 0.0f;
-        _data[15] = 1.0f;
+        _data[12] = 0.0f
+        _data[13] = 0.0f
+        _data[14] = 0.0f
+        _data[15] = 1.0f
 
         return this
     }

@@ -141,19 +141,6 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             )
         }
 
-        "spinable_drawable" -> {
-            val payload = payloadJson.jsonObject
-            val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""
-            val material = payload["material"]?.jsonPrimitive?.content ?: ""
-            val axis = payload["axis"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
-            val anglSpeed = payload["anglSpeed"]?.jsonPrimitive?.float ?: 0.0f
-
-            SpinableDrawableData(
-                type = nodeWrapper.type,
-                payload = SpinableDrawablePayload(mesh, material, axis, anglSpeed)
-            )
-        }
-
         "flyaround_drawable" -> {
             val payload = payloadJson.jsonObject
             val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""

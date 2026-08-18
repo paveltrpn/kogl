@@ -23,7 +23,6 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
     override fun apply(node: StateGroup): Unit {
         _program = node.program
 
-        // ...and bind it.
         _program.use()
 
         node.traverse(this)
@@ -41,18 +40,20 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
 
     override fun apply(node: Drawable): Unit {
         when (node) {
-            is SpinableDrawable -> {
-                node.applyTransform(_modelMatrixStack.top)
-                node.update(_delta)
-            }
-
             is FlyaroundDrawable -> {
-                node.applyTransform(_modelMatrixStack.top)
-                node.update(_delta)
+                val local = node.updateLocal(_delta)
+
+                val top = _modelMatrixStack.top
+                top.transpose()
+
+                node.applyTransform(local.multiply(top))
             }
 
             is Drawable -> {
-                node.applyTransform(_modelMatrixStack.top)
+                val top = _modelMatrixStack.top
+                top.transpose()
+
+                node.applyTransform(top)
             }
         }
 

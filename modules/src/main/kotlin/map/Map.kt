@@ -52,10 +52,6 @@ private fun buildNode(nodeData: NodeData, meshStorage: Map<String, Mesh>): Node?
             buildDrawable(nodeData, meshStorage)
         }
 
-        is SpinableDrawableData -> {
-            buildSpinableDrawable(nodeData, meshStorage)
-        }
-
         is FlyaroundDrawableData -> {
             buildFlyaroundDrawable(nodeData, meshStorage)
         }
@@ -147,27 +143,6 @@ private fun buildDrawable(drawableData: DrawableData, meshStorage: Map<String, M
     return Drawable(mesh)
 }
 
-private fun buildSpinableDrawable(spinableData: SpinableDrawableData, meshStorage: Map<String, Mesh>): Drawable? {
-    val p = spinableData.payload
-
-    if (meshStorage[p.mesh] == null) {
-        throw RuntimeException("SpinableDrawable no such mesh - \"${p.mesh}\"!")
-    }
-
-    val axisArray = p.axis
-    if (axisArray.size != 3) throw RuntimeException("SpinableDrawable axis array wrong size - \"${axisArray.size}\"!")
-
-    val ax = Vector3(axisArray[0], axisArray[1], axisArray[2])
-    if (ax.length() == 0.0f) throw RuntimeException("SpinableDrawable axis length is zero!")
-
-    ax.normalize()
-
-    return SpinableDrawable(meshStorage[p.mesh]!!).apply {
-        axis = ax
-        anglSpeed = p.anglSpeed
-    }
-}
-
 private fun buildFlyaroundDrawable(flyaroundData: FlyaroundDrawableData, meshStorage: Map<String, Mesh>): Drawable? {
     val p = flyaroundData.payload
 
@@ -219,13 +194,6 @@ fun printNode(node: NodeData, indent: String = "") {
         is DrawableData -> {
             println("${indent}  mesh: ${node.payload.mesh}")
             println("${indent}  material: ${node.payload.material}")
-        }
-
-        is SpinableDrawableData -> {
-            println("${indent}  mesh: ${node.payload.mesh}")
-            println("${indent}  material: ${node.payload.material}")
-            println("${indent}  axis: ${node.payload.axis.contentToString()}")
-            println("${indent}  anglSpeed: ${node.payload.anglSpeed}")
         }
 
         is FlyaroundDrawableData -> {

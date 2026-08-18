@@ -58,10 +58,15 @@
                           ],
                           "child": {
                             "node": {
-                              "type": "spinable_drawable",
+                              "type": "flyaround_drawable",
                               "payload": {
                                 "mesh": "box",
                                 "material": "mat1",
+                                "origin": [
+                                  0.0,
+                                  0.0,
+                                  0.0
+                                ],
                                 "axis": [
                                   0.0,
                                   1.0,

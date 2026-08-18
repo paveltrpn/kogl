@@ -41,7 +41,7 @@ open class Transform() : Node() {
     }
 
     fun transform(m: Matrix4): Matrix4 {
-        return matrix.multiply(m)
+        return m.multiply(matrix)
     }
 }
 

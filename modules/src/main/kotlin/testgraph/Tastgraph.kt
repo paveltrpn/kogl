@@ -51,21 +51,21 @@ fun sparseObjectsGraph(): StateGroup {
     }
 
     for (i in 0..64) {
-        val item = SpinableDrawable(diamondMesh)
-        item.apply {
+        val item = FlyaroundDrawable(diamondMesh).apply {
             color = randomVector3(0.1f, 0.9f)
+            origin = Vector3(0.0f, 0.0f, 0.0f)
             axis = randomVector3(-0.6f, 0.6f).normalize()
             anglSpeed = randomFloat(-1.0f, 1.0f)
         }
 
         val scale = Transform()
-        val sf = randomFloat(0.2f, 0.6f)
+        val sf = randomFloat(0.2f, 2.0f)
         scale.matrix = algebra.scale(sf, sf, sf)
 
         val offset = Transform()
         val rz = randomFloat(-1.0f, -6.0f)
-        val rtv = randomVector3(-4.0f, 4.0f)
-        offset.matrix = algebra.offset(rtv.x, rtv.y, rz);
+        val rtv = randomVector3(-8.0f, 8.0f)
+        offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
 
         scale.addChild(item)
         offset.addChild(scale)
@@ -73,19 +73,21 @@ fun sparseObjectsGraph(): StateGroup {
     }
 
     for (i in 0..16) {
-        val item = SpinableDrawable(frameMesh)
-        item.color = randomVector3(0.1f, 0.9f)
-        item.axis = randomVector3(-0.6f, 0.6f).normalize()
-        item.anglSpeed = randomFloat(0.4f, 1.2f)
+        val item = FlyaroundDrawable(frameMesh).apply {
+            color = randomVector3(0.1f, 0.9f)
+            origin = Vector3(0.0f, 0.0f, 0.0f)
+            axis = randomVector3(-0.6f, 0.6f).normalize()
+            anglSpeed = randomFloat(0.4f, 1.2f)
+        }
 
         val scale = Transform()
-        val sf = randomFloat(0.8f, 1.8f)
+        val sf = randomFloat(0.2f, 2.0f)
         scale.matrix = algebra.scale(sf, sf, sf)
 
         val offset = Transform()
         val rz = randomFloat(-1.0f, -6.0f)
-        val rtv = randomVector3(-5.0f, 5.0f)
-        offset.matrix = algebra.offset(rtv.x, rtv.y, rz);
+        val rtv = randomVector3(-8.0f, 8.0f)
+        offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
 
         scale.addChild(item)
         offset.addChild(scale)
@@ -93,19 +95,21 @@ fun sparseObjectsGraph(): StateGroup {
     }
 
     for (i in 0..16) {
-        val item = SpinableDrawable(arch01dMesh)
-        item.color = randomVector3(0.1f, 0.9f)
-        item.axis = randomVector3(-0.6f, 0.6f).normalize()
-        item.anglSpeed = randomFloat(0.4f, 1.2f)
+        val item = FlyaroundDrawable(arch01dMesh).apply {
+            color = randomVector3(0.1f, 0.9f)
+            origin = Vector3(0.0f, 0.0f, 0.0f)
+            axis = randomVector3(-0.6f, 0.6f).normalize()
+            anglSpeed = randomFloat(0.4f, 1.2f)
+        }
 
         val scale = Transform()
-        val sf = randomFloat(0.8f, 1.4f)
+        val sf = randomFloat(0.2f, 2.0f)
         scale.matrix = algebra.scale(sf, sf, sf)
 
         val offset = Transform()
         val rz = randomFloat(-1.0f, -6.0f)
-        val rtv = randomVector3(-6.0f, 6.0f)
-        offset.matrix = algebra.offset(rtv.x, rtv.y, rz);
+        val rtv = randomVector3(-8.0f, 8.0f)
+        offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
 
         scale.addChild(item)
         offset.addChild(scale)

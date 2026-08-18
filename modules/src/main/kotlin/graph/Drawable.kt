@@ -43,7 +43,7 @@ open class Drawable(mesh: Mesh) : Node() {
     }
 
     fun applyTransform(tr: Matrix4): Unit {
-        tr.transpose()
+        // tr.transpose()
         _combined = tr
     }
 
@@ -65,55 +65,12 @@ open class Drawable(mesh: Mesh) : Node() {
 }
 
 // ============================================================================
-// ======================= SpinableDrawable ===================================
-// ============================================================================
-
-class SpinableDrawable(mesh: Mesh) : Drawable(mesh) {
-    private var _axis = Vector3()
-    private var _anglSpeed = 0.0f
-
-    private var _angl = 0.0f
-
-    constructor(mesh: Mesh, ax: Vector3, anglSpeed: Float) : this(mesh) {
-        _axis = ax
-        _anglSpeed = anglSpeed
-    }
-
-    var axis: Vector3
-        get(): Vector3 {
-            return _axis
-        }
-        set(value: Vector3) {
-            _axis = value
-            _axis.normalizeSelf()
-        }
-
-    var anglSpeed: Float
-        get(): Float {
-            return _anglSpeed
-        }
-        set(value) {
-            _anglSpeed = value
-        }
-
-    fun update(dt: Float): Unit {
-        _angl += anglSpeed * dt
-
-        if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
-
-        val spin = rotation(_axis, _angl)
-
-        _combined = spin.multiply(_combined)
-    }
-}
-
-// ============================================================================
 // ======================= FlyaroundDrawable ===================================
 // ============================================================================
 
 class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
-    private var _origin = Vector3()
-    private var _axis = Vector3()
+    private var _origin = Vector3(0.0f, 0.0f, 0.0f)
+    private var _axis = Vector3(0.0f, 1.0f, 0.0f)
     private var _anglSpeed = 0.0f
 
     private var _angl = 0.0f
@@ -143,7 +100,7 @@ class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
             _anglSpeed = value
         }
 
-    fun update(dt: Float): Unit {
+    fun updateLocal(dt: Float): Matrix4 {
         _angl += anglSpeed * dt
 
         if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
@@ -153,6 +110,6 @@ class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
         val offset = algebra.offset(_origin)
         offset.transpose()
 
-        _combined = offset.multiply(spin).multiply(_combined)
+        return offset.multiply(spin)
     }
 }

@@ -24,14 +24,6 @@ data class TransformPayload(
 data class DrawablePayload(val mesh: String, val material: String) {}
 
 @Serializable
-data class SpinableDrawablePayload(
-    val mesh: String,
-    val material: String,
-    val axis: FloatArray,
-    val anglSpeed: Float
-) {}
-
-@Serializable
 data class FlyaroundDrawablePayload(
     val mesh: String,
     val material: String,
@@ -57,9 +49,6 @@ data class TransformData(override val type: String, val payload: TransformPayloa
     NodeData(type) {}
 
 data class DrawableData(override val type: String, val payload: DrawablePayload) :
-    NodeData(type) {}
-
-data class SpinableDrawableData(override val type: String, val payload: SpinableDrawablePayload) :
     NodeData(type) {}
 
 data class FlyaroundDrawableData(override val type: String, val payload: FlyaroundDrawablePayload) :

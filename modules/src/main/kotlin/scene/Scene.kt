@@ -12,8 +12,9 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
     // and accumulate transformations from every transform on the path.
     //
     // This data reset on every next StateGroup traversal begin.
-    private var _modelMatrix: Matrix4 = Matrix4().idtt()
+    // private var _modelMatrix: Matrix4 = Matrix4().idtt()
     private var _program: Program = Program()
+    private var _modelMatrixStack = MatrixStack()
 
     init {
         _delta = delta
@@ -38,24 +39,25 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
     }
 
     override fun apply(node: Transform): Unit {
-        _modelMatrix = _modelMatrix.multiply(node.matrix)
+        _modelMatrixStack.push(node)
         node.traverse(this)
+        _modelMatrixStack.pop()
     }
 
     override fun apply(node: Drawable): Unit {
         when (node) {
             is SpinableDrawable -> {
-                node.applyTransform(_modelMatrix)
+                node.applyTransform(_modelMatrixStack.top)
                 node.update(_delta)
             }
 
             is FlyaroundDrawable -> {
-                node.applyTransform(_modelMatrix)
+                node.applyTransform(_modelMatrixStack.top)
                 node.update(_delta)
             }
 
             is Drawable -> {
-                node.applyTransform(_modelMatrix)
+                node.applyTransform(_modelMatrixStack.top)
             }
         }
 
@@ -66,8 +68,6 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
 
         // ...and draw call.
         node.draw()
-
-        _modelMatrix = Matrix4().idtt()
     }
 }
 

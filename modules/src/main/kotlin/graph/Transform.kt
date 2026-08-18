@@ -39,6 +39,10 @@ open class Transform() : Node() {
     fun addChild(child: Node): Unit {
         _child = child
     }
+
+    fun transform(m: Matrix4): Matrix4 {
+        return matrix.multiply(m)
+    }
 }
 
 

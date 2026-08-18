@@ -94,7 +94,7 @@
                     "matrix": [],
                     "transform_type": "offset",
                     "data": [
-                      0.5,
+                      -3.0,
                       0.0,
                       0.0
                     ],
@@ -111,7 +111,7 @@
                                   "transform_type": "offset",
                                   "data": [
                                     0.0,
-                                    0.3,
+                                    2.0,
                                     0.0
                                   ],
                                   "child": {
@@ -168,7 +168,7 @@
                                   "transform_type": "offset",
                                   "data": [
                                     0.0,
-                                    0.0,
+                                    -2.0,
                                     0.0
                                   ],
                                   "child": {
@@ -205,10 +205,10 @@
                       "node": {
                         "type": "flyaround_drawable",
                         "payload": {
-                          "mesh": "box",
+                          "mesh": "frame",
                           "material": "mat1",
                           "origin": [
-                            0.0,
+                            2.0,
                             0.0,
                             0.0
                           ],

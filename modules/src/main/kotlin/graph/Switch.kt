@@ -1,12 +1,12 @@
 package graph
 
-enum class SwitchMask {
-    ENABLED,
-    DISABLED
+enum class SwitchMask(val value: Int) {
+    DISCARD(0),
+    SHOW(1)
 }
 
 class Switch : Node() {
-    data class Child(val node: Node, val mask: Int)
+    data class Child(val node: Node, var mask: SwitchMask)
 
     protected var _children: MutableList<Child> = mutableListOf()
 
@@ -16,7 +16,7 @@ class Switch : Node() {
 
     override fun traverse(visitor: Visitor): Unit {
         for (child in _children) {
-            if (child.mask == 1) {
+            if (child.mask == SwitchMask.SHOW) {
                 child.node.accept(visitor)
             }
         }
@@ -33,12 +33,32 @@ class Switch : Node() {
     fun addChild(enabled: Boolean, child: Node): Unit {
         _children.addLast(
             Child(
-                child, if (enabled) 1 else 0
+                child, if (enabled) SwitchMask.SHOW else SwitchMask.DISCARD
             )
         )
     }
 
-    fun addChild(mask: Int, child: Node): Unit {
+    fun addChild(mask: SwitchMask, child: Node): Unit {
         _children.addLast(Child(child, mask))
+    }
+
+    fun setChild(enabled: Boolean, index: Int): Unit {
+        for ((i, child) in _children.withIndex()) {
+            if (i == index) {
+                child.mask = if (enabled) SwitchMask.SHOW else SwitchMask.DISCARD
+            }
+        }
+    }
+
+    fun setAllChildren(enabled: Boolean): Unit {
+        for (child in _children) {
+            child.mask = if (enabled) SwitchMask.SHOW else SwitchMask.DISCARD
+        }
+    }
+
+    fun setSingleChildOn(index: Int): Unit {
+        for ((i, child) in _children.withIndex()) {
+            child.mask = if (i == index) SwitchMask.SHOW else SwitchMask.DISCARD
+        }
     }
 }

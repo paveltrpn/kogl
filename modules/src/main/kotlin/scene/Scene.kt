@@ -20,6 +20,10 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
         _viewMatrix = viewMatrix
     }
 
+    override fun apply(node: Switch): Unit {
+        node.traverse(this)
+    }
+
     override fun apply(node: StateGroup): Unit {
         _program = node.program
 

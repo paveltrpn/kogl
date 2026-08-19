@@ -2,7 +2,7 @@ package graph
 
 import algebra.*
 
-open class Transform() : Node() {
+open class TransformGroup() : Node() {
     private var _child: Node? = null
 
     private var _matrix = Matrix4()

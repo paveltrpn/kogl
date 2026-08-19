@@ -5,7 +5,7 @@ enum class SwitchMask(val value: Int) {
     SHOW(1)
 }
 
-class Switch : Node() {
+class SwitchGroup : Node() {
     data class Child(val node: Node, var mask: SwitchMask)
 
     protected var _children: MutableList<Child> = mutableListOf()

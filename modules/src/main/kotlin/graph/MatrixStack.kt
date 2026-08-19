@@ -23,7 +23,7 @@ class MatrixStack {
         _stack.addLast(m)
     }
 
-    fun push(t: Transform): Unit {
+    fun push(t: TransformGroup): Unit {
         _stack.addLast(t.transform(top))
     }
 

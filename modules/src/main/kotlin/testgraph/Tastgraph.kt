@@ -58,11 +58,11 @@ fun sparseObjectsGraph(): StateGroup {
             anglSpeed = randomFloat(-1.0f, 1.0f)
         }
 
-        val scale = Transform()
+        val scale = TransformGroup()
         val sf = randomFloat(0.2f, 2.0f)
         scale.matrix = algebra.scale(sf, sf, sf)
 
-        val offset = Transform()
+        val offset = TransformGroup()
         val rz = randomFloat(-1.0f, -6.0f)
         val rtv = randomVector3(-8.0f, 8.0f)
         offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
@@ -80,11 +80,11 @@ fun sparseObjectsGraph(): StateGroup {
             anglSpeed = randomFloat(0.4f, 1.2f)
         }
 
-        val scale = Transform()
+        val scale = TransformGroup()
         val sf = randomFloat(0.2f, 2.0f)
         scale.matrix = algebra.scale(sf, sf, sf)
 
-        val offset = Transform()
+        val offset = TransformGroup()
         val rz = randomFloat(-1.0f, -6.0f)
         val rtv = randomVector3(-8.0f, 8.0f)
         offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
@@ -102,11 +102,11 @@ fun sparseObjectsGraph(): StateGroup {
             anglSpeed = randomFloat(0.4f, 1.2f)
         }
 
-        val scale = Transform()
+        val scale = TransformGroup()
         val sf = randomFloat(0.2f, 2.0f)
         scale.matrix = algebra.scale(sf, sf, sf)
 
-        val offset = Transform()
+        val offset = TransformGroup()
         val rz = randomFloat(-1.0f, -6.0f)
         val rtv = randomVector3(-8.0f, 8.0f)
         offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
@@ -147,10 +147,10 @@ fun testFlyaroundsGraph(): StateGroup {
         origin = Vector3(1.5f, 0.0f, 0.0f)
     }
 
-    val scale = Transform()
+    val scale = TransformGroup()
     scale.matrix = algebra.scale(0.5f, 0.5f, 0.5f)
 
-    val offset = Transform()
+    val offset = TransformGroup()
     offset.matrix = algebra.offset(0.0f, 0.0f, 0.0f)
 
     scale.addChild(item)
@@ -181,10 +181,10 @@ fun testCubesGraph(): StateGroup {
     val item = Drawable(boxMesh)
     item.color = Vector3(0.0f, 0.0f, 1.0f)
 
-    val scale = Transform()
+    val scale = TransformGroup()
     scale.matrix = algebra.scale(1.0f, 1.0f, 1.0f)
 
-    val offset = Transform()
+    val offset = TransformGroup()
     offset.matrix = algebra.offset(0.0f, 0.0f, 0.0f)
 
     scale.addChild(item)

@@ -16,7 +16,7 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
         _viewMatrix = viewMatrix
     }
 
-    override fun apply(node: Switch): Unit {
+    override fun apply(node: SwitchGroup): Unit {
         node.traverse(this)
     }
 
@@ -32,7 +32,7 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
         node.traverse(this)
     }
 
-    override fun apply(node: Transform): Unit {
+    override fun apply(node: TransformGroup): Unit {
         _modelMatrixStack.push(node)
         node.traverse(this)
         _modelMatrixStack.pop()

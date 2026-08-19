@@ -38,7 +38,7 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
         _modelMatrixStack.pop()
     }
 
-    override fun apply(node: Drawable): Unit {
+    override fun apply(node: Leaf): Unit {
         when (node) {
             is FlyaroundDrawable -> {
                 val local = node.updateLocal(_delta)
@@ -47,6 +47,11 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
                 top.transpose()
 
                 node.applyTransform(local.multiply(top))
+
+                // ...update shader uniform...
+                _program.setMatrixUniform("view_matrix", false, _viewMatrix)
+                _program.setMatrixUniform("drawable_matrix", false, node.combined)
+                _program.setVectorUniform("color", node.color)
             }
 
             is Drawable -> {
@@ -54,13 +59,14 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
                 top.transpose()
 
                 node.applyTransform(top)
+
+                // ...update shader uniform...
+                _program.setMatrixUniform("view_matrix", false, _viewMatrix)
+                _program.setMatrixUniform("drawable_matrix", false, node.combined)
+                _program.setVectorUniform("color", node.color)
             }
         }
 
-        // ...update shader uniform...
-        _program.setMatrixUniform("view_matrix", false, _viewMatrix)
-        _program.setMatrixUniform("drawable_matrix", false, node.combined)
-        _program.setVectorUniform("color", node.color)
 
         // ...and draw call.
         node.draw()

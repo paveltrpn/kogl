@@ -8,7 +8,7 @@ import mesh.*
 // ======================= Drawable ===========================================
 // ============================================================================
 
-open class Drawable(mesh: Mesh) : Node() {
+open class Drawable(mesh: Mesh) : Leaf() {
     private var _buffer: MeshBuffer? = null
 
     protected var _color = Vector3(1.0f, 1.0f, 1.0f)
@@ -30,15 +30,7 @@ open class Drawable(mesh: Mesh) : Node() {
         }
     }
 
-    override fun accept(visitor: Visitor): Unit {
-        visitor.apply(this)
-    }
-
-    override fun traverse(visitor: Visitor): Unit {
-        // NOTE: noop.
-    }
-
-    fun draw(): Unit {
+    override fun draw(): Unit {
         _buffer?.draw()
     }
 
@@ -64,7 +56,7 @@ open class Drawable(mesh: Mesh) : Node() {
 }
 
 // ============================================================================
-// ======================= FlyaroundDrawable ===================================
+// ======================= FlyaroundDrawable ==================================
 // ============================================================================
 
 class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {

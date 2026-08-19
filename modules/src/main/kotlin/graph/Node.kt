@@ -5,7 +5,5 @@ abstract class Node {
         visitor.apply(this)
     }
 
-    open fun traverse(visitor: Visitor): Unit {
-        // NOTE: noop.
-    }
+    abstract fun traverse(visitor: Visitor): Unit
 }

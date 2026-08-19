@@ -79,6 +79,11 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
 // ======================= Scene ==============================================
 // ============================================================================
 
+/**
+ * This object serve as the largest unit of scenegraph representation,
+ * and can also be thought of as database. Scene can be very large, both
+ * in physical space units and in content.
+ */
 class Scene {
     private var _locales: MutableList<Locale> = mutableListOf()
 

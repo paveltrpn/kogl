@@ -35,7 +35,7 @@ class Render : EventObserver {
 
         _scene = Scene().apply {
             val sparseObjectsLoc = Locale(Vector3())
-            val m01Loc = Locale(Vector3())
+            val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
 
 //            addStateGroup(testgraph.testCubesGraph())
 //            addStateGroup(testgraph.testFlyaroundsGraph())

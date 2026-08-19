@@ -89,9 +89,9 @@ class Scene {
             ncp = 0.1f
             fcp = 100.0f
 
-            eye = Vector3(1.0f, -10.5f, -17.5f)
-            azimuth = 0.0f
-            elevation = -25.0f
+            eye = Vector3(-18.0f, -13.5f, -14.5f)
+            azimuth = 54.0f
+            elevation = -31.0f
         }
     }
 

@@ -5,10 +5,11 @@ import algebra.*
 class Locale(origin: Vector3) {
     private val _origin: Vector3
 
-    private val _graph: Group = Group()
+    private val _graph: TransformGroup = TransformGroup()
 
     init {
         _origin = origin
+        _graph.matrix = matrix
     }
 
     val matrix: Matrix4

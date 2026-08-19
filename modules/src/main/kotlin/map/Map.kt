@@ -44,7 +44,7 @@ private fun buildNode(nodeData: NodeData, meshStorage: Map<String, Mesh>): Node?
             buildGroup(nodeData, meshStorage)
         }
 
-        is TransformData -> {
+        is TransformGroupData -> {
             buildTransform(nodeData, meshStorage)
         }
 
@@ -83,7 +83,7 @@ private fun buildGroup(groupData: GroupData, meshStorage: Map<String, Mesh>): Gr
     return group
 }
 
-private fun buildTransform(transformData: TransformData, meshStorage: Map<String, Mesh>): TransformGroup {
+private fun buildTransform(transformGroupData: TransformGroupData, meshStorage: Map<String, Mesh>): TransformGroup {
     fun constructTransform(type: String, rawMatrix: FloatArray, rawData: FloatArray): TransformGroup {
         if (!rawMatrix.isEmpty()) {
             if (rawMatrix.size != 16) throw RuntimeException("Transform matrix array wrong size - \"${rawMatrix.size}\"!")
@@ -126,7 +126,7 @@ private fun buildTransform(transformData: TransformData, meshStorage: Map<String
         return TransformGroup()
     }
 
-    val p = transformData.payload
+    val p = transformGroupData.payload
 
     val transform = constructTransform(p.trnasform_type, p.matrix, p.data)
 
@@ -184,7 +184,7 @@ fun printNode(node: NodeData, indent: String = "") {
             }
         }
 
-        is TransformData -> {
+        is TransformGroupData -> {
             println("${indent}  transform_type: ${node.payload.trnasform_type}")
             println("${indent}  matrix: ${node.payload.matrix.contentToString()}")
             println("${indent}  data: ${node.payload.data.contentToString()}")

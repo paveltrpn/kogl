@@ -13,7 +13,7 @@ data class GroupPayload(val children: MutableList<NodeData>) {}
 data class StateGroupPayload(val program: String, val children: MutableList<NodeData>) {}
 
 @Serializable
-data class TransformPayload(
+data class TransformGroupPayload(
     val trnasform_type: String,
     val matrix: FloatArray,
     val data: FloatArray,
@@ -45,7 +45,7 @@ data class GroupData(override val type: String, val payload: GroupPayload) :
 data class StateGroupData(override val type: String, val payload: StateGroupPayload) :
     NodeData(type) {}
 
-data class TransformData(override val type: String, val payload: TransformPayload) :
+data class TransformGroupData(override val type: String, val payload: TransformGroupPayload) :
     NodeData(type) {}
 
 data class DrawableData(override val type: String, val payload: DrawablePayload) :

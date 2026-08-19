@@ -124,9 +124,9 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
                 else -> DummyNodeData()
             }
 
-            TransformData(
+            TransformGroupData(
                 type = nodeWrapper.type,
-                payload = TransformPayload(transformType, matrix, data, child)
+                payload = TransformGroupPayload(transformType, matrix, data, child)
             )
         }
 

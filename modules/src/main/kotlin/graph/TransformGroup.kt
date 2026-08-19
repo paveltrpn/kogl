@@ -2,9 +2,7 @@ package graph
 
 import algebra.*
 
-open class TransformGroup() : Node() {
-    private var _child: Node? = null
-
+open class TransformGroup() : Group() {
     private var _matrix = Matrix4()
 
     constructor(other: FloatArray) : this() {
@@ -15,18 +13,6 @@ open class TransformGroup() : Node() {
         visitor.apply(this)
     }
 
-    override fun traverse(visitor: Visitor): Unit {
-        _child?.accept(visitor)
-    }
-
-    var child: Node?
-        get(): Node? {
-            return _child
-        }
-        set(value) {
-            _child = value
-        }
-
     var matrix: Matrix4
         get(): Matrix4 {
             return _matrix
@@ -34,11 +20,6 @@ open class TransformGroup() : Node() {
         set(value) {
             _matrix = value
         }
-
-    // NOTE: Must accept Transform, Group or Drawable.
-    fun addChild(child: Node): Unit {
-        _child = child
-    }
 
     fun transform(m: Matrix4): Matrix4 {
         return m.multiply(matrix)

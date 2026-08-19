@@ -9,11 +9,10 @@ import org.lwjgl.opengl.GL46.*
 import algebra.*
 import config.Config
 import event.*
-import scene.*
+import graph.*
 import ui.*
 import image.*
 import map.*
-import graph.*
 
 class Render : EventObserver {
     private var _run: Boolean

@@ -1,4 +1,4 @@
-package scene
+package graph
 
 import graph.*
 import algebra.*

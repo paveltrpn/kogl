@@ -30,7 +30,7 @@ open class Drawable(mesh: Mesh) : Leaf() {
         }
     }
 
-    override fun draw(): Unit {
+    open fun draw(): Unit {
         _buffer?.draw()
     }
 

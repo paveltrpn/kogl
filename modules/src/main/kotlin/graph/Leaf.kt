@@ -8,6 +8,4 @@ abstract class Leaf : Node() {
     override fun traverse(visitor: Visitor): Unit {
         // NOTE: noop, this is leaf node, no children to traverse.
     }
-
-    abstract fun draw(): Unit
 }

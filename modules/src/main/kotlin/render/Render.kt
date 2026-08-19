@@ -13,6 +13,7 @@ import scene.*
 import ui.*
 import image.*
 import map.*
+import graph.*
 
 class Render : EventObserver {
     private var _run: Boolean
@@ -33,11 +34,17 @@ class Render : EventObserver {
         val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
 
         _scene = Scene().apply {
-            addStateGroup(testgraph.sparseObjectsGraph())
+            val sparseObjectsLoc = Locale(Vector3())
+            val m01Loc = Locale(Vector3())
+
 //            addStateGroup(testgraph.testCubesGraph())
-            // addStateGroup(testgraph.testFlyaroundsGraph())
-            addStateGroup(sg[0])
-            addStateGroup(sg[1])
+//            addStateGroup(testgraph.testFlyaroundsGraph())
+
+            sparseObjectsLoc.addStateGroup(testgraph.sparseObjectsGraph())
+            m01Loc.addStateGroups(sg)
+
+            addLocale(sparseObjectsLoc)
+            addLocale(m01Loc)
         }
 
 //        class PrintTypeVisitor : Visitor {
@@ -82,7 +89,7 @@ class Render : EventObserver {
         glEnable(GL_DEPTH_TEST)
         glDepthFunc(GL_LESS)
 
-        _scene.walk2()
+        _scene.walk()
 
         glDisable(GL_DEPTH_TEST)
 

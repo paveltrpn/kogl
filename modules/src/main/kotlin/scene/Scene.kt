@@ -78,7 +78,8 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
 // ============================================================================
 
 class Scene {
-    private var _graph: Group = Group()
+    private var _locales: MutableList<Locale> = mutableListOf()
+
     private var _camera = Flycam()
 
     init {
@@ -99,14 +100,17 @@ class Scene {
             return _camera
         }
 
-    fun walk2(): Unit {
+    fun walk(): Unit {
         _camera.traverse()
 
         val r = GraphRecordVisitor(1.0f, _camera.matrix)
-        _graph.accept(r)
+
+        for (locale in _locales) {
+            locale.root.accept(r)
+        }
     }
 
-    fun addStateGroup(stateGroup: StateGroup): Unit {
-        _graph.addChild(stateGroup)
+    fun addLocale(locale: Locale): Unit {
+        _locales.addLast(locale)
     }
 }

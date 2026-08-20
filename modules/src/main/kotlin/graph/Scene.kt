@@ -4,7 +4,11 @@ import graph.*
 import algebra.*
 import render.*
 
-class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor {
+// ============================================================================
+// ======================= GraphRecordVisitor =================================
+// ============================================================================
+
+class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
     private val _delta: Float
     private var _viewMatrix: Matrix4
 

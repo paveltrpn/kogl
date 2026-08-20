@@ -1,11 +1,47 @@
 package  graph
 
-interface Visitor {
-    fun apply(node: Node) = Unit
-    fun apply(node: Leaf) = Unit
-    fun apply(node: Group) = Unit
-    fun apply(node: StateGroup) = Unit
-    fun apply(node: TransformGroup) = Unit
-    fun apply(node: Drawable) = Unit
-    fun apply(node: SwitchGroup) = Unit
+abstract class Visitor {
+    open fun apply(node: Node): Unit {
+
+    }
+
+    open fun apply(node: Leaf): Unit {
+
+    }
+
+    open fun apply(node: Group): Unit {
+
+    }
+
+    open fun apply(node: StateGroup): Unit {
+
+    }
+
+    open fun apply(node: TransformGroup): Unit {
+
+    }
+
+    open fun apply(node: Drawable): Unit {
+
+    }
+
+    open fun apply(node: SwitchGroup): Unit {
+
+    }
+
+    open fun apply(node: View): Unit {
+
+    }
+
+    open fun apply(node: Light): Unit {
+
+    }
+
+    open fun apply(node: OmniLight): Unit {
+
+    }
+
+    open fun apply(node: SpotLight): Unit {
+
+    }
 }

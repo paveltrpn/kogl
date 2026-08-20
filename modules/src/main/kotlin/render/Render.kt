@@ -33,16 +33,29 @@ class Render : EventObserver {
         val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
 
         _scene = Scene().apply {
-            val sparseObjectsLoc = Locale(Vector3())
-            val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
+            val (dimonds, frames, arches) = testgraph.sparseObjectsGraph()
+
+            val dimondsLoc = Locale(Vector3(-8.0f, 0.0f, 0.0f)).apply {
+                addStateGroup(dimonds)
+            }
+
+            val framesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {
+                addStateGroup(frames)
+            }
+
+            val archesLoc = Locale(Vector3(8.0f, 0.0f, 0.0f)).apply {
+                addStateGroup(arches)
+            }
 
 //            addStateGroup(testgraph.testCubesGraph())
 //            addStateGroup(testgraph.testFlyaroundsGraph())
 
-            sparseObjectsLoc.addStateGroup(testgraph.sparseObjectsGraph())
-            m01Loc.addStateGroups(sg)
+            addLocale(dimondsLoc)
+            addLocale(framesLoc)
+            addLocale(archesLoc)
 
-            addLocale(sparseObjectsLoc)
+            val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
+            m01Loc.addStateGroups(sg)
             addLocale(m01Loc)
         }
 

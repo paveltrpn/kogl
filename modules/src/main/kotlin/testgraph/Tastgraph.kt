@@ -10,7 +10,7 @@ import graph.*
 import mesh.*
 import render.*
 
-fun sparseObjectsGraph(): StateGroup {
+fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
     val pathPrefix = Config.instance().basePath
 
     val frameObj = readWavefrontObjFile("${pathPrefix}/assets/bodies/frame.obj")
@@ -34,7 +34,9 @@ fun sparseObjectsGraph(): StateGroup {
 
     flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
 
-    val rootStateGroup = StateGroup(flatshadeProgram)
+    val diamondStateGroup = StateGroup(flatshadeProgram)
+    val frameStateGroup = StateGroup(flatshadeProgram)
+    val arch01StateGroup = StateGroup(flatshadeProgram)
 
     val sum: (Int, Int) -> Int = { a: Int, b: Int ->
         val result = a + b
@@ -50,7 +52,7 @@ fun sparseObjectsGraph(): StateGroup {
         Vector3(list[0], list[1], list[2])
     }
 
-    for (i in 0..64) {
+    for (i in 0..32) {
         val item = FlyaroundDrawable(diamondMesh).apply {
             color = randomVector3(0.1f, 0.9f)
             origin = Vector3(0.0f, 0.0f, 0.0f)
@@ -63,13 +65,13 @@ fun sparseObjectsGraph(): StateGroup {
         scale.matrix = algebra.scale(sf, sf, sf)
 
         val offset = TransformGroup()
-        val rz = randomFloat(-1.0f, -6.0f)
-        val rtv = randomVector3(-8.0f, 8.0f)
+        val rz = randomFloat(-4.0f, -12.0f)
+        val rtv = randomVector3(-4.0f, 4.0f)
         offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
 
         scale.addChild(item)
         offset.addChild(scale)
-        rootStateGroup.addChild(offset)
+        diamondStateGroup.addChild(offset)
     }
 
     for (i in 0..16) {
@@ -81,17 +83,17 @@ fun sparseObjectsGraph(): StateGroup {
         }
 
         val scale = TransformGroup()
-        val sf = randomFloat(0.2f, 2.0f)
+        val sf = randomFloat(0.4f, 2.0f)
         scale.matrix = algebra.scale(sf, sf, sf)
 
         val offset = TransformGroup()
-        val rz = randomFloat(-1.0f, -6.0f)
-        val rtv = randomVector3(-8.0f, 8.0f)
+        val rz = randomFloat(-4.0f, -12.0f)
+        val rtv = randomVector3(-4.0f, 4.0f)
         offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
 
         scale.addChild(item)
         offset.addChild(scale)
-        rootStateGroup.addChild(offset)
+        frameStateGroup.addChild(offset)
     }
 
     for (i in 0..16) {
@@ -103,20 +105,20 @@ fun sparseObjectsGraph(): StateGroup {
         }
 
         val scale = TransformGroup()
-        val sf = randomFloat(0.2f, 2.0f)
+        val sf = randomFloat(0.4f, 2.0f)
         scale.matrix = algebra.scale(sf, sf, sf)
 
         val offset = TransformGroup()
-        val rz = randomFloat(-1.0f, -6.0f)
-        val rtv = randomVector3(-8.0f, 8.0f)
+        val rz = randomFloat(-4.0f, -12.0f)
+        val rtv = randomVector3(-4.0f, 4.0f)
         offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
 
         scale.addChild(item)
         offset.addChild(scale)
-        rootStateGroup.addChild(offset)
+        arch01StateGroup.addChild(offset)
     }
 
-    return rootStateGroup
+    return Triple(diamondStateGroup, frameStateGroup, arch01StateGroup)
 }
 
 fun testFlyaroundsGraph(): StateGroup {

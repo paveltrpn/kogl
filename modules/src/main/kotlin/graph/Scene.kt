@@ -124,4 +124,10 @@ class Scene {
     fun addLocale(locale: Locale): Unit {
         _locales.addLast(locale)
     }
+
+    fun addLocales(locales: List<Locale>): Unit {
+        for (locale in locales) {
+            _locales.addLast(locale)
+        }
+    }
 }

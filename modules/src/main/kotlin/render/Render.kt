@@ -50,9 +50,7 @@ class Render : EventObserver {
 //            addStateGroup(testgraph.testCubesGraph())
 //            addStateGroup(testgraph.testFlyaroundsGraph())
 
-            addLocale(dimondsLoc)
-            addLocale(framesLoc)
-            addLocale(archesLoc)
+            addLocales(listOf(dimondsLoc, framesLoc, archesLoc))
 
             val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
             m01Loc.addStateGroups(sg)

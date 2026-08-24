@@ -1,6 +1,7 @@
 package graph
 
 import algebra.*
+import graph.Leaf
 import render.*
 import mesh.*
 
@@ -8,27 +9,54 @@ import mesh.*
 // ======================= Drawable ===========================================
 // ============================================================================
 
-open class Drawable(mesh: Mesh) : Leaf() {
+open class Drawable : Leaf {
+    private var _mesh: Mesh? = null
     private var _buffer: MeshBuffer? = null
 
     protected var _color = Vector3(1.0f, 1.0f, 1.0f)
     protected var _combined = Matrix4().idtt()
 
-    init {
-        when (mesh) {
+    constructor() : super() {
+
+    }
+
+    constructor(mesh: Mesh) : super() {
+        _mesh = mesh
+        when (_mesh) {
             is IndexedMesh -> {
-                _buffer = IndexedMeshBuffer(mesh)
+                _buffer = IndexedMeshBuffer(_mesh as IndexedMesh)
             }
 
             is SeparatedArraysMesh -> {
-                _buffer = ArrayMeshBuffer(mesh)
+                _buffer = ArrayMeshBuffer(_mesh as SeparatedArraysMesh)
             }
 
             is InterleavedMesh -> {
-                _buffer = InterleavedMeshBuffer(mesh)
+                _buffer = InterleavedMeshBuffer(_mesh as InterleavedMesh)
             }
         }
     }
+
+    var mesh: Mesh
+        get(): Mesh {
+            return _mesh!!
+        }
+        set(value) {
+            _mesh = value
+            when (_mesh) {
+                is IndexedMesh -> {
+                    _buffer = IndexedMeshBuffer(_mesh as IndexedMesh)
+                }
+
+                is SeparatedArraysMesh -> {
+                    _buffer = ArrayMeshBuffer(_mesh as SeparatedArraysMesh)
+                }
+
+                is InterleavedMesh -> {
+                    _buffer = InterleavedMeshBuffer(_mesh as InterleavedMesh)
+                }
+            }
+        }
 
     open fun draw(): Unit {
         _buffer?.draw()
@@ -59,12 +87,16 @@ open class Drawable(mesh: Mesh) : Leaf() {
 // ======================= FlyaroundDrawable ==================================
 // ============================================================================
 
-class FlyaroundDrawable(mesh: Mesh) : Drawable(mesh) {
+class FlyaroundDrawable : Drawable {
     private var _origin = Vector3(0.0f, 0.0f, 0.0f)
     private var _axis = Vector3(0.0f, 1.0f, 0.0f)
     private var _anglSpeed = 0.0f
 
     private var _angl = 0.0f
+
+    constructor() : super() {}
+
+    constructor(mesh: Mesh) : super(mesh) {}
 
     var origin: Vector3
         get(): Vector3 {

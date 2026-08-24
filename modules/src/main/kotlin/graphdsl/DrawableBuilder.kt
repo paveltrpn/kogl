@@ -3,17 +3,30 @@ package graphdsl
 import graph.*
 import mesh.*
 
+@DslMarker
+annotation class DrawableBuilderDslMarker
+
+@DrawableBuilderDslMarker
 class DrawableBuilder : NodeBuilder() {
+    private var _mesh: Mesh? = null
     private var _drawable: Drawable? = null
 
-    fun staticDrawable(mesh: Mesh, block: Drawable.() -> Unit): Unit {
-        _drawable = Drawable(mesh)
-        (_drawable as Drawable).apply(block)
+    var mesh: Mesh
+        get(): Mesh {
+            return _mesh!!
+        }
+        set(value) {
+            _mesh = value
+        }
+
+    fun staticDrawable(block: Drawable.() -> Unit): Unit {
+        _drawable = Drawable().apply { block() }
+        // (_drawable as Drawable).apply(block)
     }
 
-    fun flyaroundDrawable(mesh: Mesh, block: FlyaroundDrawable.() -> Unit): Unit {
-        _drawable = FlyaroundDrawable(mesh)
-        (_drawable as FlyaroundDrawable).apply(block)
+    fun flyaroundDrawable(block: FlyaroundDrawable.() -> Unit): Unit {
+        _drawable = FlyaroundDrawable().apply { block() }
+//        (_drawable as FlyaroundDrawable).apply(block)
     }
 
     fun get(): Drawable {

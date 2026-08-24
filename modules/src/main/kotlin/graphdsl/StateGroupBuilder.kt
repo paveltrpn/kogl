@@ -2,6 +2,10 @@ package graphdsl
 
 import graph.*
 
+@DslMarker
+annotation class StateGroupBuilderDslMarker
+
+@StateGroupBuilderDslMarker
 class StateGroupBuilder : NodeBuilder() {
     private var _stateGroup = StateGroup()
 

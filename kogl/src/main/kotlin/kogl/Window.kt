@@ -1,5 +1,7 @@
 package kogl
 
+import java.io.File
+
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
@@ -8,9 +10,12 @@ import org.lwjgl.opengl.GL11.glClearColor
 import org.lwjgl.opengl.GL11.glViewport
 import org.lwjgl.system.MemoryUtil
 
+import algebra.*
 import config.*
 import render.*
 import event.*
+import graph.*
+import graphdsl.*
 import image.*
 import map.*
 
@@ -49,6 +54,64 @@ class Window {
         //
         _render = Render()
         GlobalEventEmitter.instance().attach(_render)
+
+        val file = File("${basePath}/assets/m01.json")
+        val jsonString = file.readText()
+        val mapData = parseMapJson(jsonString)
+
+//        printMapStructure(mapData)
+
+        val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
+
+
+//        class PrintTypeVisitor : Visitor {
+//            override fun apply(node: StateGroup): Unit {
+//                println("my type is ${node::class}")
+//                node.traverse(this)
+//            }
+//
+//            override fun apply(node: Transform): Unit {
+//                println("my type is ${node::class}")
+//                node.traverse(this)
+//            }
+//
+//            override fun apply(node: Drawable): Unit {
+//                println("my type is ${node::class}")
+//                node.traverse(this)
+//            }
+//        }
+
+//        val printtype = PrintTypeVisitor()
+//        sparseObjectsGraph.accept(printtype)
+
+
+        with(_render) {
+            scene = Scene().apply {
+                val (dimonds, frames, arches) = testgraph.sparseObjectsGraph()
+
+                val dimondsLoc = buildLocale {
+                    origin = Vector3(-8.0f, 0.0f, 0.0f)
+                    this attach dimonds
+                }
+
+                val framesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {
+                    addStateGroup(frames)
+                }
+
+                val archesLoc = Locale(Vector3(8.0f, 0.0f, 0.0f)).apply {
+                    addStateGroup(arches)
+                }
+
+//            addStateGroup(testgraph.testCubesGraph())
+//            addStateGroup(testgraph.testFlyaroundsGraph())
+
+                addLocales(listOf(dimondsLoc, framesLoc, archesLoc))
+
+                val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
+                m01Loc.addStateGroups(sg)
+                addLocale(m01Loc)
+            }
+        }
     }
 
     fun run() {

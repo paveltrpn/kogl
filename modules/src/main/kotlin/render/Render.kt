@@ -1,87 +1,29 @@
 package render
 
-import java.io.File
 import java.text.DecimalFormat
 import java.math.RoundingMode
 
 import org.lwjgl.opengl.GL46.*
 
 import algebra.*
-import config.Config
 import event.*
 import graph.*
-import graphdsl.buildLocale
 import ui.*
 import image.*
-import map.*
 
 class Render : EventObserver {
-    private var _run: Boolean
-    private val _scene: Scene
-    private val _ui: UiGL
+    private var _run: Boolean = true
+    private val _ui: UiGL = UiGL()
 
-    init {
-        _run = true
+    private var _scene: Scene? = null
 
-        val basePath = Config.instance().basePath
-
-        val file = File("${basePath}/assets/m01.json")
-        val jsonString = file.readText()
-        val mapData = parseMapJson(jsonString)
-
-//        printMapStructure(mapData)
-
-        val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
-
-        _scene = Scene().apply {
-            val (dimonds, frames, arches) = testgraph.sparseObjectsGraph()
-
-            val dimondsLoc = buildLocale {
-                origin = Vector3(-8.0f, 0.0f, 0.0f)
-                this attach dimonds
-            }
-
-            val framesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {
-                addStateGroup(frames)
-            }
-
-            val archesLoc = Locale(Vector3(8.0f, 0.0f, 0.0f)).apply {
-                addStateGroup(arches)
-            }
-
-//            addStateGroup(testgraph.testCubesGraph())
-//            addStateGroup(testgraph.testFlyaroundsGraph())
-
-            addLocales(listOf(dimondsLoc, framesLoc, archesLoc))
-
-            val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
-            m01Loc.addStateGroups(sg)
-            addLocale(m01Loc)
+    var scene: Scene
+        get():Scene {
+            return _scene ?: throw RuntimeException("Scene is null! Nothing to return!")
         }
-
-//        class PrintTypeVisitor : Visitor {
-//            override fun apply(node: StateGroup): Unit {
-//                println("my type is ${node::class}")
-//                node.traverse(this)
-//            }
-//
-//            override fun apply(node: Transform): Unit {
-//                println("my type is ${node::class}")
-//                node.traverse(this)
-//            }
-//
-//            override fun apply(node: Drawable): Unit {
-//                println("my type is ${node::class}")
-//                node.traverse(this)
-//            }
-//        }
-
-//        val printtype = PrintTypeVisitor()
-//        sparseObjectsGraph.accept(printtype)
-
-
-        _ui = UiGL()
-    }
+        set(value) {
+            _scene = value
+        }
 
     var run: Boolean
         get(): Boolean {
@@ -92,7 +34,9 @@ class Render : EventObserver {
         }
 
     fun preLoop(): Unit {
-
+        if (_scene == null) {
+            throw RuntimeException("Scene is null! Nothing to render!")
+        }
     }
 
     fun frame(): Unit {
@@ -101,7 +45,7 @@ class Render : EventObserver {
         glEnable(GL_DEPTH_TEST)
         glDepthFunc(GL_LESS)
 
-        _scene.walk()
+        scene.walk()
 
         glDisable(GL_DEPTH_TEST)
 
@@ -115,11 +59,11 @@ class Render : EventObserver {
                 roundingMode = RoundingMode.DOWN
             }
 
-            val cx = df.format(_scene.camera.eye.x)
-            val cy = df.format(_scene.camera.eye.y)
-            val cz = df.format(_scene.camera.eye.z)
-            val az = df.format(_scene.camera.azimuth)
-            val el = df.format(_scene.camera.elevation)
+            val cx = df.format(scene.camera.eye.x)
+            val cy = df.format(scene.camera.eye.y)
+            val cz = df.format(scene.camera.eye.z)
+            val az = df.format(scene.camera.azimuth)
+            val el = df.format(scene.camera.elevation)
 
             text = "pos: ${cx} ${cy} ${cz} ${az} ${el}"
 
@@ -157,22 +101,22 @@ class Render : EventObserver {
 
                     // w
                     87 -> {
-                        _scene.camera.setMoveBit(FlycamMoveBits.FORWARD)
+                        scene.camera.setMoveBit(FlycamMoveBits.FORWARD)
                     }
 
                     // a
                     65 -> {
-                        _scene.camera.setMoveBit(FlycamMoveBits.LEFT)
+                        scene.camera.setMoveBit(FlycamMoveBits.LEFT)
                     }
 
                     // s
                     83 -> {
-                        _scene.camera.setMoveBit(FlycamMoveBits.BACKWARD)
+                        scene.camera.setMoveBit(FlycamMoveBits.BACKWARD)
                     }
 
                     // d
                     68 -> {
-                        _scene.camera.setMoveBit(FlycamMoveBits.RIGHT)
+                        scene.camera.setMoveBit(FlycamMoveBits.RIGHT)
                     }
 
                     // c
@@ -190,19 +134,19 @@ class Render : EventObserver {
             if (event.keyAction == KeyAction.RELEASE) {
                 when (event.key) {
                     87 -> {
-                        _scene.camera.unsetMoveBit(FlycamMoveBits.FORWARD)
+                        scene.camera.unsetMoveBit(FlycamMoveBits.FORWARD)
                     }
 
                     65 -> {
-                        _scene.camera.unsetMoveBit(FlycamMoveBits.LEFT)
+                        scene.camera.unsetMoveBit(FlycamMoveBits.LEFT)
                     }
 
                     83 -> {
-                        _scene.camera.unsetMoveBit(FlycamMoveBits.BACKWARD)
+                        scene.camera.unsetMoveBit(FlycamMoveBits.BACKWARD)
                     }
 
                     68 -> {
-                        _scene.camera.unsetMoveBit(FlycamMoveBits.RIGHT)
+                        scene.camera.unsetMoveBit(FlycamMoveBits.RIGHT)
                     }
                 }
             }
@@ -210,7 +154,7 @@ class Render : EventObserver {
 
         if (event is EventMouse) {
             val SENSIVITY = 0.005f
-            _scene.camera.rotate(event.xoffst.toFloat() * SENSIVITY, event.yoffst.toFloat() * SENSIVITY)
+            scene.camera.rotate(event.xoffst.toFloat() * SENSIVITY, event.yoffst.toFloat() * SENSIVITY)
         }
     }
 }

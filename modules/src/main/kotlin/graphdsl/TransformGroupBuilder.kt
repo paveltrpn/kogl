@@ -72,10 +72,6 @@ class TransformGroupBuilder : NodeBuilder() {
     fun get(): TransformGroup {
         return _transformGroup ?: throw RuntimeException("TransformGroup not initialized!")
     }
-
-    override fun attach(node: Node) {
-        TODO("Not yet implemented")
-    }
 }
 
 fun buildTransformGroup(block: TransformGroupBuilder.() -> Unit): TransformGroup {

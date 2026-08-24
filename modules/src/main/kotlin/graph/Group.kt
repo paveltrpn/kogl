@@ -20,8 +20,15 @@ open class Group : Node() {
         set(value) {
             _children = value
         }
-    
+
     fun addChild(child: Node): Unit {
         _children.addLast(child)
+    }
+
+    /**
+     * DSL related function.
+     */
+    infix fun nextChild(child: Node): Unit {
+        addChild(child)
     }
 }

@@ -20,21 +20,19 @@ class DrawableBuilder : NodeBuilder() {
         }
 
     fun staticDrawable(block: Drawable.() -> Unit): Unit {
-        _drawable = Drawable().apply { block() }
-        // (_drawable as Drawable).apply(block)
+        _drawable = Drawable().apply {
+            block()
+        }
     }
 
     fun flyaroundDrawable(block: FlyaroundDrawable.() -> Unit): Unit {
-        _drawable = FlyaroundDrawable().apply { block() }
-//        (_drawable as FlyaroundDrawable).apply(block)
+        _drawable = FlyaroundDrawable().apply {
+            block()
+        }
     }
 
     fun get(): Drawable {
         return _drawable ?: throw RuntimeException("Drawable not initialized!")
-    }
-
-    override fun attach(node: Node) {
-        TODO("Not yet implemented")
     }
 }
 

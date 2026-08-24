@@ -16,10 +16,6 @@ class StateGroupBuilder : NodeBuilder() {
     fun get(): StateGroup {
         return _stateGroup
     }
-
-    override fun attach(node: Node) {
-        TODO("Not yet implemented")
-    }
 }
 
 fun buildStateGroup(block: StateGroupBuilder.() -> Unit): StateGroup {

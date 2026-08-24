@@ -201,7 +201,7 @@ class Program {
 
     private fun uniformLocation(name: String): Int {
         return _uniforms[name]?.location
-            ?: throw RuntimeException("Error: program \"$name\" not contains uniform $name.")
+            ?: throw RuntimeException("Error: program \"$_programName\" not contains uniform \"$name\".")
     }
 
     fun setScalarUniform(name: String, value: Float) {

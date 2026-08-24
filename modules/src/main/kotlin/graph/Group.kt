@@ -28,7 +28,7 @@ open class Group : Node() {
     /**
      * DSL related function.
      */
-    infix fun nextChild(child: Node): Unit {
+    infix fun attach(child: Node): Unit {
         addChild(child)
     }
 }

@@ -2,5 +2,6 @@ package graphdsl
 
 import graph.*
 
-abstract class NodeBuilder {}
+abstract class NodeBuilder {
 
+}

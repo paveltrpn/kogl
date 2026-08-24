@@ -7,14 +7,16 @@ annotation class StateGroupBuilderDslMarker
 
 @StateGroupBuilderDslMarker
 class StateGroupBuilder : NodeBuilder() {
-    private var _stateGroup = StateGroup()
+    private var _stateGroup: StateGroup? = null
 
     fun stateGroup(block: StateGroup.() -> Unit): Unit {
-        _stateGroup.apply(block)
+        _stateGroup = StateGroup().apply {
+            block()
+        }
     }
 
     fun get(): StateGroup {
-        return _stateGroup
+        return _stateGroup ?: throw RuntimeException("StateGroup not initialized!")
     }
 }
 

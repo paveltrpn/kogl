@@ -75,7 +75,9 @@ class TransformGroupBuilder : NodeBuilder() {
 }
 
 fun buildTransformGroup(block: TransformGroupBuilder.() -> Unit): TransformGroup {
-    return TransformGroupBuilder().apply(block).get()
+    return TransformGroupBuilder().apply {
+        block()
+    }.get()
 }
 
 

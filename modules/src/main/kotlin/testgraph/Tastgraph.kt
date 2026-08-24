@@ -57,7 +57,8 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
 
     val sum: (Int, Int) -> Int = { a: Int, b: Int ->
         val result = a + b
-        result // The last expression acts as the return value
+        // The last expression acts as the return value
+        result
     }
 
     val randomFloat: (Float, Float) -> Float = { from: Float, to: Float ->
@@ -73,16 +74,15 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
         stateGroup {
             program = flatshadeProgram
             repeat(32) {
-                this nextChild buildTransformGroup {
+                this attach buildTransformGroup {
                     offset {
-                        val rz = randomFloat(-4.0f, -12.0f)
                         val rtv = randomVector3(-4.0f, 4.0f)
-                        offset = Vector3(rtv.x, rtv.y, rz)
-                        this nextChild buildTransformGroup {
+                        offset = Vector3(rtv.x, rtv.y, rtv.z)
+                        this attach buildTransformGroup {
                             scale {
                                 val sf = randomFloat(0.2f, 2.0f)
                                 scale = Vector3(sf, sf, sf)
-                                this nextChild buildDrawable {
+                                this attach buildDrawable {
                                     flyaroundDrawable {
                                         mesh = diamondMesh
                                         color = randomVector3(0.1f, 0.9f)
@@ -112,9 +112,8 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
         scale.matrix = algebra.scale(sf, sf, sf)
 
         val offset = TransformGroup()
-        val rz = randomFloat(-4.0f, -12.0f)
         val rtv = randomVector3(-4.0f, 4.0f)
-        offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
+        offset.matrix = algebra.offset(rtv.x, rtv.y, rtv.z)
 
         scale.addChild(item)
         offset.addChild(scale)
@@ -134,9 +133,8 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
         scale.matrix = algebra.scale(sf, sf, sf)
 
         val offset = TransformGroup()
-        val rz = randomFloat(-4.0f, -12.0f)
         val rtv = randomVector3(-4.0f, 4.0f)
-        offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
+        offset.matrix = algebra.offset(rtv.x, rtv.y, rtv.z)
 
         scale.addChild(item)
         offset.addChild(scale)

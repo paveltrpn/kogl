@@ -21,6 +21,14 @@ class StateGroupBuilder : NodeBuilder() {
 }
 
 fun buildStateGroup(block: StateGroupBuilder.() -> Unit): StateGroup {
-    return StateGroupBuilder().apply(block).get()
+    val r = StateGroupBuilder().apply {
+        block()
+    }.get()
+
+    if (r.isEmpty) {
+        throw RuntimeException("Do not create empty state groups!")
+    }
+
+    return r
 }
 

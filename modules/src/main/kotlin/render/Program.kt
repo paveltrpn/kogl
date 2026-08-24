@@ -55,6 +55,14 @@ class Program {
 //        reflectUniforms(_programHandle)
 //    }
 
+    var source: ShaderSource
+        get(): ShaderSource {
+            return _shaderSources ?: throw RuntimeException("Trying to obtain undefined shader sources!")
+        }
+        set(value) {
+            _shaderSources = value
+        }
+
     fun source(src: ShaderSource): Unit {
         _shaderSources = src
     }

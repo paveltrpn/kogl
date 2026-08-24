@@ -10,6 +10,7 @@ import algebra.*
 import config.Config
 import event.*
 import graph.*
+import graphdsl.buildLocale
 import ui.*
 import image.*
 import map.*
@@ -35,8 +36,9 @@ class Render : EventObserver {
         _scene = Scene().apply {
             val (dimonds, frames, arches) = testgraph.sparseObjectsGraph()
 
-            val dimondsLoc = Locale(Vector3(-8.0f, 0.0f, 0.0f)).apply {
-                addStateGroup(dimonds)
+            val dimondsLoc = buildLocale {
+                origin = Vector3(-8.0f, 0.0f, 0.0f)
+                this attach dimonds
             }
 
             val framesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {

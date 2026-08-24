@@ -11,7 +11,7 @@ import graphdsl.*
 import mesh.*
 import render.*
 
-fun stateGroupDSL(): StateGroup {
+fun localeDSL(): Locale {
     val flatshadeSource = ShaderSource("flatshade")
     val flatshadeProgram = Program().apply {
         source(flatshadeSource)
@@ -20,10 +20,19 @@ fun stateGroupDSL(): StateGroup {
 
     flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
 
-    return buildStateGroup {
-        stateGroup {
-            program = flatshadeProgram
-            // addChild()
+    return buildLocale {
+        origin = Vector3(0.0f, 0.0f, 0.0f)
+
+        this attach buildStateGroup {
+            stateGroup {
+                program = flatshadeProgram
+            }
+        }
+
+        this attach buildStateGroup {
+            stateGroup {
+                program = flatshadeProgram
+            }
         }
     }
 }
@@ -42,15 +51,15 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
 
     // =================================================
 
-    val flatshadeSource = ShaderSource("flatshade")
     val flatshadeProgram = Program().apply {
-        source(flatshadeSource)
+        source = ShaderSource("flatshade")
         define(GL_VERTEX_SHADER, "DUMMY_ONE 1")
         define(GL_VERTEX_SHADER, "DUMMY_TWO 2")
-        build()
-    }
 
-    flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
+        build()
+
+        setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
+    }
 
     val frameStateGroup = StateGroup(flatshadeProgram)
     val arch01StateGroup = StateGroup(flatshadeProgram)
@@ -73,7 +82,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
     val diamondStateGroup = buildStateGroup {
         stateGroup {
             program = flatshadeProgram
-            repeat(32) {
+            repeat(16) {
                 this attach buildTransformGroup {
                     offset {
                         val rtv = randomVector3(-4.0f, 4.0f)

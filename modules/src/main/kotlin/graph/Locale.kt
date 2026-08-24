@@ -45,4 +45,9 @@ class Locale {
             _graph.addChild(node)
         }
     }
+
+    val isEmpty: Boolean
+        get(): Boolean {
+            return _graph.cildrenCount == 0
+        }
 }

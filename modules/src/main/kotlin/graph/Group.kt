@@ -31,4 +31,14 @@ open class Group : Node() {
     infix fun attach(child: Node): Unit {
         addChild(child)
     }
+
+    val cildrenCount: Int
+        get(): Int {
+            return _children.size
+        }
+
+    val isEmpty: Boolean
+        get(): Boolean {
+            return cildrenCount == 0
+        }
 }

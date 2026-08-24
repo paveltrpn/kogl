@@ -280,4 +280,58 @@ class Program {
         _floatBuffer.clear().put(value.data).flip()
         glUniformMatrix4fv(location, transpose, _floatBuffer)
     }
+
+    @JvmName("setNumberUniform")
+    fun <T : Number> set(p: Pair<String, T>): Unit {
+        val (id, value) = p
+        when (value) {
+            is Int -> {
+                setScalarUniform(id, value)
+            }
+
+            is Float -> {
+                setScalarUniform(id, value)
+            }
+
+            is Double -> {
+                setScalarUniform(id, value)
+            }
+        }
+    }
+
+    @JvmName("setMatrix2Uniform")
+    fun set(p: Pair<String, Matrix2>, transpose: Boolean): Unit {
+        val (id, value) = p
+        setMatrixUniform(id, transpose, value)
+    }
+
+    @JvmName("setMatrix3Uniform")
+    fun set(p: Pair<String, Matrix3>, transpose: Boolean): Unit {
+        val (id, value) = p
+        setMatrixUniform(id, transpose, value)
+    }
+
+    @JvmName("setMatrix4Uniform")
+    fun set(p: Pair<String, Matrix4>, transpose: Boolean): Unit {
+        val (id, value) = p
+        setMatrixUniform(id, transpose, value)
+    }
+
+    @JvmName("setVector2Uniform")
+    fun set(p: Pair<String, Vector2>): Unit {
+        val (id, value) = p
+        setVectorUniform(id, value)
+    }
+
+    @JvmName("setVector3Uniform")
+    fun set(p: Pair<String, Vector3>): Unit {
+        val (id, value) = p
+        setVectorUniform(id, value)
+    }
+
+    @JvmName("setVector4Uniform")
+    fun set(p: Pair<String, Vector4>): Unit {
+        val (id, value) = p
+        setVectorUniform(id, value)
+    }
 }

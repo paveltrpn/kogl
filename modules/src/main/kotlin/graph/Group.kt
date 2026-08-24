@@ -42,3 +42,4 @@ open class Group : Node() {
             return cildrenCount == 0
         }
 }
+

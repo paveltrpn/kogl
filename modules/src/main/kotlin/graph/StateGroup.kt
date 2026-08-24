@@ -28,6 +28,4 @@ open class StateGroup : Group {
     override fun accept(visitor: Visitor): Unit {
         visitor.apply(this)
     }
-
-
 }

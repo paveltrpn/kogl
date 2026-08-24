@@ -64,9 +64,11 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
                 }
 
                 // ...update shader uniform...
-                _program.setMatrixUniform("view_matrix", false, _viewMatrix)
-                _program.setMatrixUniform("drawable_matrix", false, node.combined)
-                _program.setVectorUniform("color", node.color)
+                with(_program) {
+                    set("view_matrix" to _viewMatrix, false)
+                    set("drawable_matrix" to node.combined, false)
+                    set("color" to node.color)
+                }
 
                 // ...and draw call.
                 node.draw()

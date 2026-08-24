@@ -17,7 +17,7 @@ class DrawableBuilder : NodeBuilder() {
     }
 
     fun get(): Drawable {
-        return _drawable!!
+        return _drawable ?: throw RuntimeException("Drawable not initialized!")
     }
 }
 

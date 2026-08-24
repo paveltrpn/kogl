@@ -84,8 +84,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
             repeat(16) {
                 attachTransform {
                     offset {
-                        val rtv = randomVector3(-4.0f, 4.0f)
-                        offset = Vector3(rtv.x, rtv.y, rtv.z)
+                        offset = randomVector3(-4.0f, 4.0f)
                         attachTransform {
                             scale {
                                 val sf = randomFloat(0.2f, 2.0f)
@@ -117,8 +116,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
 
         val transform = buildTransform {
             offset {
-                val rtv = randomVector3(-4.0f, 4.0f)
-                offset = Vector3(rtv.x, rtv.y, rtv.z)
+                offset = randomVector3(-4.0f, 4.0f)
                 attachTransform {
                     scale {
                         val sf = randomFloat(0.4f, 2.0f)

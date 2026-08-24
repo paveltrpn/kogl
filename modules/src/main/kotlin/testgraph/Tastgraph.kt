@@ -72,7 +72,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
     val diamondStateGroup = buildStateGroup {
         program = flatshadeProgram
         stateGroup {
-            for (i in 0..32) {
+            repeat(32) {
                 val item = FlyaroundDrawable(diamondMesh).apply {
                     color = randomVector3(0.1f, 0.9f)
                     origin = Vector3(0.0f, 0.0f, 0.0f)
@@ -80,24 +80,30 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
                     anglSpeed = randomFloat(-1.0f, 1.0f)
                 }
 
-                val scale = TransformGroup()
-                val sf = randomFloat(0.2f, 2.0f)
-                scale.matrix = algebra.scale(sf, sf, sf)
+                val scale = buildTransformGroup {
+                    val sf = randomFloat(0.2f, 2.0f)
+                    scale = Vector3(sf, sf, sf)
+                    scale {
+                        addChild(item)
+                    }
+                }
 
-                val offset = TransformGroup()
-                val rz = randomFloat(-4.0f, -12.0f)
-                val rtv = randomVector3(-4.0f, 4.0f)
-                offset.matrix = algebra.offset(rtv.x, rtv.y, rz)
+                val offset = buildTransformGroup {
+                    val rz = randomFloat(-4.0f, -12.0f)
+                    val rtv = randomVector3(-4.0f, 4.0f)
+                    offset = Vector3(rtv.x, rtv.y, rz)
 
-                scale.addChild(item)
-                offset.addChild(scale)
+                    offset {
+                        addChild(scale)
+                    }
+                }
 
                 addChild(offset)
             }
         }
     }
 
-    for (i in 0..16) {
+    repeat(16) {
         val item = FlyaroundDrawable(frameMesh).apply {
             color = randomVector3(0.1f, 0.9f)
             origin = Vector3(0.0f, 0.0f, 0.0f)
@@ -119,7 +125,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
         frameStateGroup.addChild(offset)
     }
 
-    for (i in 0..16) {
+    repeat(16) {
         val item = FlyaroundDrawable(arch01dMesh).apply {
             color = randomVector3(0.1f, 0.9f)
             origin = Vector3(0.0f, 0.0f, 0.0f)

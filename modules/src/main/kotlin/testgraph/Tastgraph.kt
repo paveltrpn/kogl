@@ -73,32 +73,28 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
         program = flatshadeProgram
         stateGroup {
             repeat(32) {
-                val item = FlyaroundDrawable(diamondMesh).apply {
-                    color = randomVector3(0.1f, 0.9f)
-                    origin = Vector3(0.0f, 0.0f, 0.0f)
-                    axis = randomVector3(-0.6f, 0.6f).normalize()
-                    anglSpeed = randomFloat(-1.0f, 1.0f)
-                }
-
-                val scale = buildTransformGroup {
-                    val sf = randomFloat(0.2f, 2.0f)
-                    scale = Vector3(sf, sf, sf)
-                    scale {
-                        addChild(item)
-                    }
-                }
-
-                val offset = buildTransformGroup {
+                addChild(buildTransformGroup {
                     val rz = randomFloat(-4.0f, -12.0f)
                     val rtv = randomVector3(-4.0f, 4.0f)
                     offset = Vector3(rtv.x, rtv.y, rz)
-
                     offset {
-                        addChild(scale)
+                        addChild(buildTransformGroup {
+                            val sf = randomFloat(0.2f, 2.0f)
+                            scale = Vector3(sf, sf, sf)
+                            scale {
+                                addChild(buildDrawable {
+                                    mesh = diamondMesh
+                                    flyaroundDrawable {
+                                        color = randomVector3(0.1f, 0.9f)
+                                        origin = Vector3(0.0f, 0.0f, 0.0f)
+                                        axis = randomVector3(-0.6f, 0.6f).normalize()
+                                        anglSpeed = randomFloat(-1.0f, 1.0f)
+                                    }
+                                })
+                            }
+                        })
                     }
-                }
-
-                addChild(offset)
+                })
             }
         }
     }

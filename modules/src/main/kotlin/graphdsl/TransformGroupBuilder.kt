@@ -80,4 +80,10 @@ fun buildTransformGroup(block: TransformGroupBuilder.() -> Unit): TransformGroup
     }.get()
 }
 
+infix fun Group.attachTransform(block: TransformGroupBuilder.() -> Unit): Unit {
+    this attach buildTransformGroup {
+        block()
+    }
+}
+
 

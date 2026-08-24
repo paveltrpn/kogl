@@ -37,5 +37,13 @@ class DrawableBuilder : NodeBuilder() {
 }
 
 fun buildDrawable(block: DrawableBuilder.() -> Unit): Drawable {
-    return DrawableBuilder().apply(block).get()
+    return DrawableBuilder().apply {
+        block()
+    }.get()
+}
+
+infix fun Group.attachDrawable(block: DrawableBuilder.() -> Unit): Unit {
+    this attach buildDrawable {
+        block()
+    }
 }

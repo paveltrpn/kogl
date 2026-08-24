@@ -29,7 +29,7 @@ abstract class Visitor {
 
     }
 
-    open fun apply(node: View): Unit {
+    open fun apply(node: Behavior): Unit {
 
     }
 

@@ -3,7 +3,7 @@ package graph
 import algebra.*
 
 open class TransformGroup() : Group() {
-    private var _matrix = Matrix4()
+    private var _matrix = Matrix4().idtt()
 
     constructor(other: FloatArray) : this() {
         matrix = Matrix4(other)

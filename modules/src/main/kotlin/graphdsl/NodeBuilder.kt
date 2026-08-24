@@ -1,6 +1,8 @@
 package graphdsl
 
-open class NodeBuilder {
-    
+import graph.*
+
+abstract class NodeBuilder {
+    abstract fun attach(node: Node): Unit
 }
 

@@ -19,6 +19,10 @@ class DrawableBuilder : NodeBuilder() {
     fun get(): Drawable {
         return _drawable ?: throw RuntimeException("Drawable not initialized!")
     }
+
+    override fun attach(node: Node) {
+        TODO("Not yet implemented")
+    }
 }
 
 fun buildDrawable(block: DrawableBuilder.() -> Unit): Drawable {

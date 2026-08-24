@@ -18,7 +18,7 @@ class Render : EventObserver {
     private var _scene: Scene? = null
 
     var scene: Scene
-        get():Scene {
+        get(): Scene {
             return _scene ?: throw RuntimeException("Scene is null! Nothing to return!")
         }
         set(value) {

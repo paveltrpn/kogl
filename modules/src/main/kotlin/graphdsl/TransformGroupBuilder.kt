@@ -75,9 +75,15 @@ class TransformGroupBuilder : NodeBuilder() {
 }
 
 fun buildTransform(block: TransformGroupBuilder.() -> Unit): TransformGroup {
-    return TransformGroupBuilder().apply {
+    val r = TransformGroupBuilder().apply {
         block()
     }.get()
+
+//    if (r.isEmpty) {
+//        throw RuntimeException("Do not create empty transform groups!")
+//    }
+
+    return r
 }
 
 infix fun Group.attachTransform(block: TransformGroupBuilder.() -> Unit): Unit {

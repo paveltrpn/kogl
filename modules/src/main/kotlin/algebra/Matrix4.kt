@@ -1,9 +1,5 @@
 package algebra
 
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.FloatBuffer
-
 class Matrix4 {
     private var _data = FloatArray(16) { it -> 0.0f }
 

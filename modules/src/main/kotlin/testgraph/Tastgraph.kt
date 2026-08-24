@@ -76,15 +76,12 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
                 addChild(buildTransformGroup {
                     val rz = randomFloat(-4.0f, -12.0f)
                     val rtv = randomVector3(-4.0f, 4.0f)
-                    offset = Vector3(rtv.x, rtv.y, rz)
-                    offset {
+                    offset(Vector3(rtv.x, rtv.y, rz)) {
                         addChild(buildTransformGroup {
                             val sf = randomFloat(0.2f, 2.0f)
-                            scale = Vector3(sf, sf, sf)
-                            scale {
+                            scale(Vector3(sf, sf, sf)) {
                                 addChild(buildDrawable {
-                                    mesh = diamondMesh
-                                    flyaroundDrawable {
+                                    flyaroundDrawable(diamondMesh) {
                                         color = randomVector3(0.1f, 0.9f)
                                         origin = Vector3(0.0f, 0.0f, 0.0f)
                                         axis = randomVector3(-0.6f, 0.6f).normalize()

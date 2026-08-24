@@ -21,8 +21,8 @@ fun stateGroupDSL(): StateGroup {
     flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
 
     return buildStateGroup {
-        program = flatshadeProgram
         stateGroup {
+            program = flatshadeProgram
             // addChild()
         }
     }
@@ -70,8 +70,8 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
     }
 
     val diamondStateGroup = buildStateGroup {
-        program = flatshadeProgram
         stateGroup {
+            program = flatshadeProgram
             repeat(32) {
                 addChild(buildTransformGroup {
                     val rz = randomFloat(-4.0f, -12.0f)

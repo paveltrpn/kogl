@@ -20,7 +20,7 @@ class StateGroupBuilder : NodeBuilder() {
     }
 }
 
-fun buildStateGroup(block: StateGroupBuilder.() -> Unit): StateGroup {
+fun buildState(block: StateGroupBuilder.() -> Unit): StateGroup {
     val r = StateGroupBuilder().apply {
         block()
     }.get()

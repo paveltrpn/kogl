@@ -21,13 +21,13 @@ fun localeDSL(): Locale {
     return buildLocale {
         origin = Vector3(0.0f, 0.0f, 0.0f)
 
-        this attach buildStateGroup {
+        this attach buildState {
             stateGroup {
                 program = flatshadeProgram
             }
         }
 
-        this attach buildStateGroup {
+        this attach buildState {
             stateGroup {
                 program = flatshadeProgram
             }
@@ -78,7 +78,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
         Vector3(list[0], list[1], list[2])
     }
 
-    val diamondStateGroup = buildStateGroup {
+    val diamondStateGroup = buildState {
         stateGroup {
             program = flatshadeProgram
             repeat(16) {
@@ -115,17 +115,21 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
             anglSpeed = randomFloat(0.4f, 1.2f)
         }
 
-        val scale = TransformGroup()
-        val sf = randomFloat(0.4f, 2.0f)
-        scale.matrix = algebra.scale(sf, sf, sf)
+        val transform = buildTransform {
+            offset {
+                val rtv = randomVector3(-4.0f, 4.0f)
+                offset = Vector3(rtv.x, rtv.y, rtv.z)
+                attachTransform {
+                    scale {
+                        val sf = randomFloat(0.4f, 2.0f)
+                        scale = Vector3(sf, sf, sf)
+                    }
+                }
+            }
+        }
 
-        val offset = TransformGroup()
-        val rtv = randomVector3(-4.0f, 4.0f)
-        offset.matrix = algebra.offset(rtv.x, rtv.y, rtv.z)
-
-        scale.addChild(item)
-        offset.addChild(scale)
-        frameStateGroup.addChild(offset)
+        transform.addChild(item)
+        frameStateGroup.addChild(transform)
     }
 
     repeat(16) {

@@ -74,14 +74,14 @@ class TransformGroupBuilder : NodeBuilder() {
     }
 }
 
-fun buildTransformGroup(block: TransformGroupBuilder.() -> Unit): TransformGroup {
+fun buildTransform(block: TransformGroupBuilder.() -> Unit): TransformGroup {
     return TransformGroupBuilder().apply {
         block()
     }.get()
 }
 
 infix fun Group.attachTransform(block: TransformGroupBuilder.() -> Unit): Unit {
-    this attach buildTransformGroup {
+    this attach buildTransform {
         block()
     }
 }

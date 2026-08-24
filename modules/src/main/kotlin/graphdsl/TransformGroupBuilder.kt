@@ -3,7 +3,7 @@ package graphdsl
 import graph.*
 import render.*
 
-class StateGroupBuilder : NodeBuilder() {
+class TransformGroupBuilder : NodeBuilder() {
     private var _program = Program()
     private var _stateGroup = StateGroup()
 
@@ -25,7 +25,8 @@ class StateGroupBuilder : NodeBuilder() {
     }
 }
 
-fun buildStateGroup(block: StateGroupBuilder.() -> Unit): StateGroup {
+fun buildTransformGroup(block: StateGroupBuilder.() -> Unit): StateGroup {
     return StateGroupBuilder().apply(block).get()
 }
+
 

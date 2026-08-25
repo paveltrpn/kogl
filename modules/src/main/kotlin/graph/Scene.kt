@@ -45,7 +45,7 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
         when (node) {
             is Drawable -> {
                 when (node) {
-                    is FlyaroundDrawable -> {
+                    is SpinableDrawable -> {
                         val local = node.updateLocal(_delta)
 
                         val top = _modelMatrixStack.top.copy()
@@ -54,11 +54,13 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
                         node.applyTransform(local.multiply(top))
                     }
 
-                    is Drawable -> {
+                    is FlyaroundDrawable -> {
+                        val local = node.updateLocal(_delta)
+
                         val top = _modelMatrixStack.top.copy()
                         top.transpose()
 
-                        node.applyTransform(top)
+                        node.applyTransform(local.multiply(top))
                     }
                 }
 

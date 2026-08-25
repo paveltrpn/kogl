@@ -14,6 +14,12 @@ class DrawableBuilder : NodeBuilder() {
         _drawable = other
     }
 
+    fun spinableDrawable(block: SpinableDrawable.() -> Unit): Unit {
+        _drawable = SpinableDrawable().apply {
+            block()
+        }
+    }
+
     fun flyaroundDrawable(block: FlyaroundDrawable.() -> Unit): Unit {
         _drawable = FlyaroundDrawable().apply {
             block()

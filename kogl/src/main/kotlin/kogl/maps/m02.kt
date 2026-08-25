@@ -25,7 +25,7 @@ fun m02(): List<Locale> {
                     offset {
                         offset = Vector3(0.0f, 0.0f, 10.0f)
                         attachDrawable {
-                            flyaroundDrawable {
+                            spinableDrawable {
                                 mesh = storage["diamond"]
                                 color = Vector3(1.0f, 1.0f, 1.0f)
                                 origin = Vector3(0.0f, 0.0f, 2.0f)

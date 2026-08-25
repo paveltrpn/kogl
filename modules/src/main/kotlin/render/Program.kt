@@ -341,22 +341,49 @@ class Program {
 
 // ============================================================================
 
-interface UnifirmSetter<T> {
+interface UniformSetter<T> {
     fun set(p: Program)
 }
 
-fun value(pair: Pair<String, Vector3>): UnifirmSetter<Vector3> {
-    return object : UnifirmSetter<Vector3> {
-        override fun set(p: Program) {
-            val (id, value) = pair
-            p.setVectorUniform(id, value)
+fun <T> value(pair: Pair<String, T>): UniformSetter<T> {
+    when (pair.second) {
+        is Vector2 -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setVectorUniform(id, value as Vector2)
+                }
+            }
+        }
+
+        is Vector3 -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setVectorUniform(id, value as Vector3)
+                }
+            }
+        }
+
+        is Vector4 -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setVectorUniform(id, value as Vector4)
+                }
+            }
+        }
+
+        else -> {
+            throw RuntimeException("Unknown UniformSetter<T> type!")
         }
     }
 }
 
 /**
- * Wierdo unifirm assignment.
+ * Weirdo uniform assignment.
+ * Can be used as ```program assign value("some_unifirm" to some_value)```
  */
-infix fun Program.assign(setter: UnifirmSetter<Vector3>): Unit {
+infix fun <T> Program.assign(setter: UniformSetter<T>): Unit {
     setter.set(this)
 }

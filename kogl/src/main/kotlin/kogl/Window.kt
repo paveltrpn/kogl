@@ -42,75 +42,63 @@ class Window {
         _width = Config.instance().konfig.window_width
         _height = Config.instance().konfig.window_height
 
-        //
+        // OpenGL init.
         initGLFW()
 
         val cc = Color(Config.instance().konfig.background_color)
 
-        //
         glViewport(0, 0, _width, _height)
         glClearColor(cc.rf, cc.gf, cc.bf, 1.0f)
 
-        //
+
+        // Main scene init.
+        val mainScene = Scene()
+
+        with(mainScene) {
+            val (dimonds, frames, arches) = testgraph.sparseObjectsGraph()
+
+            val dimondsLoc = buildLocale {
+                origin = Vector3(-8.0f, 0.0f, 0.0f)
+                this attach dimonds
+            }
+
+            val framesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {
+                addStateGroup(frames)
+            }
+
+            val archesLoc = Locale(Vector3(8.0f, 0.0f, 0.0f)).apply {
+                addStateGroup(arches)
+            }
+
+            addLocales(listOf(dimondsLoc, framesLoc, archesLoc))
+        }
+
+//        with(mainScene) {
+//            val file = File("${basePath}/assets/m01.json")
+//            val jsonString = file.readText()
+//            val mapData = parseMapJson(jsonString)
+//            val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
+//
+//            val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
+//            m01Loc.addStateGroups(sg)
+//            addLocale(m01Loc)
+//        }
+
+        with(mainScene) {
+            val m = maps.m02()
+            addLocales(m)
+        }
+
+//        with(mainScene) {
+//            camera = Flycam()
+//        }
+
+        // Render init.
         _render = Render()
         GlobalEventEmitter.instance().attach(_render)
 
-        val file = File("${basePath}/assets/m01.json")
-        val jsonString = file.readText()
-        val mapData = parseMapJson(jsonString)
-
-//        printMapStructure(mapData)
-
-        val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
-
-
-//        class PrintTypeVisitor : Visitor {
-//            override fun apply(node: StateGroup): Unit {
-//                println("my type is ${node::class}")
-//                node.traverse(this)
-//            }
-//
-//            override fun apply(node: Transform): Unit {
-//                println("my type is ${node::class}")
-//                node.traverse(this)
-//            }
-//
-//            override fun apply(node: Drawable): Unit {
-//                println("my type is ${node::class}")
-//                node.traverse(this)
-//            }
-//        }
-
-//        val printtype = PrintTypeVisitor()
-//        sparseObjectsGraph.accept(printtype)
-
-
         with(_render) {
-            scene = Scene().apply {
-                val (dimonds, frames, arches) = testgraph.sparseObjectsGraph()
-
-                val dimondsLoc = buildLocale {
-                    origin = Vector3(-8.0f, 0.0f, 0.0f)
-                    this attach dimonds
-                }
-
-                val framesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {
-                    addStateGroup(frames)
-                }
-
-                val archesLoc = Locale(Vector3(8.0f, 0.0f, 0.0f)).apply {
-                    addStateGroup(arches)
-                }
-
-//            addStateGroup(testgraph.testCubesGraph())
-//            addStateGroup(testgraph.testFlyaroundsGraph())
-
-                addLocales(listOf(dimondsLoc, framesLoc, archesLoc))
-
-                val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
-                m01Loc.addStateGroups(sg)
-                addLocale(m01Loc)
-            }
+            scene = mainScene
         }
     }
 

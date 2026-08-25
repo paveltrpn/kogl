@@ -1,8 +1,51 @@
 package maps
 
+import algebra.*
 import graph.*
 import graphdsl.*
+import map.*
+import render.*
 
-fun m02(): Scene {
-    return Scene()
+fun m02(): List<Locale> {
+    val flatshadeProgram = Program().apply {
+        source = ShaderSource("flatshade")
+        build()
+        set("color" to Vector3(1.0f, 0.0f, 0.0f))
+    }
+
+    val storage = Storage.instance()
+
+    val l1 = buildLocale {
+        origin = Vector3(0.0f, 0.0f, 0.0f)
+
+        attachState {
+            stateGroup {
+                program = flatshadeProgram
+                attachGroup {
+                    group {
+                        attachDrawable {
+                            flyaroundDrawable {
+                                mesh = storage["diamond"]
+                                color = Vector3(1.0f, 1.0f, 1.0f)
+                                origin = Vector3(0.0f, 0.0f, 0.0f)
+                                //axis = randomVector3(-0.6f, 0.6f).normalize()
+                                //anglSpeed = randomFloat(-1.0f, 1.0f)
+                            }
+                        }
+                        attachDrawable {
+                            flyaroundDrawable {
+                                mesh = storage["diamond"]
+                                color = Vector3(1.0f, 1.0f, 1.0f)
+                                origin = Vector3(0.0f, 2.0f, 0.0f)
+                                //axis = randomVector3(-0.6f, 0.6f).normalize()
+                                //anglSpeed = randomFloat(-1.0f, 1.0f)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return listOf(l1)
 }

@@ -11,30 +11,6 @@ import graphdsl.*
 import mesh.*
 import render.*
 
-fun localeDSL(): Locale {
-    val flatshadeProgram = Program().apply {
-        source(ShaderSource("flatshade"))
-        build()
-        setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
-    }
-
-    return buildLocale {
-        origin = Vector3(0.0f, 0.0f, 0.0f)
-
-        attachState {
-            stateGroup {
-                program = flatshadeProgram
-            }
-        }
-
-        attachState {
-            stateGroup {
-                program = flatshadeProgram
-            }
-        }
-    }
-}
-
 fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
     val pathPrefix = Config.instance().basePath
 
@@ -157,47 +133,6 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
     }
 
     return Triple(diamondStateGroup, frameStateGroup, arch01StateGroup)
-}
-
-fun testFlyaroundsGraph(): StateGroup {
-    val pathPrefix = Config.instance().basePath
-
-    val diamondObj = readWavefrontObjFile("${pathPrefix}/assets/bodies/diamond.obj")
-    val diamondMesh = SeparatedArraysMesh(diamondObj)
-
-    // =================================================
-
-    val flatshadeSource = ShaderSource("flatshade")
-    val flatshadeProgram = Program().apply {
-        source(flatshadeSource)
-        build()
-    }
-
-    flatshadeProgram.setVectorUniform("color", Vector3(1.0f, 0.0f, 0.0f))
-
-    val rootStateGroup = StateGroup(flatshadeProgram)
-
-    // =================================================
-
-    val item = FlyaroundDrawable(diamondMesh)
-    item.apply {
-        color = Vector3(0.0f, 0.0f, 1.0f)
-        axis = Vector3(0.0f, 0.0f, 1.0f).normalize()
-        anglSpeed = 0.7f
-        origin = Vector3(1.5f, 0.0f, 0.0f)
-    }
-
-    val scale = TransformGroup()
-    scale.matrix = algebra.scale(0.5f, 0.5f, 0.5f)
-
-    val offset = TransformGroup()
-    offset.matrix = algebra.offset(0.0f, 0.0f, 0.0f)
-
-    scale.addChild(item)
-    offset.addChild(scale)
-    rootStateGroup.addChild(offset)
-
-    return rootStateGroup
 }
 
 fun testCubesGraph(): StateGroup {

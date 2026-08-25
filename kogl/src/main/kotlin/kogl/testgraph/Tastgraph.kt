@@ -126,7 +126,12 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
             }
         }
 
-        transform.addChild(item)
+        with(transform) {
+            attachDrawable {
+                this set item
+            }
+        }
+
         frameStateGroup.addChild(transform)
     }
 

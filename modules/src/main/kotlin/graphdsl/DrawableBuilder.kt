@@ -8,21 +8,10 @@ annotation class DrawableBuilderDslMarker
 
 @DrawableBuilderDslMarker
 class DrawableBuilder : NodeBuilder() {
-    private var _mesh: Mesh? = null
     private var _drawable: Drawable? = null
 
-    var mesh: Mesh
-        get(): Mesh {
-            return _mesh!!
-        }
-        set(value) {
-            _mesh = value
-        }
-
-    fun staticDrawable(block: Drawable.() -> Unit): Unit {
-        _drawable = Drawable().apply {
-            block()
-        }
+    infix fun set(other: Drawable): Unit {
+        _drawable = other
     }
 
     fun flyaroundDrawable(block: FlyaroundDrawable.() -> Unit): Unit {

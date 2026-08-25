@@ -68,8 +68,9 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
                     set("model_matrix" to node.modelMatrix, false)
                     // set("color" to node.color)
 
-                    "color" assign value(node.color, _program)
                 }
+
+                _program assign value("color" to node.color)
 
                 // ...and draw call.
                 node.draw()

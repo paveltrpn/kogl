@@ -342,12 +342,13 @@ class Program {
 // ============================================================================
 
 interface UnifirmSetter<T> {
-    fun set(id: String)
+    fun set(p: Program)
 }
 
-fun value(value: Vector3, p: Program): UnifirmSetter<Vector3> {
+fun value(pair: Pair<String, Vector3>): UnifirmSetter<Vector3> {
     return object : UnifirmSetter<Vector3> {
-        override fun set(id: String) {
+        override fun set(p: Program) {
+            val (id, value) = pair
             p.setVectorUniform(id, value)
         }
     }
@@ -356,6 +357,6 @@ fun value(value: Vector3, p: Program): UnifirmSetter<Vector3> {
 /**
  * Wierdo unifirm assignment.
  */
-infix fun String.assign(setter: UnifirmSetter<Vector3>): Unit {
+infix fun Program.assign(setter: UnifirmSetter<Vector3>): Unit {
     setter.set(this)
 }

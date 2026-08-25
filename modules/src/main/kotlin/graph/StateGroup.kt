@@ -9,7 +9,7 @@ import render.*
 open class StateGroup : Group {
     private var _program: Program
 
-    constructor() {
+    constructor() : super() {
         _program = Program()
     }
 

@@ -63,6 +63,10 @@ class Program {
             return _shaderSources ?: throw RuntimeException("Trying to obtain undefined shader sources!")
         }
         set(value) {
+            if (_shaderSources != null) {
+                throw RuntimeException("Shader source reattach is not allowed!")
+            }
+            
             _shaderSources = value
         }
 

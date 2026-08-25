@@ -7,13 +7,16 @@ import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
 import algebra.*
-import config.*
 
 data class UniformInfo(
     val location: Int,
     val type: Int,
     val size: Int
 )
+
+// ============================================================================
+// ======================= Program ============================================
+// ============================================================================
 
 class Program {
     private var _shaderSources: ShaderSource? = null
@@ -334,4 +337,25 @@ class Program {
         val (id, value) = p
         setVectorUniform(id, value)
     }
+}
+
+// ============================================================================
+
+interface UnifirmSetter<T> {
+    fun set(id: String)
+}
+
+fun value(value: Vector3, p: Program): UnifirmSetter<Vector3> {
+    return object : UnifirmSetter<Vector3> {
+        override fun set(id: String) {
+            p.setVectorUniform(id, value)
+        }
+    }
+}
+
+/**
+ * Wierdo unifirm assignment.
+ */
+infix fun String.assign(setter: UnifirmSetter<Vector3>): Unit {
+    setter.set(this)
 }

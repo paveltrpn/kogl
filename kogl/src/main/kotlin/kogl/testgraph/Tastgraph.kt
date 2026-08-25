@@ -153,7 +153,7 @@ fun testCubesGraph(): StateGroup {
 
     // =================================================
 
-    val item = Drawable(boxMesh)
+    val item = SpinableDrawable(boxMesh)
     item.color = Vector3(0.0f, 0.0f, 1.0f)
 
     val scale = TransformGroup()

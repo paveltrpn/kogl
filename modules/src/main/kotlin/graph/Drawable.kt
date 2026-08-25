@@ -1,6 +1,7 @@
 package graph
 
-import algebra.*
+import algebra.Vector3
+import algebra.Matrix4
 import render.*
 import mesh.*
 
@@ -8,7 +9,7 @@ import mesh.*
 // ======================= Drawable ===========================================
 // ============================================================================
 
-open class Drawable : Leaf {
+abstract class Drawable : Leaf {
     private var _mesh: Mesh? = null
     private var _buffer: MeshBuffer? = null
 
@@ -108,10 +109,25 @@ open class Drawable : Leaf {
         set(value) {
             _color = value
         }
+
+    protected val offsetMatrix: Matrix4
+        get(): Matrix4 {
+            val offset = algebra.offset(_origin)
+            offset.transpose()
+            return offset
+        }
+
+    protected fun updateAnglAndGetSpinMatrix(dt: Float): Matrix4 {
+        _angl += anglSpeed * dt
+
+        if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
+
+        return algebra.rotation(_axis, _angl)
+    }
 }
 
 // ============================================================================
-// ======================= FlyaroundDrawable ==================================
+// ======================= SpinableDrawable ===================================
 // ============================================================================
 
 class SpinableDrawable : Drawable {
@@ -119,18 +135,9 @@ class SpinableDrawable : Drawable {
 
     constructor(mesh: Mesh) : super(mesh) {}
 
-
     fun updateLocal(dt: Float): Matrix4 {
-        _angl += anglSpeed * dt
-
-        if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
-
-        val spin = rotation(_axis, _angl)
-
-        val offset = algebra.offset(_origin)
-        offset.transpose()
-
-        return spin.multiply(offset)
+        val spinMatrix = updateAnglAndGetSpinMatrix(dt)
+        return spinMatrix.multiply(offsetMatrix)
     }
 }
 
@@ -144,15 +151,7 @@ class FlyaroundDrawable : Drawable {
     constructor(mesh: Mesh) : super(mesh) {}
 
     fun updateLocal(dt: Float): Matrix4 {
-        _angl += anglSpeed * dt
-
-        if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
-
-        val spin = rotation(_axis, _angl)
-
-        val offset = algebra.offset(_origin)
-        offset.transpose()
-
-        return offset.multiply(spin)
+        val spinMatrix = updateAnglAndGetSpinMatrix(dt)
+        return offsetMatrix.multiply(spinMatrix)
     }
 }

@@ -140,7 +140,7 @@ private fun buildTransform(transformGroupData: TransformGroupData, meshStorage: 
 
 private fun buildDrawable(drawableData: DrawableData, meshStorage: Map<String, Mesh>): Drawable? {
     val mesh = meshStorage[drawableData.payload.mesh] ?: return null
-    return Drawable(mesh)
+    return SpinableDrawable(mesh)
 }
 
 private fun buildFlyaroundDrawable(flyaroundData: FlyaroundDrawableData, meshStorage: Map<String, Mesh>): Drawable? {

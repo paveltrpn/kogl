@@ -30,6 +30,7 @@ fun m02(): List<Locale> {
                                 color = Vector3(1.0f, 1.0f, 1.0f)
                                 origin = Vector3(0.0f, 0.0f, 2.0f)
                                 axis = Vector3(0.0f, 1.0f, 0.0f)
+                                scale = Vector3(3.0f, 3.0f, 1.0f)
                                 anglSpeed = 0.5f
                             }
                         }
@@ -38,6 +39,7 @@ fun m02(): List<Locale> {
                                 mesh = storage["box"]
                                 color = Vector3(1.0f, 1.0f, 1.0f)
                                 origin = Vector3(0.0f, 0.0f, 0.0f)
+                                scale = Vector3(3.0f, 1.0f, 1.0f)
                                 // axis = Vector3(0.0f, 1.0f, 0.0f)
                                 // anglSpeed = 0.5f
                             }

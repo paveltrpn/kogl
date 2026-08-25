@@ -17,9 +17,10 @@ abstract class Drawable : Leaf {
     protected var _modelMatrix = Matrix4().idtt()
 
     protected var _origin = Vector3(0.0f, 0.0f, 0.0f)
+    protected var _scale = Vector3(1.0f, 1.0f, 1.0f)
     protected var _axis = Vector3(0.0f, 1.0f, 0.0f)
-    protected var _anglSpeed = 0.0f
     protected var _angl = 0.0f
+    protected var _anglSpeed = 0.0f
 
     constructor() : super() {}
 
@@ -69,13 +70,30 @@ abstract class Drawable : Leaf {
             _origin = value
         }
 
+    var scale: Vector3
+        get(): Vector3 {
+            return _scale
+        }
+        set(value) {
+            _scale = value
+        }
+
     var axis: Vector3
         get(): Vector3 {
             return _axis
         }
         set(value: Vector3) {
+            // TODO: assert zero length vector.
             _axis = value
             _axis.normalizeSelf()
+        }
+
+    var angl: Float
+        get(): Float {
+            return _angl
+        }
+        set(value) {
+            _angl = value
         }
 
     var anglSpeed: Float
@@ -117,6 +135,11 @@ abstract class Drawable : Leaf {
             return offset
         }
 
+    protected val scaleMatrix: Matrix4
+        get(): Matrix4 {
+            return algebra.scale(_scale)
+        }
+
     protected fun updateAnglAndGetSpinMatrix(dt: Float): Matrix4 {
         _angl += anglSpeed * dt
 
@@ -137,7 +160,8 @@ class SpinableDrawable : Drawable {
 
     fun updateLocal(dt: Float): Matrix4 {
         val spinMatrix = updateAnglAndGetSpinMatrix(dt)
-        return spinMatrix.multiply(offsetMatrix)
+        val t = scaleMatrix.multiply(spinMatrix)
+        return t.multiply(offsetMatrix)
     }
 }
 
@@ -152,6 +176,7 @@ class FlyaroundDrawable : Drawable {
 
     fun updateLocal(dt: Float): Matrix4 {
         val spinMatrix = updateAnglAndGetSpinMatrix(dt)
-        return offsetMatrix.multiply(spinMatrix)
+        val t = offsetMatrix.multiply(scaleMatrix)
+        return t.multiply(spinMatrix)
     }
 }

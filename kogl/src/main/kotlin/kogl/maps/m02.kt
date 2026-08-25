@@ -21,8 +21,9 @@ fun m02(): List<Locale> {
         attachState {
             stateGroup {
                 program = flatshadeProgram
-                attachGroup {
-                    group {
+                attachTransform {
+                    offset {
+                        offset = Vector3(0.0f, 0.0f, 0.0f)
                         attachDrawable {
                             flyaroundDrawable {
                                 mesh = storage["diamond"]
@@ -34,9 +35,9 @@ fun m02(): List<Locale> {
                         }
                         attachDrawable {
                             flyaroundDrawable {
-                                mesh = storage["diamond"]
+                                mesh = storage["box"]
                                 color = Vector3(1.0f, 1.0f, 1.0f)
-                                origin = Vector3(0.0f, 2.0f, 0.0f)
+                                origin = Vector3(0.0f, 0.0f, 2.0f)
                                 //axis = randomVector3(-0.6f, 0.6f).normalize()
                                 //anglSpeed = randomFloat(-1.0f, 1.0f)
                             }

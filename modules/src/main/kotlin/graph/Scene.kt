@@ -65,7 +65,7 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
                 // ...update shader uniform...
                 with(_program) {
                     set("view_matrix" to _viewMatrix, false)
-                    set("drawable_matrix" to node.combined, false)
+                    set("model_matrix" to node.modelMatrix, false)
                     set("color" to node.color)
                 }
 
@@ -95,7 +95,7 @@ class Scene {
     private var _camera = Flycam()
 
     init {
-        _camera.apply {
+        with(_camera) {
             fov = 45.0f
             aspect = 16.0f / 9.0f
             ncp = 0.1f
@@ -107,15 +107,18 @@ class Scene {
         }
     }
 
-    val camera: Flycam
+    var camera: Flycam
         get(): Flycam {
             return _camera
+        }
+        set(value) {
+            _camera = value
         }
 
     fun walk(): Unit {
         _camera.traverse()
 
-        val r = GraphRecordVisitor(1.0f, _camera.matrix)
+        val r = GraphRecordVisitor(1.0f, _camera.viewMatrix)
 
         for (locale in _locales) {
             locale.root.accept(r)

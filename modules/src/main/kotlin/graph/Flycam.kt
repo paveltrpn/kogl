@@ -158,7 +158,7 @@ class Flycam {
     fun traverse() {
         var velocity = Vector3(0.0f, 0.0f, 0.0f)
 
-        if ((_moveMask shr FlycamMoveBits.FORWARD.ordinal) and 1 == 1) {
+        if (((_moveMask shr FlycamMoveBits.FORWARD.ordinal) and 1) == 1) {
             velocity += _look
         }
 
@@ -177,7 +177,7 @@ class Flycam {
         _eye += (velocity.scale(0.5f))
     }
 
-    val matrix: Matrix4
+    val viewMatrix: Matrix4
         get(): Matrix4 {
             val projection = Matrix4().perspective(_fov, _aspect, _ncp, _fcp)
 

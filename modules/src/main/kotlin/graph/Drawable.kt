@@ -1,7 +1,6 @@
 package graph
 
 import algebra.*
-import graph.Leaf
 import render.*
 import mesh.*
 
@@ -14,7 +13,7 @@ open class Drawable : Leaf {
     private var _buffer: MeshBuffer? = null
 
     protected var _color = Vector3(1.0f, 1.0f, 1.0f)
-    protected var _combined = Matrix4().idtt()
+    protected var _modelMatrix = Matrix4().idtt()
 
     constructor() : super() {
 
@@ -63,15 +62,15 @@ open class Drawable : Leaf {
     }
 
     fun applyTransform(tr: Matrix4): Unit {
-        _combined = tr
+        _modelMatrix = tr
     }
 
-    var combined: Matrix4
+    var modelMatrix: Matrix4
         get(): Matrix4 {
-            return _combined
+            return _modelMatrix
         }
         set(value) {
-            _combined = value
+            _modelMatrix = value
         }
 
     var color: Vector3

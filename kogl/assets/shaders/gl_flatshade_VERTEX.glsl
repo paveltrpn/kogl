@@ -2,7 +2,7 @@ layout (location = 0) in vec3 pos;
 layout (location = 1) in vec3 nrm;
 
 uniform mat4 view_matrix;
-uniform mat4 drawable_matrix;
+uniform mat4 model_matrix;
 uniform vec3 color;
 
 out vec3 newColor;
@@ -16,14 +16,14 @@ void main()
 
     vec3 directionalVector = normalize(lightpos);
 
-    mat4 itModel = transpose(inverse(drawable_matrix));
+    mat4 itModel = transpose(inverse(model_matrix));
     vec4 updatedNrm = itModel * vec4(nrm, 0.0);
 
     float directional = max(dot(normalize(updatedNrm).xyz, directionalVector), 0.0);
 
     vLighting = ambientLight + (lightcolor * directional);
 
-    mat4 mvp = view_matrix * drawable_matrix;
+    mat4 mvp = view_matrix * model_matrix;
     gl_Position = mvp * vec4(pos, 1.0);
 
     newColor = color;

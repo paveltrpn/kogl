@@ -46,6 +46,10 @@ class Locale {
         }
     }
 
+    infix fun attach(sg: StateGroup): Unit {
+        addStateGroup(sg)
+    }
+
     val isEmpty: Boolean
         get(): Boolean {
             return _graph.cildrenCount == 0

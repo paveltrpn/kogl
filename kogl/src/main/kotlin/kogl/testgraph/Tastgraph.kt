@@ -21,13 +21,13 @@ fun localeDSL(): Locale {
     return buildLocale {
         origin = Vector3(0.0f, 0.0f, 0.0f)
 
-        this attach buildState {
+        attachState {
             stateGroup {
                 program = flatshadeProgram
             }
         }
 
-        this attach buildState {
+        attachState {
             stateGroup {
                 program = flatshadeProgram
             }

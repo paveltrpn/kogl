@@ -24,6 +24,12 @@ class LocaleBuilder : NodeBuilder() {
         _stateGroups.addLast(sg)
     }
 
+    fun attachState(block: StateGroupBuilder.() -> Unit): Unit {
+        attachStateGroup(StateGroupBuilder().apply {
+            block()
+        }.get())
+    }
+
     infix fun attach(sg: StateGroup): Unit {
         attachStateGroup(sg)
     }
@@ -46,4 +52,10 @@ fun buildLocale(block: LocaleBuilder.() -> Unit): Locale {
     }
 
     return r
+}
+
+infix fun Locale.attachState(block: StateGroupBuilder.() -> Unit): Unit {
+    this.addStateGroup(StateGroupBuilder().apply {
+        block()
+    }.get())
 }

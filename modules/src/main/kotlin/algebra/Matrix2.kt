@@ -4,11 +4,11 @@ class Matrix2 {
     private var _data = FloatArray(4) { it -> 0.0f }
 
     constructor() {
-
+        idtt()
     }
 
     constructor(other: Matrix2) {
-        _data = other._data
+        _data = other._data.copyOf()
     }
 
     constructor(a00: Float = 0.0f, a01: Float = 0.0f, a10: Float = 0.0f, a11: Float = 0.0f) {
@@ -16,6 +16,10 @@ class Matrix2 {
         _data[1] = a01
         _data[2] = a10
         _data[3] = a11
+    }
+
+    fun copy(): Matrix2 {
+        return Matrix2(this)
     }
 
     val data: FloatArray
@@ -56,6 +60,21 @@ class Matrix2 {
             _data[1] = value.x
             _data[3] = value.y
         }
+
+    fun zero(): Matrix2 {
+        _data.fill(0.0f)
+
+        return this
+    }
+
+    fun idtt(): Matrix2 {
+        _data[0] = 1.0f
+        _data[1] = 0.0f
+        _data[2] = 0.0f
+        _data[3] = 1.0f
+
+        return this
+    }
 
     fun multiply(other: Matrix2): Matrix2 {
         val result = Matrix2()

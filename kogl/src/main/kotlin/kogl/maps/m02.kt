@@ -23,23 +23,23 @@ fun m02(): List<Locale> {
                 program = flatshadeProgram
                 attachTransform {
                     offset {
-                        offset = Vector3(0.0f, 0.0f, 0.0f)
+                        offset = Vector3(0.0f, 0.0f, 10.0f)
                         attachDrawable {
                             flyaroundDrawable {
                                 mesh = storage["diamond"]
                                 color = Vector3(1.0f, 1.0f, 1.0f)
-                                origin = Vector3(0.0f, 0.0f, 0.0f)
-                                //axis = randomVector3(-0.6f, 0.6f).normalize()
-                                //anglSpeed = randomFloat(-1.0f, 1.0f)
+                                origin = Vector3(0.0f, 0.0f, 2.0f)
+                                axis = Vector3(0.0f, 1.0f, 0.0f)
+                                anglSpeed = 0.5f
                             }
                         }
                         attachDrawable {
                             flyaroundDrawable {
                                 mesh = storage["box"]
                                 color = Vector3(1.0f, 1.0f, 1.0f)
-                                origin = Vector3(0.0f, 0.0f, 2.0f)
-                                //axis = randomVector3(-0.6f, 0.6f).normalize()
-                                //anglSpeed = randomFloat(-1.0f, 1.0f)
+                                origin = Vector3(0.0f, 0.0f, 0.0f)
+                                // axis = Vector3(0.0f, 1.0f, 0.0f)
+                                // anglSpeed = 0.5f
                             }
                         }
                     }

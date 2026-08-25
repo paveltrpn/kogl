@@ -8,11 +8,15 @@ class Matrix4 {
     }
 
     constructor(other: Matrix4) {
-        _data = other._data
+        _data = other._data.copyOf()
     }
 
     constructor(other: FloatArray) {
         _data = other
+    }
+
+    fun copy(): Matrix4 {
+        return Matrix4(this)
     }
 
     val data: FloatArray
@@ -112,7 +116,7 @@ class Matrix4 {
 
     fun zero(): Matrix4 {
         _data.fill(0.0f)
-        
+
         return this
     }
 

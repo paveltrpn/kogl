@@ -93,7 +93,9 @@ class FlyaroundDrawable : Drawable {
 
     private var _angl = 0.0f
 
-    constructor() : super() {}
+    constructor() : super() {
+        
+    }
 
     constructor(mesh: Mesh) : super(mesh) {}
 

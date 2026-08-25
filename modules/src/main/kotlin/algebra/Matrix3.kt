@@ -4,18 +4,22 @@ class Matrix3 {
     private var _data = FloatArray(9) { it -> 0.0f }
 
     constructor() {
-
+        idtt()
     }
 
     constructor(other: Matrix3) {
-        _data = other._data
+        _data = other._data.copyOf()
+    }
+
+    fun copy(): Matrix3 {
+        return Matrix3(this)
     }
 
     val data: FloatArray
         get(): FloatArray {
             return _data
         }
-    
+
     // Rows
     var row0: Vector3
         get(): Vector3 {
@@ -77,6 +81,26 @@ class Matrix3 {
             _data[5] = value.y
             _data[8] = value.z
         }
+
+    fun zero(): Matrix3 {
+        _data.fill(0.0f)
+
+        return this
+    }
+
+    fun idtt(): Matrix3 {
+        _data[0] = 1.0f
+        _data[1] = 0.0f
+        _data[2] = 0.0f
+        _data[3] = 0.0f
+        _data[4] = 1.0f
+        _data[5] = 0.0f
+        _data[6] = 0.0f
+        _data[7] = 0.0f
+        _data[8] = 1.0f
+
+        return this
+    }
 
     fun multiply(other: Matrix3): Matrix3 {
         val result = Matrix3()

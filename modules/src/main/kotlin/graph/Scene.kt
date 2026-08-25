@@ -1,6 +1,5 @@
 package graph
 
-import graph.*
 import algebra.*
 import render.*
 
@@ -20,7 +19,7 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
         _viewMatrix = viewMatrix
     }
 
-    override fun apply(node: SwitchGroup): Unit {
+    override fun apply(node: Switch): Unit {
         node.traverse(this)
     }
 

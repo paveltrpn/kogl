@@ -25,7 +25,7 @@ abstract class Visitor {
 
     }
 
-    open fun apply(node: SwitchGroup): Unit {
+    open fun apply(node: Switch): Unit {
 
     }
 

@@ -17,7 +17,6 @@ fun m02(): List<Locale> {
 
     val l1 = buildLocale {
         origin = Vector3(0.0f, 0.0f, 0.0f)
-
         attachState {
             stateGroup {
                 program = flatshadeProgram
@@ -28,9 +27,9 @@ fun m02(): List<Locale> {
                             spinableDrawable {
                                 mesh = storage["diamond"]
                                 color = Vector3(1.0f, 1.0f, 1.0f)
-                                origin = Vector3(0.0f, 0.0f, 2.0f)
+                                origin = Vector3(0.0f, 0.0f, 0.0f)
                                 axis = Vector3(0.0f, 1.0f, 0.0f)
-                                scale = Vector3(3.0f, 3.0f, 1.0f)
+                                scale = Vector3(3.0f, 3.0f, 3.0f)
                                 anglSpeed = 0.5f
                             }
                         }
@@ -38,10 +37,157 @@ fun m02(): List<Locale> {
                             flyaroundDrawable {
                                 mesh = storage["box"]
                                 color = Vector3(1.0f, 1.0f, 1.0f)
+                                origin = Vector3(0.0f, 0.0f, 3.0f)
+                                scale = Vector3(8.0f, 1.0f, 1.0f)
+                                axis = Vector3(1.0f, 0.0f, 0.0f)
+                                anglSpeed = 0.5f
+                            }
+                        }
+                        attachDrawable {
+                            flyaroundDrawable {
+                                mesh = storage["box"]
+                                color = Vector3(1.0f, 1.0f, 1.0f)
+                                origin = Vector3(0.0f, 0.0f, -3.0f)
+                                scale = Vector3(8.0f, 1.0f, 1.0f)
+                                axis = Vector3(1.0f, 0.0f, 0.0f)
+                                anglSpeed = 0.5f
+                            }
+                        }
+                    }
+                }
+                attachTransform {
+                    offset {
+                        offset = Vector3(0.0f, 0.0f, -10.0f)
+                        attachDrawable {
+                            spinableDrawable {
+                                mesh = storage["diamond"]
+                                color = Vector3(1.0f, 1.0f, 1.0f)
                                 origin = Vector3(0.0f, 0.0f, 0.0f)
-                                scale = Vector3(3.0f, 1.0f, 1.0f)
-                                // axis = Vector3(0.0f, 1.0f, 0.0f)
-                                // anglSpeed = 0.5f
+                                axis = Vector3(0.0f, 1.0f, 0.0f)
+                                scale = Vector3(3.0f, 3.0f, 3.0f)
+                                anglSpeed = 0.5f
+                            }
+                        }
+                        attachDrawable {
+                            flyaroundDrawable {
+                                mesh = storage["box"]
+                                color = Vector3(1.0f, 1.0f, 1.0f)
+                                origin = Vector3(0.0f, 0.0f, 3.0f)
+                                scale = Vector3(8.0f, 1.0f, 1.0f)
+                                axis = Vector3(1.0f, 0.0f, 0.0f)
+                                anglSpeed = 0.7f
+                            }
+                        }
+                        attachDrawable {
+                            flyaroundDrawable {
+                                mesh = storage["box"]
+                                color = Vector3(1.0f, 1.0f, 1.0f)
+                                origin = Vector3(0.0f, 0.0f, -4.0f)
+                                scale = Vector3(8.0f, 1.0f, 1.0f)
+                                axis = Vector3(1.0f, 0.0f, 0.0f)
+                                anglSpeed = -0.5f
+                            }
+                        }
+                        attachDrawable {
+                            flyaroundDrawable {
+                                mesh = storage["box"]
+                                color = Vector3(1.0f, 1.0f, 1.0f)
+                                origin = Vector3(0.0f, 5.0f, 0.0f)
+                                scale = Vector3(8.0f, 1.0f, 1.0f)
+                                axis = Vector3(1.0f, 0.0f, 0.0f)
+                                anglSpeed = -0.3f
+                            }
+                        }
+                        attachDrawable {
+                            flyaroundDrawable {
+                                mesh = storage["box"]
+                                color = Vector3(1.0f, 1.0f, 1.0f)
+                                origin = Vector3(0.0f, -6.0f, 0.0f)
+                                scale = Vector3(8.0f, 1.0f, 1.0f)
+                                axis = Vector3(1.0f, 0.0f, 0.0f)
+                                anglSpeed = -0.8f
+                            }
+                        }
+                    }
+                }
+                attachTransform {
+                    offset {
+                        offset = Vector3(14.0f, 0.0f, 0.0f)
+                        attachTransform {
+                            rotate {
+                                axis = Vector3(0.0f, 1.0f, 0.0f)
+                                angl = 90.0f
+                                attachDrawable {
+                                    spinableDrawable {
+                                        mesh = storage["diamond"]
+                                        color = Vector3(1.0f, 1.0f, 1.0f)
+                                        origin = Vector3(0.0f, 0.0f, 0.0f)
+                                        axis = Vector3(0.0f, 1.0f, 0.0f)
+                                        scale = Vector3(3.0f, 3.0f, 3.0f)
+                                        anglSpeed = 0.5f
+                                    }
+                                }
+                                attachDrawable {
+                                    flyaroundDrawable {
+                                        mesh = storage["box"]
+                                        color = Vector3(1.0f, 1.0f, 1.0f)
+                                        origin = Vector3(0.0f, 0.0f, 3.0f)
+                                        scale = Vector3(8.0f, 1.0f, 1.0f)
+                                        axis = Vector3(1.0f, 0.0f, 0.0f)
+                                        anglSpeed = 0.5f
+                                    }
+                                }
+                                attachDrawable {
+                                    flyaroundDrawable {
+                                        mesh = storage["box"]
+                                        color = Vector3(1.0f, 1.0f, 1.0f)
+                                        origin = Vector3(0.0f, 0.0f, -3.0f)
+                                        scale = Vector3(8.0f, 1.0f, 1.0f)
+                                        axis = Vector3(1.0f, 0.0f, 0.0f)
+                                        anglSpeed = 0.5f
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                attachTransform {
+                    offset {
+                        offset = Vector3(-14.0f, 0.0f, 0.0f)
+                        attachTransform {
+                            rotate {
+                                axis = Vector3(0.0f, 1.0f, 0.0f)
+                                angl = 90.0f
+                                attachDrawable {
+                                    spinableDrawable {
+                                        mesh = storage["diamond"]
+                                        color = Vector3(1.0f, 1.0f, 1.0f)
+                                        origin = Vector3(0.0f, 0.0f, 0.0f)
+                                        axis = Vector3(0.0f, 1.0f, 0.0f)
+                                        scale = Vector3(3.0f, 3.0f, 3.0f)
+                                        anglSpeed = 0.5f
+                                    }
+                                }
+                                attachDrawable {
+                                    flyaroundDrawable {
+                                        mesh = storage["box"]
+                                        color = Vector3(1.0f, 1.0f, 1.0f)
+                                        origin = Vector3(0.0f, 0.0f, 3.0f)
+                                        scale = Vector3(8.0f, 1.0f, 1.0f)
+                                        axis = Vector3(1.0f, 0.0f, 0.0f)
+                                        anglSpeed = 0.5f
+                                    }
+                                }
+                                attachDrawable {
+                                    flyaroundDrawable {
+                                        mesh = storage["box"]
+                                        color = Vector3(1.0f, 1.0f, 1.0f)
+                                        origin = Vector3(0.0f, 0.0f, -3.0f)
+                                        scale = Vector3(8.0f, 1.0f, 1.0f)
+                                        axis = Vector3(1.0f, 0.0f, 0.0f)
+                                        anglSpeed = 0.5f
+                                    }
+                                }
                             }
                         }
                     }

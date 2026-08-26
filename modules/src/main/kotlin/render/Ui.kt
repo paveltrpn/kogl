@@ -60,7 +60,7 @@ class UiGL : Ui() {
 
         }
 
-        glEnable(GL_TEXTURE_2D)
+//        glEnable(GL_TEXTURE_2D)
 
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -95,7 +95,9 @@ class UiGL : Ui() {
 
         _labelBuffer.draw()
 
-        glDisable(GL_TEXTURE_2D)
+//        NOTE: GL_INVALID_ENUM error generated in this place.
+//        glDisable(GL_TEXTURE_2D)
+
         glDisable(GL_BLEND)
 
         _componentsList.clear()

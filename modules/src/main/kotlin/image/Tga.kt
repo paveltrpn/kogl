@@ -132,7 +132,7 @@ class Tga(path: String) : Image() {
                 _data[destIdx + 0] = b.toByte()
 
                 if (components == 4) {
-                    _data[destIdx + 3] = if (pixelSize == 4) dest[srcIdx + 3].toByte() else -1
+                    _data[destIdx + 3] = if (pixelSize == 4) dest[srcIdx + 3] else -1
                 }
             }
         }

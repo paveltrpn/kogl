@@ -83,22 +83,22 @@ class OBJMesh(
 
     val verticesCount: Int
         get(): Int {
-            return _vertices.size.div(3) ?: 0
+            return _vertices.size.div(3)
         }
 
     val vnormalsCount: Int
         get(): Int {
-            return _vnormals.size.div(3) ?: 0
+            return _vnormals.size.div(3)
         }
 
     val txcoordsCount: Int
         get(): Int {
-            return _txcoords.size.div(2) ?: 0
+            return _txcoords.size.div(2)
         }
 
     val trianglesCount: Int
         get(): Int {
-            return _triangles.size.div(9) ?: 0
+            return _triangles.size.div(9)
         }
 
     // Return i-th triangle vertices as Vector3

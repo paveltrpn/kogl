@@ -125,8 +125,8 @@ fun enableDebugContext(): Unit {
     glEnable(GL_DEBUG_OUTPUT)
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS)
 
-//     NOTE: glDebugMessageControl not working at all! No messages filtered with any
-//     of this calls!
+//    NOTE: glDebugMessageControl not working at all! No messages filtered with any
+//    of this calls!
 //    glDebugMessageControl(
 //        GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, true
 //    )

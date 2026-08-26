@@ -2,6 +2,8 @@ package kogl
 
 import java.io.File
 
+import kotlin.reflect.*
+
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
@@ -18,8 +20,6 @@ import graph.*
 import graphdsl.*
 import image.*
 import map.*
-import org.lwjgl.opengl.GL43.GL_DEBUG_SEVERITY_HIGH
-import org.lwjgl.opengl.GL43.GL_DEBUG_SEVERITY_MEDIUM
 
 class Window {
     private var allocator: GLFWAllocator? = null
@@ -39,7 +39,7 @@ class Window {
         val basePath = Config.instance().basePath
         Storage.init(basePath)
 
-        println("base path is ${basePath}")
+        println("Base path is ${basePath}.")
 
         _width = Config.instance().konfig.window_width
         _height = Config.instance().konfig.window_height
@@ -47,6 +47,8 @@ class Window {
         // OpenGL init.
         initGLFW()
 
+        // Enable debug.
+        println("Debug out is ENABLED! Disable it in ${this::class.constructors.first()}")
         debug.enableDebugContext()
 
         val cc = Color(Config.instance().konfig.background_color)

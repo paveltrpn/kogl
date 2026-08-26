@@ -14,10 +14,17 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
     private var _program: Program = Program()
     private var _modelMatrixStack = MatrixStack()
 
+    private var _drawCallsCount = 0
+
     init {
         _delta = delta
         _viewMatrix = viewMatrix
     }
+
+    val drawCallsCount: Int
+        get(): Int {
+            return _drawCallsCount
+        }
 
     override fun apply(node: Switch): Unit {
         node.traverse(this)
@@ -75,6 +82,8 @@ class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
 
                 // ...and draw call.
                 node.draw()
+
+                _drawCallsCount++
             }
 
 //            is -> OtherLeaf {
@@ -97,6 +106,13 @@ class Scene {
     private var _locales: MutableList<Locale> = mutableListOf()
 
     private var _camera = Flycam()
+
+    private var _drawCallsCount = 0
+
+    val drawCallsCount: Int
+        get(): Int {
+            return _drawCallsCount
+        }
 
     init {
         with(_camera) {
@@ -127,6 +143,8 @@ class Scene {
         for (locale in _locales) {
             locale.root.accept(r)
         }
+
+        _drawCallsCount = r.drawCallsCount
     }
 
     fun addLocale(locale: Locale): Unit {

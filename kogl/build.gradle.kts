@@ -7,6 +7,8 @@ val lwjglVersion = "3.3.6"
 val lwjglNatives = "natives-linux"
 
 dependencies {
+    implementation(kotlin("reflect"))
+    
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
     implementation("org.lwjgl", "lwjgl")

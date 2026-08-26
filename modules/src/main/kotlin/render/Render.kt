@@ -53,7 +53,7 @@ class Render : EventObserver {
         val TEXT_START_POS_Y = 30.0f
         val TEXT_PLANE_Z = 0.4f
 
-        val l1 = Label().apply {
+        val cameraPosLabel = Label().apply {
             val df = DecimalFormat("0.000").apply {
                 // Truncates instead of rounding up.
                 roundingMode = RoundingMode.DOWN
@@ -74,14 +74,24 @@ class Render : EventObserver {
             color = Color(255, 255, 255, 255)
         }
 
+        val drawCallsLabel = Label().apply {
+            text = "draw calls: ${scene.drawCallsCount}"
+
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - 2.2f)
+            z = TEXT_PLANE_Z + 0.1f
+            letterSpace = 0.0f
+            letterScale = 1.0f
+            color = Color(255, 255, 255, 255)
+        }
+
         val b1 = Billboard().apply {
-            size = Vector2(18.0f, 2.5f)
+            size = Vector2(18.0f, 5.0f)
             position = Vector2(-30.5f, 30.5f)
             z = TEXT_PLANE_Z
             color = Color(255, 200, 128, 128)
         }
 
-        _ui.add(listOf(l1, b1))
+        _ui.add(listOf(cameraPosLabel, drawCallsLabel, b1))
 
         _ui.flush()
     }

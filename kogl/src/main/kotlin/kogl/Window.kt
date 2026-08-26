@@ -45,6 +45,8 @@ class Window {
         // OpenGL init.
         initGLFW()
 
+        debug.enableDebugContext()
+        
         val cc = Color(Config.instance().konfig.background_color)
 
         glViewport(0, 0, _width, _height)

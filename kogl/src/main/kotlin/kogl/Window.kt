@@ -18,6 +18,8 @@ import graph.*
 import graphdsl.*
 import image.*
 import map.*
+import org.lwjgl.opengl.GL43.GL_DEBUG_SEVERITY_HIGH
+import org.lwjgl.opengl.GL43.GL_DEBUG_SEVERITY_MEDIUM
 
 class Window {
     private var allocator: GLFWAllocator? = null
@@ -46,7 +48,7 @@ class Window {
         initGLFW()
 
         debug.enableDebugContext()
-        
+
         val cc = Color(Config.instance().konfig.background_color)
 
         glViewport(0, 0, _width, _height)

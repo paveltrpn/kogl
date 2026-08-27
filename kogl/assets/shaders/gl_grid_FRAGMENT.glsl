@@ -1,36 +1,17 @@
 in vec3 vWorldPos;
 out vec4 outFragColor;
 
-//uniform float gridSize;
-//uniform float lineThickness;
-//uniform float maxRange;
-//uniform float zoomSensitivity;
-//uniform vec3 colorMajor; // Color for lines at multiples of (gridSize * 5) e.g., 100m
-//uniform vec3 colorMinor; // Color for standard lines e.g., 10m
-//uniform float majorDivisor; // How often a major line appears (e.g., 5)
-
-//float _gridSize{ 0.8f };
-//float _lineThickness{ 0.015f };
-//float _maxRange{ 100.0f };
-//float _zoomSensitivity{ 0.05f };
-//
-//vsg::vec3 _colorMajor{ 0.7f, 0.2f, 0.2f };
-//vsg::vec3 _colorMinor{ 0.2f, 0.2f, 0.5f };
-//
-//float _majorDivisor{ 5.0f };
-//float _gridScale{ 10.0 };
-//float _gridZOffset{ 0.0 };
+uniform float gridSize;
+uniform float lineThickness;
+uniform float maxRange;
+uniform float zoomSensitivity;
+uniform vec3 colorMajor; // Color for lines at multiples of (gridSize * 5) e.g., 100m
+uniform vec3 colorMinor; // Color for standard lines e.g., 10m
+uniform float majorDivisor; // How often a major line appears (e.g., 5)
 
 void main() {
-    float gridSize = 0.8f;
-    float lineThickness = 0.015f;
-    float maxRange = 100.0f;
-    float zoomSensitivity = 0.05f;
-    vec3 colorMajor = vec3(0.7f, 0.2f, 0.2f);
-    vec3 colorMinor = vec3(0.2f, 0.2f, 0.5f);
-    float majorDivisor = 5.0f;
-
-    vec3 CB_cameraPos = vec3(0.0, 1.0, 1.0);
+    //    vec3 CB_cameraPos = vec3(0.0, 1.0, 1.0);
+    vec3 CB_cameraPos = vec3(-18.0, -13.0, -14.0);
 
     // 1. Early Z-culling based on distance
     float distToCamera = length(vWorldPos - CB_cameraPos);

@@ -18,7 +18,7 @@ void main() {
     mat4 planeZOffset = mat4(1.0);
     planeZOffset[3][2] = zOffset;
 
-    vec4 worldPos = planeScale * planeZOffset * vertecies[gl_VertexIndex];
+    vec4 worldPos = planeScale * planeZOffset * vertecies[gl_VertexID];
     vWorldPos = worldPos.xyz;
     gl_Position = view_matrix * model_matrix * worldPos;
 }

@@ -108,8 +108,21 @@ class GridDrawVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(d
                 with(_program) {
                     set("view_matrix" to _viewMatrix, false)
                     set("model_matrix" to Matrix4(), false)
+
+                    set("scale" to 10.0f)
+                    set("zOffset" to 0.0f)
+
+                    set("gridSize" to 0.8f)
+                    set("lineThickness" to 0.015f)
+                    set("maxRange" to 100.0f)
+                    set("zoomSensitivity" to 0.05f)
+                    set("colorMajor" to Vector3(0.7f, 0.2f, 0.2f))
+                    set("colorMinor" to Vector3(0.2f, 0.2f, 0.5f))
+                    set("majorDivisor" to 5.0f)
                 }
+
                 node.draw()
+
                 _drawCallsCount++
             }
         }
@@ -156,7 +169,6 @@ class Scene {
                 source = ShaderSource("grid")
                 extension(GL_VERTEX_SHADER, "GL_KHR_vulkan_glsl : enable")
                 build()
-//                set("color" to Vector3(1.0f, 0.0f, 0.0f))
             }
 
             val tr = TransformGroup().apply {
@@ -186,7 +198,6 @@ class Scene {
         _grid.accept(g)
 
         val r = DrawableVisitor(1.0f, _camera.viewMatrix)
-
         for (locale in _locales) {
             locale.root.accept(r)
         }

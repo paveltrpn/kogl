@@ -102,15 +102,15 @@ class IndexedMeshBuffer(mesh: IndexedMesh) : MeshBuffer() {
             0,
             Float.SIZE_BYTES * 3
         );
-        glEnableVertexArrayAttrib(_vao, /* attribute */ 0);
-        glVertexArrayAttribFormat(_vao, /* attribute */ 0, 3, GL_FLOAT, false, 0);
-        glVertexArrayAttribBinding(_vao, /* attribute */ 0, /* binding */ 0);
+        glEnableVertexArrayAttrib(_vao, /* attribute */ 0)
+        glVertexArrayAttribFormat(_vao, /* attribute */ 0, 3, GL_FLOAT, false, 0)
+        glVertexArrayAttribBinding(_vao, /* attribute */ 0, /* binding */ 0)
 
         // Link normals buffer to VAO attribute 1.
-        glVertexArrayVertexBuffer(_vao, 1, _buffers[MeshBuffersEnum.NORMALS.ordinal], 0, Float.SIZE_BYTES * 3);
-        glEnableVertexArrayAttrib(_vao, 1);
-        glVertexArrayAttribFormat(_vao, 1, 3, GL_FLOAT, false, 0);
-        glVertexArrayAttribBinding(_vao, 1, 1);
+        glVertexArrayVertexBuffer(_vao, 1, _buffers[MeshBuffersEnum.NORMALS.ordinal], 0, Float.SIZE_BYTES * 3)
+        glEnableVertexArrayAttrib(_vao, 1)
+        glVertexArrayAttribFormat(_vao, 1, 3, GL_FLOAT, false, 0)
+        glVertexArrayAttribBinding(_vao, 1, 1)
 
         // Attach Index Buffer(EBO) directly to the VAO.
         glVertexArrayElementBuffer(

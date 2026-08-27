@@ -111,13 +111,15 @@ class GridDrawVisitor(delta: Float, val cameraPos: Vector3, viewMatrix: Matrix4)
                     set("view_matrix" to _viewMatrix, false)
                     set("model_matrix" to Matrix4(), false)
 
-                    set("scale" to 50.0f)
+                    set("scale" to 250.0f)
                     set("yOffset" to 0.0f)
 
                     set("gridSize" to 1.0f)
                     set("lineThickness" to 0.02f)
-                    set("maxRange" to 25.0f)
+                    set("maxRange" to 75.0f)
+
                     set("zoomSensitivity" to 0.05f)
+
                     this assign value("colorMajor" to Vector3(0.7f, 0.2f, 0.2f))
                     this assign value("colorMinor" to Vector3(0.2f, 0.2f, 0.5f))
                     set("majorDivisor" to 5.0f)

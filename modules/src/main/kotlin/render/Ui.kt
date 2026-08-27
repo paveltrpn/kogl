@@ -79,7 +79,7 @@ class UiGL : Ui() {
         // Render billboards geometry.
 
         glUniform1i(enableTextureLoc, 0)
-        val bbColor = Color(255, 200, 128, 128).asVec4.data
+        val bbColor = Color(255, 200, 128, 64).asVec4.data
         glUniform4f(colorLoc, bbColor[0], bbColor[1], bbColor[2], bbColor[3])
 
         _billboardBuffer.draw()

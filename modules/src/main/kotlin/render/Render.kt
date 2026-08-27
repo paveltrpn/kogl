@@ -84,14 +84,24 @@ class Render : EventObserver {
             color = Color(255, 255, 255, 255)
         }
 
-        val b1 = Billboard().apply {
-            size = Vector2(18.0f, 5.0f)
-            position = Vector2(-30.5f, 30.5f)
-            z = TEXT_PLANE_Z
-            color = Color(255, 200, 128, 128)
+        val gridToggleLable = Label().apply {
+            text = "\"g\" - toggle grid visibility"
+
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - 4.4f)
+            z = TEXT_PLANE_Z + 0.1f
+            letterSpace = 0.0f
+            letterScale = 1.0f
+            color = Color(255, 255, 255, 255)
         }
 
-        _ui.add(listOf(cameraPosLabel, drawCallsLabel, b1))
+        val b1 = Billboard().apply {
+            size = Vector2(18.0f, 7.5f)
+            position = Vector2(-30.5f, 30.5f)
+            z = TEXT_PLANE_Z
+            color = Color(255, 200, 128, 64)
+        }
+
+        _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, b1))
 
         _ui.flush()
     }
@@ -136,7 +146,7 @@ class Render : EventObserver {
 
                     // g
                     71 -> {
-
+                        scene.toggleGridVisibility()
                     }
                 }
             }

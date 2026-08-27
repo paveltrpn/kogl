@@ -151,6 +151,9 @@ class Scene {
     private var _locales: MutableList<Locale> = mutableListOf()
 
     private var _grid: StateGroup
+    private var _gridSwitch: Switch
+    private var _gridEnabled: Boolean = true
+
     private var _camera = Flycam()
 
     private var _drawCallsCount = 0
@@ -172,6 +175,9 @@ class Scene {
             elevation = -31.0f
         }
 
+        _gridSwitch = Switch()
+        _gridSwitch.addChild(true, Grid())
+
         _grid = buildState {
             stateGroup {
                 program = Program().apply {
@@ -179,9 +185,14 @@ class Scene {
                     extension(GL_VERTEX_SHADER, "GL_KHR_vulkan_glsl")
                     build()
                 }
-                this attach Grid()
+                this attach _gridSwitch
             }
         }
+    }
+
+    fun toggleGridVisibility(): Unit {
+        _gridEnabled = !_gridEnabled
+        _gridSwitch.setChild(_gridEnabled, 0)
     }
 
     var camera: Flycam

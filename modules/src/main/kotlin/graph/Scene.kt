@@ -3,6 +3,7 @@ package graph
 import org.lwjgl.opengl.GL46.*
 
 import algebra.*
+import graphdsl.buildState
 import render.*
 
 // ============================================================================
@@ -112,12 +113,12 @@ class GridDrawVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(d
                     set("scale" to 10.0f)
                     set("zOffset" to 0.0f)
 
-                    set("gridSize" to 0.8f)
+                    set("gridSize" to 1.0f)
                     set("lineThickness" to 0.015f)
                     set("maxRange" to 100.0f)
                     set("zoomSensitivity" to 0.05f)
-                    set("colorMajor" to Vector3(0.7f, 0.2f, 0.2f))
-                    set("colorMinor" to Vector3(0.2f, 0.2f, 0.5f))
+                    this assign value("colorMajor" to Vector3(0.7f, 0.2f, 0.2f))
+                    this assign value("colorMinor" to Vector3(0.2f, 0.2f, 0.5f))
                     set("majorDivisor" to 5.0f)
                 }
 
@@ -139,10 +140,9 @@ class GridDrawVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(d
  * in physical space units and in content.
  */
 class Scene {
-    private var _grid = StateGroup()
-
     private var _locales: MutableList<Locale> = mutableListOf()
 
+    private var _grid: StateGroup
     private var _camera = Flycam()
 
     private var _drawCallsCount = 0
@@ -164,22 +164,15 @@ class Scene {
             elevation = -31.0f
         }
 
-        with(_grid) {
-            program = Program().apply {
-                source = ShaderSource("grid")
-                extension(GL_VERTEX_SHADER, "GL_KHR_vulkan_glsl : enable")
-                build()
+        _grid = buildState {
+            stateGroup {
+                program = Program().apply {
+                    source = ShaderSource("grid")
+                    extension(GL_VERTEX_SHADER, "GL_KHR_vulkan_glsl : enable")
+                    build()
+                }
+                this attach Grid()
             }
-
-            val tr = TransformGroup().apply {
-                matrix = algebra.offset(Vector3(0.0f, 0.0f, 0.0f))
-
-                val grid = Grid()
-
-                addChild(grid)
-            }
-
-            addChild(tr)
         }
     }
 

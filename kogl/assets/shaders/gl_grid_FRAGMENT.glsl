@@ -19,17 +19,17 @@ void main() {
         discard;
     }
 
-    // 2. Calculate local coordinates relative to the grid size
+    // Calculate local coordinates relative to the grid size
     // We use absolute values for symmetry, but mod handles negative coords naturally too
     float xLocal = mod(vWorldPos.x, gridSize);
-    float yLocal = mod(vWorldPos.y, gridSize);
+    float yLocal = mod(vWorldPos.z, gridSize);
 
-    // 3. Determine distance to the nearest vertical and horizontal lines
+    // Determine distance to the nearest vertical and horizontal lines
     // The distance to the nearest line is the minimum of (xLocal, gridSize - xLocal)
     float distToXLine = min(xLocal, gridSize - xLocal);
     float distToYLine = min(yLocal, gridSize - yLocal);
 
-    // 4. Determine if we are on a line
+    // Determine if we are on a line
     float alpha = 0.0;
 
     // Check X-axis lines
@@ -50,7 +50,7 @@ void main() {
     }
     // Check Y-axis lines (only if we weren't already on an X line)
     else if (distToYLine < lineThickness) {
-        float gridIndexY = round(vWorldPos.y / gridSize);
+        float gridIndexY = round(vWorldPos.z / gridSize);
         bool isMajorY = (mod(gridIndexY, majorDivisor) == 0.0);
 
         alpha = 1.0;
@@ -62,13 +62,13 @@ void main() {
         }
     }
 
-    // 5. Fade out lines based on distance (Atmospheric Perspective / Fog)
+    // Fade out lines based on distance (Atmospheric Perspective / Fog)
     // Calculate fade factor: 1.0 at camera, 0.0 at maxRange
     float fade = 1.0 - (distToCamera / maxRange);
     // Apply a curve to the fade for smoother disappearance
     fade = clamp(pow(fade, 2.0), 0.0, 1.0);
 
-    // 6. Zoom-based Line Thickness Adjustment
+    // Zoom-based Line Thickness Adjustment
     // If camera zooms out (far away), lines get thinner visually.
     // To compensate, we scale the thickness by camera distance.
     // Note: This creates the "Infinite" look where lines stay constant width relative to scene size.

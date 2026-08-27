@@ -70,7 +70,7 @@ void main() {
     // If camera zooms out (far away), lines get thinner visually.
     // To compensate, we scale the thickness by camera distance.
     // Note: This creates the "Infinite" look where lines stay constant width relative to scene size.
-    float zoomScale = mix(1.0, distToCamera * 0.01, zoomSensitivity);
+    float zoomScale = mix(1.0, distToCamera * 0.5, zoomSensitivity);
 
     // If the adjusted line is now too thin, fade it out gently
     float adjustedThickness = lineThickness * zoomScale;
@@ -81,6 +81,9 @@ void main() {
     if (alpha < 0.5) {
         discard;
     }
+
+    // NOTE: This line cause shader program build crash.
+    // fade = 1.0f;
 
     outFragColor.a *= fade;
 }

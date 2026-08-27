@@ -34,6 +34,8 @@ class Program {
 
     private val _versionString = "#version 450 core\n\n"
 
+    private var _programSourceText: MutableList<String> = mutableListOf()
+
 //    constructor(shaders: ShaderSource) {
 //        _programName = shaders.programName
 //
@@ -99,9 +101,9 @@ class Program {
         for ((stage, label) in defines) {
             val existing = result[stage]
             if (existing != null) {
-                result[stage] = "$existing#define $label\n"
+                result[stage] = "$existing#define $label\n\n"
             } else {
-                result[stage] = "#define $label\n"
+                result[stage] = "#define $label\n\n"
             }
         }
 
@@ -114,9 +116,9 @@ class Program {
         for ((stage, label) in defines) {
             val existing = result[stage]
             if (existing != null) {
-                result[stage] = "$existing#extension $label\n"
+                result[stage] = "$existing#extension $label : enable\n\n"
             } else {
-                result[stage] = "#extension $label\n"
+                result[stage] = "#extension $label : enable\n\n"
             }
         }
 
@@ -132,6 +134,9 @@ class Program {
     }
 
     fun build(): Unit {
+        // Clear cached program source text.
+        _programSourceText.clear()
+
         val shadersList = _shaderSources?.shadersList ?: throw RuntimeException("Set shader sources before build!")
         _programName = _shaderSources!!.programName
 
@@ -178,8 +183,8 @@ class Program {
         val defines = parseDefines(_defines)
         val thisStageDefines = defines[stage] ?: ""
 
-//        val fullSource = _versionString + thisStageExtensions + thisStageDefines + source
-//        println("$fullSource")
+        val fullSource = _versionString + thisStageExtensions + thisStageDefines + source
+        _programSourceText.addLast(fullSource)
 
         glShaderSource(shHandle, _versionString, thisStageExtensions, thisStageDefines, source)
 
@@ -373,6 +378,11 @@ class Program {
         val (id, value) = p
         setVectorUniform(id, value)
     }
+
+    val programSourceText: String
+        get():String {
+            return _programSourceText.joinToString(separator = "\n\n")
+        }
 }
 
 // ============================================================================

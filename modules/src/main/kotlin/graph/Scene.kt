@@ -102,7 +102,8 @@ class DrawableVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(d
 // ======================= GridDrawVisitor ====================================
 // ============================================================================
 
-class GridDrawVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(delta, viewMatrix) {
+class GridDrawVisitor(delta: Float, val cameraPos: Vector3, viewMatrix: Matrix4) :
+    DrawCallVisitorBase(delta, viewMatrix) {
     override fun apply(node: Leaf): Unit {
         when (node) {
             is Grid -> {
@@ -110,16 +111,18 @@ class GridDrawVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(d
                     set("view_matrix" to _viewMatrix, false)
                     set("model_matrix" to Matrix4(), false)
 
-                    set("scale" to 10.0f)
+                    set("scale" to 100.0f)
                     set("zOffset" to 0.0f)
 
                     set("gridSize" to 1.0f)
                     set("lineThickness" to 0.015f)
-                    set("maxRange" to 100.0f)
-                    set("zoomSensitivity" to 0.05f)
+                    set("maxRange" to 150.0f)
+                    set("zoomSensitivity" to 0.01f)
                     this assign value("colorMajor" to Vector3(0.7f, 0.2f, 0.2f))
                     this assign value("colorMinor" to Vector3(0.2f, 0.2f, 0.5f))
                     set("majorDivisor" to 5.0f)
+
+                    this assign value("cameraPos" to cameraPos)
                 }
 
                 node.draw()
@@ -168,7 +171,7 @@ class Scene {
             stateGroup {
                 program = Program().apply {
                     source = ShaderSource("grid")
-                    extension(GL_VERTEX_SHADER, "GL_KHR_vulkan_glsl : enable")
+                    extension(GL_VERTEX_SHADER, "GL_KHR_vulkan_glsl")
                     build()
                 }
                 this attach Grid()
@@ -187,7 +190,7 @@ class Scene {
     fun walk(): Unit {
         _camera.traverse()
 
-        val g = GridDrawVisitor(1.0f, _camera.viewMatrix)
+        val g = GridDrawVisitor(1.0f, _camera.eye, _camera.viewMatrix)
         _grid.accept(g)
 
         val r = DrawableVisitor(1.0f, _camera.viewMatrix)

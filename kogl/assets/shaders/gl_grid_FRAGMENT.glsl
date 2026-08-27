@@ -8,13 +8,11 @@ uniform float zoomSensitivity;
 uniform vec3 colorMajor; // Color for lines at multiples of (gridSize * 5) e.g., 100m
 uniform vec3 colorMinor; // Color for standard lines e.g., 10m
 uniform float majorDivisor; // How often a major line appears (e.g., 5)
+uniform vec3 cameraPos;
 
 void main() {
-    //    vec3 CB_cameraPos = vec3(0.0, 1.0, 1.0);
-    vec3 CB_cameraPos = vec3(-18.0, -13.0, -14.0);
-
-    // 1. Early Z-culling based on distance
-    float distToCamera = length(vWorldPos - CB_cameraPos);
+    // Early Z-culling based on distance
+    float distToCamera = length(vWorldPos - cameraPos);
     if (distToCamera > maxRange) {
         discard;
     }
@@ -22,12 +20,12 @@ void main() {
     // Calculate local coordinates relative to the grid size
     // We use absolute values for symmetry, but mod handles negative coords naturally too
     float xLocal = mod(vWorldPos.x, gridSize);
-    float yLocal = mod(vWorldPos.z, gridSize);
+    float zLocal = mod(vWorldPos.z, gridSize);
 
     // Determine distance to the nearest vertical and horizontal lines
     // The distance to the nearest line is the minimum of (xLocal, gridSize - xLocal)
     float distToXLine = min(xLocal, gridSize - xLocal);
-    float distToYLine = min(yLocal, gridSize - yLocal);
+    float distToZLine = min(zLocal, gridSize - zLocal);
 
     // Determine if we are on a line
     float alpha = 0.0;
@@ -48,10 +46,10 @@ void main() {
             outFragColor = vec4(colorMinor, 1.0);
         }
     }
-    // Check Y-axis lines (only if we weren't already on an X line)
-    else if (distToYLine < lineThickness) {
-        float gridIndexY = round(vWorldPos.z / gridSize);
-        bool isMajorY = (mod(gridIndexY, majorDivisor) == 0.0);
+    // Check Z-axis lines (only if we weren't already on an X line)
+    else if (distToZLine < lineThickness) {
+        float gridIndexZ = round(vWorldPos.z / gridSize);
+        bool isMajorY = (mod(gridIndexZ, majorDivisor) == 0.0);
 
         alpha = 1.0;
 

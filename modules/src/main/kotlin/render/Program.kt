@@ -393,6 +393,33 @@ interface UniformSetter<T> {
 
 fun <T> value(pair: Pair<String, T>): UniformSetter<T> {
     when (pair.second) {
+        is Int -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setScalarUniform(id, value as Int)
+                }
+            }
+        }
+
+        is Float -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setScalarUniform(id, value as Float)
+                }
+            }
+        }
+
+        is Double -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setScalarUniform(id, value as Double)
+                }
+            }
+        }
+
         is Vector2 -> {
             return object : UniformSetter<T> {
                 override fun set(p: Program) {
@@ -416,6 +443,41 @@ fun <T> value(pair: Pair<String, T>): UniformSetter<T> {
                 override fun set(p: Program) {
                     val (id, value) = pair
                     p.setVectorUniform(id, value as Vector4)
+                }
+            }
+        }
+
+        else -> {
+            throw RuntimeException("Unknown UniformSetter<T> type!")
+        }
+    }
+}
+
+fun <T> value(pair: Pair<String, T>, transpose: Boolean): UniformSetter<T> {
+    when (pair.second) {
+        is Matrix2 -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setMatrixUniform(id, transpose, value as Matrix2)
+                }
+            }
+        }
+
+        is Matrix3 -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setMatrixUniform(id, transpose, value as Matrix3)
+                }
+            }
+        }
+
+        is Matrix4 -> {
+            return object : UniformSetter<T> {
+                override fun set(p: Program) {
+                    val (id, value) = pair
+                    p.setMatrixUniform(id, transpose, value as Matrix4)
                 }
             }
         }

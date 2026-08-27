@@ -46,9 +46,11 @@ abstract class DrawCallVisitorBase(delta: Float, viewMatrix: Matrix4) : Visitor(
     }
 
     override fun apply(node: TransformGroup): Unit {
-        _modelMatrixStack.push(node)
-        node.traverse(this)
-        _modelMatrixStack.pop()
+        with(_modelMatrixStack) {
+            push(node)
+            node.traverse(this@DrawCallVisitorBase)
+            pop()
+        }
     }
 }
 
@@ -83,7 +85,8 @@ class DrawableVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(d
                 // ...update shader uniform...
                 with(_program) {
                     set("view_matrix" to _viewMatrix, false)
-                    set("model_matrix" to node.modelMatrix, false)
+                    this assign value("model_matrix" to node.modelMatrix, false)
+                    // set("model_matrix" to node.modelMatrix, false)
 
                     // set("color" to node.color)
                     this assign value("color" to node.color)
@@ -115,7 +118,9 @@ class GridDrawVisitor(delta: Float, val cameraPos: Vector3, viewMatrix: Matrix4)
                     set("maxRange" to 256.0f)
                     set("yOffset" to 0.0f)
 
-                    set("gridSize" to 1.0f)
+                    //set("gridSize" to 1.0f)
+                    this assign value("gridSize" to 1.0f)
+                    
                     set("majorDivisor" to 5.0f)
 
                     set("lineThickness" to 0.0256f)

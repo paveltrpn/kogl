@@ -1,8 +1,8 @@
-## Kotlin opengl
+### Kotlin opengl
 
 This is an kotlin opengl scene graph rendering app inspired by some ideas from vsg (osg) and java3d scenegraphs.
 
-### Run
+#### Run
 
 ```gradle kogl:run```
 

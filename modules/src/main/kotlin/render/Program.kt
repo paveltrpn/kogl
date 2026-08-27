@@ -22,6 +22,7 @@ class Program {
     private var _shaderSources: ShaderSource? = null
 
     private val _defines: MutableList<Pair<Int, String>> = mutableListOf()
+    private val _extensions: MutableList<Pair<Int, String>> = mutableListOf()
 
     private var _programName: String = ""
     private var _programHandle: Int = 0
@@ -66,7 +67,7 @@ class Program {
             if (_shaderSources != null) {
                 throw RuntimeException("Shader source reattach is not allowed!")
             }
-            
+
             _shaderSources = value
         }
 
@@ -81,6 +82,15 @@ class Program {
         }
 
         _defines.addLast(Pair(stage, label))
+    }
+
+    fun extension(stage: Int, label: String): Unit {
+        if (glGetProgrami(_programHandle, GL_LINK_STATUS) == GL_TRUE) {
+            println("It meaningless to add defines to already linked program \"$_programName\"!")
+            return
+        }
+
+        _extensions.addLast(Pair(stage, label))
     }
 
     private fun parseDefines(defines: List<Pair<Int, String>>): Map<Int, String> {
@@ -98,8 +108,27 @@ class Program {
         return result
     }
 
+    private fun parseExtensions(defines: List<Pair<Int, String>>): Map<Int, String> {
+        val result = mutableMapOf<Int, String>()
+
+        for ((stage, label) in defines) {
+            val existing = result[stage]
+            if (existing != null) {
+                result[stage] = "$existing#extension $label\n"
+            } else {
+                result[stage] = "#extension $label\n"
+            }
+        }
+
+        return result
+    }
+
     fun cleanDefines(): Unit {
         _defines.clear()
+    }
+
+    fun cleanExtensions(): Unit {
+        _extensions.clear()
     }
 
     fun build(): Unit {
@@ -143,13 +172,16 @@ class Program {
     private fun compile(stage: Int, source: String): Int {
         val shHandle = glCreateShader(stage)
 
+        val extension = parseExtensions(_extensions)
+        val thisStageExtensions = extension[stage] ?: ""
+
         val defines = parseDefines(_defines)
         val thisStageDefines = defines[stage] ?: ""
 
-//        val fullSource = versionString + thisStageDefines + source
+//        val fullSource = _versionString + thisStageExtensions + thisStageDefines + source
 //        println("$fullSource")
 
-        glShaderSource(shHandle, _versionString, thisStageDefines, source)
+        glShaderSource(shHandle, _versionString, thisStageExtensions, thisStageDefines, source)
 
         glCompileShader(shHandle)
 

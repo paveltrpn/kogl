@@ -1,20 +1,22 @@
 package graph
 
+import org.lwjgl.opengl.GL46.*
+
 import algebra.*
 import render.*
 
 // ============================================================================
-// ======================= DrawCallVisitor ====================================
+// ======================= DrawCallVisitorBase ================================
 // ============================================================================
 
-class DrawCallVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
-    private val _delta: Float
-    private var _viewMatrix: Matrix4
+abstract class DrawCallVisitorBase(delta: Float, viewMatrix: Matrix4) : Visitor() {
+    protected val _delta: Float
+    protected var _viewMatrix: Matrix4
 
-    private var _program: Program = Program()
-    private var _modelMatrixStack = MatrixStack()
+    protected var _program: Program = Program()
+    protected var _modelMatrixStack = MatrixStack()
 
-    private var _drawCallsCount = 0
+    protected var _drawCallsCount = 0
 
     init {
         _delta = delta
@@ -47,7 +49,13 @@ class DrawCallVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
         node.traverse(this)
         _modelMatrixStack.pop()
     }
+}
 
+// ============================================================================
+// ======================= DrawableVisitor ====================================
+// ============================================================================
+
+class DrawableVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(delta, viewMatrix) {
     override fun apply(node: Leaf): Unit {
         when (node) {
             is Drawable -> {
@@ -85,10 +93,25 @@ class DrawCallVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
 
                 _drawCallsCount++
             }
+        }
+    }
+}
 
-//            is -> OtherLeaf {
-//
-//            }
+// ============================================================================
+// ======================= GridDrawVisitor ====================================
+// ============================================================================
+
+class GridDrawVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(delta, viewMatrix) {
+    override fun apply(node: Leaf): Unit {
+        when (node) {
+            is Grid -> {
+                with(_program) {
+                    set("view_matrix" to _viewMatrix, false)
+                    set("model_matrix" to Matrix4(), false)
+                }
+                node.draw()
+                _drawCallsCount++
+            }
         }
     }
 }
@@ -103,6 +126,8 @@ class DrawCallVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
  * in physical space units and in content.
  */
 class Scene {
+    private var _grid = StateGroup()
+
     private var _locales: MutableList<Locale> = mutableListOf()
 
     private var _camera = Flycam()
@@ -125,6 +150,25 @@ class Scene {
             azimuth = 54.0f
             elevation = -31.0f
         }
+
+        with(_grid) {
+            program = Program().apply {
+                source = ShaderSource("grid")
+                extension(GL_VERTEX_SHADER, "GL_KHR_vulkan_glsl : enable")
+                build()
+//                set("color" to Vector3(1.0f, 0.0f, 0.0f))
+            }
+
+            val tr = TransformGroup().apply {
+                matrix = algebra.offset(Vector3(0.0f, 0.0f, 0.0f))
+
+                val grid = Grid()
+
+                addChild(grid)
+            }
+
+            addChild(tr)
+        }
     }
 
     var camera: Flycam
@@ -138,7 +182,10 @@ class Scene {
     fun walk(): Unit {
         _camera.traverse()
 
-        val r = DrawCallVisitor(1.0f, _camera.viewMatrix)
+        val g = GridDrawVisitor(1.0f, _camera.viewMatrix)
+        _grid.accept(g)
+
+        val r = DrawableVisitor(1.0f, _camera.viewMatrix)
 
         for (locale in _locales) {
             locale.root.accept(r)

@@ -121,7 +121,7 @@ class GLDebugDiscardNotification : GLDebugCallbackBase() {
     }
 }
 
-fun enableDebugContext(): Unit {
+fun <T : GLDebugMessageCallbackI> enableDebugContext(cb: T): Unit {
     glEnable(GL_DEBUG_OUTPUT)
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS)
 
@@ -139,7 +139,5 @@ fun enableDebugContext(): Unit {
 //        GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, GL_DEBUG_SEVERITY_HIGH, 0, true
 //    )
 
-//    glDebugMessageCallback(GLDebugCallbackAll(), 0L)
-
-    glDebugMessageCallback(GLDebugDiscardNotification(), 0L)
+    glDebugMessageCallback(cb, 0L)
 }

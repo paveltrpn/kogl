@@ -4,10 +4,10 @@ import algebra.*
 import render.*
 
 // ============================================================================
-// ======================= GraphRecordVisitor =================================
+// ======================= DrawCallVisitor ====================================
 // ============================================================================
 
-class GraphRecordVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
+class DrawCallVisitor(delta: Float, viewMatrix: Matrix4) : Visitor() {
     private val _delta: Float
     private var _viewMatrix: Matrix4
 
@@ -138,7 +138,7 @@ class Scene {
     fun walk(): Unit {
         _camera.traverse()
 
-        val r = GraphRecordVisitor(1.0f, _camera.viewMatrix)
+        val r = DrawCallVisitor(1.0f, _camera.viewMatrix)
 
         for (locale in _locales) {
             locale.root.accept(r)

@@ -48,8 +48,8 @@ class Window {
         initGLFW()
 
         // Enable debug.
-        println("Debug out is ENABLED! Disable it in ${this::class.constructors.first()}")
-        debug.enableDebugContext()
+        println("Debug output ENABLED! Disable it in ${this::class.constructors.first()}")
+        debug.enableDebugContext(debug.GLDebugDiscardNotification())
 
         val cc = Color(Config.instance().konfig.background_color)
 

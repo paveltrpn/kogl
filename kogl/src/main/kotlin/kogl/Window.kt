@@ -1,9 +1,5 @@
 package kogl
 
-import java.io.File
-
-import kotlin.reflect.*
-
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
@@ -49,7 +45,7 @@ class Window {
 
         // Enable debug.
         println("Debug output ENABLED! Disable it in ${this::class.constructors.first()}")
-        debug.enableDebugContext(debug.GLDebugDiscardNotification())
+        gldebug.enableDebugContext(gldebug.GLDebugDiscardNotification())
 
         val cc = Color(Config.instance().konfig.background_color)
 
@@ -61,10 +57,10 @@ class Window {
         val mainScene = Scene()
 
         with(mainScene) {
-            val (dimonds, frames, arches) = testgraph.sparseObjectsGraph()
+            val (dimonds, frames, arches) = kogl.testgraph.sparseObjectsGraph()
 
             val dimondsLoc = buildLocale {
-                origin = Vector3(-8.0f, 0.0f, 0.0f)
+                origin = Vector3(0.0f, 0.0f, 0.0f)
                 this attach dimonds
             }
 
@@ -72,7 +68,7 @@ class Window {
                 addStateGroup(frames)
             }
 
-            val archesLoc = Locale(Vector3(8.0f, 0.0f, 0.0f)).apply {
+            val archesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {
                 addStateGroup(arches)
             }
 
@@ -91,7 +87,7 @@ class Window {
 //        }
 
         with(mainScene) {
-            val m = maps.m02()
+            val m = kogl.maps.m02()
             addLocales(m)
         }
 

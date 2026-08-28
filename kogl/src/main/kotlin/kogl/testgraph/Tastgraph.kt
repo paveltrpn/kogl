@@ -1,4 +1,4 @@
-package testgraph
+package kogl.testgraph
 
 import kotlin.random.Random
 

@@ -1,4 +1,4 @@
-package debug
+package gldebug
 
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.opengl.GLDebugMessageCallbackI

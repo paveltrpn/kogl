@@ -1,4 +1,4 @@
-package maps
+package kogl.maps
 
 import algebra.*
 import graph.*

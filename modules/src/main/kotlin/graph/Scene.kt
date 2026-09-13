@@ -120,11 +120,11 @@ class GridDrawVisitor(delta: Float, val cameraPos: Vector3, viewMatrix: Matrix4)
 
                     //set("gridSize" to 1.0f)
                     this assign value("gridSize" to 1.0f)
-                    
+
                     set("majorDivisor" to 5.0f)
 
                     set("lineThickness" to 0.0256f)
-                    set("zoomSensitivity" to 4.0f)
+                    set("zoomSensitivity" to 0.5f)
 
                     this assign value("colorMajor" to Vector3(0.7f, 0.1f, 0.1f))
                     this assign value("colorMinor" to Vector3(0.1f, 0.1f, 0.5f))

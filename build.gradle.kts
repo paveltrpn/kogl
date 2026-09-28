@@ -3,6 +3,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+kotlin {
+    jvmToolchain(26)
+}
+
 allprojects {
     repositories {
         mavenCentral()

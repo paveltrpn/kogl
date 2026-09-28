@@ -28,6 +28,7 @@ tasks.test {
 }
 
 kotlin {
+    jvmToolchain(26)
     compilerOptions {
         // optIn.add("kotlin.RequiresOptIn")
     }

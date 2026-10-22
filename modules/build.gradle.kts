@@ -30,7 +30,7 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(26)
+    jvmToolchain(21)
     compilerOptions {
         // optIn.add("kotlin.RequiresOptIn")
     }

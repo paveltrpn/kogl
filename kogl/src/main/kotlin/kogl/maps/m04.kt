@@ -86,29 +86,29 @@ fun m04(): List<Locale> {
                 arrayOf(
                     Vector3(-20.0f, -3.0f, 26.0f),
                     Vector3(20.0f, -2.0f, 26.0f),
-                    Vector3(50.0f, -2.5f, 26.0f),
-                    Vector3(80.0f, -1.5f, 26.0f)
+                    Vector3(50.0f, -4.5f, 26.0f),
+                    Vector3(80.0f, -6.5f, 26.0f)
                 ),
                 arrayOf(
-                    Vector3(-20.0f, -1.5f, 9.0f),
+                    Vector3(-20.0f, -4.5f, 9.0f),
                     Vector3(20.0f, -2.5f, 9.0f),
                     Vector3(50.0f, -2.0f, 9.0f),
                     Vector3(80.0f, -3.0f, 9.0f)
                 ),
                 arrayOf(
-                    Vector3(-20.0f, -2.5f, -9.0f),
+                    Vector3(-20.0f, -5.5f, -9.0f),
                     Vector3(20.0f, -1.5f, -9.0f),
                     Vector3(50.0f, -3.0f, -9.0f),
                     Vector3(80.0f, -2.0f, -9.0f)
                 ),
                 arrayOf(
                     Vector3(-20.0f, -2.0f, -26.0f),
-                    Vector3(20.0f, -3.0f, -26.0f),
+                    Vector3(20.0f, 4.0f, -26.0f),
                     Vector3(50.0f, -1.5f, -26.0f),
-                    Vector3(80.0f, -2.5f, -26.0f)
+                    Vector3(80.0f, -7.5f, -26.0f)
                 )
             ),
-            IntPair(32, 16)
+            IntPair(4, 4)
         ).toObjMesh("river")
     )
 

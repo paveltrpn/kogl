@@ -42,3 +42,5 @@ Every step is a visitor.
 
 - When you create or update a map, add an artful description of what it is.
 - The description must be full enough that any magical entity can reproduce it.
+
+- When you import something use "star wildcard ended" import style, do not try to import entities by name.

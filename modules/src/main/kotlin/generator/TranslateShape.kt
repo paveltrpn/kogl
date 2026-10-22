@@ -1,16 +1,19 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
 
+// ============================================================================
+// ======================= TranslateShape =====================================
+// ============================================================================
 class TranslateShape(
     shape: GeneratorShape,
     delta: Vector2
-) : TransformShape(shape, translateEval(delta))
+) : TransformShape(shape, _translateEval(delta))
 
-private fun translateEval(delta: Vector2): (ShapeVertex) -> Unit {
+private fun _translateEval(delta: Vector2): (ShapeVertex) -> Unit {
     val dx = delta.x
     val dy = delta.y
-    return { vertex ->
+    return { vertex: ShapeVertex ->
         vertex.mPosition = Vector2(
             vertex.mPosition.x + dx,
             vertex.mPosition.y + dy

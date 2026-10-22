@@ -4,12 +4,16 @@ import algebra.*
 
 typealias MeshValueType = Float
 
+// ============================================================================
+// ======================= ObjTriangleIndices =================================
+// ============================================================================
+
 // Dual-Indexing (Per-Face Normals/UVs). Each value is an index into
 // corresponding face data array. Compatible with .obj, FBX, glTF
 class ObjTriangleIndices {
-    var vertexIndex = IntArray(3) { 0 }
-    var normalIndex = IntArray(3) { 0 }
-    var texCoordIndex = IntArray(3) { 0 }
+    var vertexIndex = IntArray(3) { index: Int -> 0 }
+    var normalIndex = IntArray(3) { index: Int -> 0 }
+    var texCoordIndex = IntArray(3) { index: Int -> 0 }
 }
 
 // ============================================================================
@@ -17,16 +21,16 @@ class ObjTriangleIndices {
 // ============================================================================
 
 abstract class Mesh(name: String) {
-    protected val _name: String = name
+    protected val mName: String = name
 
     val name: String
         get(): String {
-            return _name
+            return mName
         }
 
     abstract fun transform(tr: Matrix4): Unit
 
-    protected fun transformVertices(vertices: FloatArray, tr: Matrix4): Unit {
+    protected fun mTransformVertices(vertices: FloatArray, tr: Matrix4): Unit {
         var i: Int = 0
         while (i < vertices.size) {
             val vertex = Vector3(vertices[i + 0], vertices[i + 1], vertices[i + 2])
@@ -113,7 +117,7 @@ class OBJMesh(
     }
 
     override fun transform(tr: Matrix4): Unit {
-        transformVertices(_vertices, tr)
+        mTransformVertices(_vertices, tr)
     }
 }
 
@@ -205,7 +209,7 @@ class SeparatedArraysMesh : Mesh {
         }
 
     override fun transform(tr: Matrix4): Unit {
-        transformVertices(_vertices, tr)
+        mTransformVertices(_vertices, tr)
     }
 }
 
@@ -263,7 +267,7 @@ class IndexedMesh : Mesh {
         }
 
     override fun transform(tr: Matrix4): Unit {
-        transformVertices(_vertices, tr)
+        mTransformVertices(_vertices, tr)
     }
 }
 

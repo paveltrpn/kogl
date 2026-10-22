@@ -1,7 +1,10 @@
 package mesh
 
-import java.io.File
-import java.io.FileNotFoundException
+import java.io.*
+
+// ============================================================================
+// ======================= MtlFormatToken =====================================
+// ============================================================================
 
 private enum class MtlFormatToken {
     NEW_MATERIAL,
@@ -28,7 +31,7 @@ private enum class MtlFormatToken {
     COMMENT,
 }
 
-private val tokensMap: Map<MtlFormatToken, String> = mapOf(
+private val _tokensMap: Map<MtlFormatToken, String> = mapOf(
     MtlFormatToken.NEW_MATERIAL to "newmtl ",
     MtlFormatToken.AMBIENT_COLOR to "Ka ",
     MtlFormatToken.DIFFUSE_COLOR to "Kd ",
@@ -53,6 +56,10 @@ private val tokensMap: Map<MtlFormatToken, String> = mapOf(
     MtlFormatToken.COMMENT to "# "
 )
 
+// ============================================================================
+// ======================= Material ===========================================
+// ============================================================================
+
 data class Material(
     val name: String,
     val ka: Triple<Float, Float, Float> = Triple(0.0f, 0.0f, 0.0f),
@@ -64,7 +71,7 @@ data class Material(
     val mapKd: String? = null
 )
 
-private fun split(str: String, delim: Char): List<String> {
+private fun _split(str: String, delim: Char): List<String> {
     val result = mutableListOf<String>()
     var left = 0
     for (i in str.indices) {
@@ -79,8 +86,8 @@ private fun split(str: String, delim: Char): List<String> {
     return result
 }
 
-private fun parseColorString(str: String): Triple<Float, Float, Float> {
-    val valuesString = split(str, ' ')
+private fun _parseColorString(str: String): Triple<Float, Float, Float> {
+    val valuesString = _split(str, ' ')
     val r = valuesString[0].toFloat()
     val g = valuesString[1].toFloat()
     val b = valuesString[2].toFloat()
@@ -115,16 +122,18 @@ fun readWavefrontMtlFile(filePath: String): Map<String, Material> {
 
     for (line in fileHandle.lineSequence()) {
         val str = line.trim()
-        if (str.isEmpty()) continue
+        if (str.isEmpty()) {
+            continue
+        }
 
         when {
-            str.startsWith(tokensMap[MtlFormatToken.COMMENT]!!) -> {
+            str.startsWith(_tokensMap[MtlFormatToken.COMMENT]!!) -> {
                 continue
             }
 
-            str.startsWith(tokensMap[MtlFormatToken.NEW_MATERIAL]!!) -> {
+            str.startsWith(_tokensMap[MtlFormatToken.NEW_MATERIAL]!!) -> {
                 saveCurrentMaterial()
-                currentName = str.substring(tokensMap[MtlFormatToken.NEW_MATERIAL]!!.length).trim()
+                currentName = str.substring(_tokensMap[MtlFormatToken.NEW_MATERIAL]!!.length).trim()
                 ka = Triple(0.0f, 0.0f, 0.0f)
                 kd = Triple(0.8f, 0.8f, 0.8f)
                 ks = Triple(0.0f, 0.0f, 0.0f)
@@ -135,44 +144,44 @@ fun readWavefrontMtlFile(filePath: String): Map<String, Material> {
                 continue
             }
 
-            str.startsWith(tokensMap[MtlFormatToken.AMBIENT_COLOR]!!) -> {
-                val colorString = str.substring(tokensMap[MtlFormatToken.AMBIENT_COLOR]!!.length)
-                ka = parseColorString(colorString)
+            str.startsWith(_tokensMap[MtlFormatToken.AMBIENT_COLOR]!!) -> {
+                val colorString = str.substring(_tokensMap[MtlFormatToken.AMBIENT_COLOR]!!.length)
+                ka = _parseColorString(colorString)
                 continue
             }
 
-            str.startsWith(tokensMap[MtlFormatToken.DIFFUSE_COLOR]!!) -> {
-                val colorString = str.substring(tokensMap[MtlFormatToken.DIFFUSE_COLOR]!!.length)
-                kd = parseColorString(colorString)
+            str.startsWith(_tokensMap[MtlFormatToken.DIFFUSE_COLOR]!!) -> {
+                val colorString = str.substring(_tokensMap[MtlFormatToken.DIFFUSE_COLOR]!!.length)
+                kd = _parseColorString(colorString)
                 continue
             }
 
-            str.startsWith(tokensMap[MtlFormatToken.SPECULAR_COLOR]!!) -> {
-                val colorString = str.substring(tokensMap[MtlFormatToken.SPECULAR_COLOR]!!.length)
-                ks = parseColorString(colorString)
+            str.startsWith(_tokensMap[MtlFormatToken.SPECULAR_COLOR]!!) -> {
+                val colorString = str.substring(_tokensMap[MtlFormatToken.SPECULAR_COLOR]!!.length)
+                ks = _parseColorString(colorString)
                 continue
             }
 
-            str.startsWith(tokensMap[MtlFormatToken.SPECULAR_EXPONENT]!!) -> {
-                val valueString = str.substring(tokensMap[MtlFormatToken.SPECULAR_EXPONENT]!!.length)
+            str.startsWith(_tokensMap[MtlFormatToken.SPECULAR_EXPONENT]!!) -> {
+                val valueString = str.substring(_tokensMap[MtlFormatToken.SPECULAR_EXPONENT]!!.length)
                 ns = valueString.trim().toFloat()
                 continue
             }
 
-            str.startsWith(tokensMap[MtlFormatToken.TRANSPARENCY]!!) -> {
-                val valueString = str.substring(tokensMap[MtlFormatToken.TRANSPARENCY]!!.length)
+            str.startsWith(_tokensMap[MtlFormatToken.TRANSPARENCY]!!) -> {
+                val valueString = str.substring(_tokensMap[MtlFormatToken.TRANSPARENCY]!!.length)
                 d = valueString.trim().toFloat()
                 continue
             }
 
-            str.startsWith(tokensMap[MtlFormatToken.ILLUMINATION_MODEL]!!) -> {
-                val valueString = str.substring(tokensMap[MtlFormatToken.ILLUMINATION_MODEL]!!.length)
+            str.startsWith(_tokensMap[MtlFormatToken.ILLUMINATION_MODEL]!!) -> {
+                val valueString = str.substring(_tokensMap[MtlFormatToken.ILLUMINATION_MODEL]!!.length)
                 illum = valueString.trim().toInt()
                 continue
             }
 
-            str.startsWith(tokensMap[MtlFormatToken.DIFFUSE_TEXTURE]!!) -> {
-                val textureString = str.substring(tokensMap[MtlFormatToken.DIFFUSE_TEXTURE]!!.length)
+            str.startsWith(_tokensMap[MtlFormatToken.DIFFUSE_TEXTURE]!!) -> {
+                val textureString = str.substring(_tokensMap[MtlFormatToken.DIFFUSE_TEXTURE]!!.length)
                 mapKd = textureString.trim()
                 continue
             }

@@ -1,7 +1,10 @@
 package algebra
 
+// ============================================================================
+// ======================= Matrix4 ============================================
+// ============================================================================
 class Matrix4 {
-    private var _data = FloatArray(16) { it -> 0.0f }
+    private var _data = FloatArray(16) { index: Int -> 0.0f }
 
     constructor() {
         idtt()
@@ -165,10 +168,10 @@ class Matrix4 {
     }
 
     fun vecMultiply(other: Vector3): Vector3 {
-        var rx = other.x * _data[0] + other.y * _data[1] + other.z * _data[2] + _data[3];
-        var ry = other.x * _data[4] + other.y * _data[5] + other.z * _data[6] + _data[7];
-        var rz = other.x * _data[8] + other.y * _data[9] + other.z * _data[10] + _data[11];
-        val w = other.x * _data[12] + other.y * _data[13] + other.z * _data[14] + _data[15];
+        var rx = other.x * _data[0] + other.y * _data[1] + other.z * _data[2] + _data[3]
+        var ry = other.x * _data[4] + other.y * _data[5] + other.z * _data[6] + _data[7]
+        var rz = other.x * _data[8] + other.y * _data[9] + other.z * _data[10] + _data[11]
+        val w = other.x * _data[12] + other.y * _data[13] + other.z * _data[14] + _data[15]
 
         // Normalize if w is different from 1.0 (convert from homogeneous to Cartesian
         // coordinates).
@@ -209,8 +212,8 @@ class Matrix4 {
     }
 
     fun fromAxisAngle(ax: Vector3, phi: Float): Matrix4 {
-        val cosphi = kotlin.math.cos(toRadians(phi));
-        val sinphi = kotlin.math.sin(toRadians(phi));
+        val cosphi = kotlin.math.cos(toRadians(phi))
+        val sinphi = kotlin.math.sin(toRadians(phi))
         val vxvy = ax.x * ax.y
         val vxvz = ax.x * ax.z
         val vyvz = ax.y * ax.z
@@ -337,13 +340,13 @@ class Matrix4 {
         _data[1] = _data[4]
         _data[4] = tmp
 
-        _data[2] = _data[8].also { _data[8] = _data[2] }
-        _data[3] = _data[12].also { _data[12] = _data[3] }
+        _data[2] = _data[8].also { value: Float -> _data[8] = _data[2] }
+        _data[3] = _data[12].also { value: Float -> _data[12] = _data[3] }
 
-        _data[6] = _data[9].also { _data[9] = _data[6] }
-        _data[7] = _data[13].also { _data[13] = _data[7] }
+        _data[6] = _data[9].also { value: Float -> _data[9] = _data[6] }
+        _data[7] = _data[13].also { value: Float -> _data[13] = _data[7] }
 
-        _data[11] = _data[14].also { _data[14] = _data[11] }
+        _data[11] = _data[14].also { value: Float -> _data[14] = _data[11] }
     }
 
     fun rotate(axis: Vector3, angle: Float): Matrix4 {

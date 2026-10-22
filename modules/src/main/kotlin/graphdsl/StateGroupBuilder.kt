@@ -2,9 +2,15 @@ package graphdsl
 
 import graph.*
 
+// ============================================================================
+// ======================= StateGroupBuilderDslMarker =========================
+// ============================================================================
 @DslMarker
 annotation class StateGroupBuilderDslMarker
 
+// ============================================================================
+// ======================= StateGroupBuilder ==================================
+// ============================================================================
 @StateGroupBuilderDslMarker
 class StateGroupBuilder : NodeBuilder() {
     private var _stateGroup: StateGroup? = null

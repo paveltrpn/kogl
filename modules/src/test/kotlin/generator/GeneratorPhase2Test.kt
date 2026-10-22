@@ -1,21 +1,21 @@
 package generator
 
-import algebra.Vector2
-import algebra.Vector3
-import kotlin.math.sqrt
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import algebra.*
+import kotlin.math.*
+import kotlin.test.*
 
-private const val EPS2 = 1e-5f
+private const val _EPS2 = 1e-5f
 
-private fun assertClose2(expected: Float, actual: Float) {
+private fun _assertClose2(expected: Float, actual: Float) {
     assertTrue(
-        kotlin.math.abs(expected - actual) <= EPS2,
+        kotlin.math.abs(expected - actual) <= _EPS2,
         "expected $expected but was $actual"
     )
 }
 
+// ============================================================================
+// ======================= DiskMeshTest =======================================
+// ============================================================================
 class DiskMeshTest {
 
     @Test
@@ -27,8 +27,8 @@ class DiskMeshTest {
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
             val r = sqrt(p.x * p.x + p.y * p.y)
-            assertTrue(r >= inner - EPS2 && r <= radius + EPS2, "radius $r out of [$inner, $radius]")
-            assertClose2(0.0f, p.z)
+            assertTrue(r >= inner - _EPS2 && r <= radius + _EPS2, "radius $r out of [$inner, $radius]")
+            _assertClose2(0.0f, p.z)
         }
     }
 
@@ -40,6 +40,9 @@ class DiskMeshTest {
     }
 }
 
+// ============================================================================
+// ======================= CapsuleMeshTest ====================================
+// ============================================================================
 class CapsuleMeshTest {
 
     @Test
@@ -51,12 +54,15 @@ class CapsuleMeshTest {
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
             val r = sqrt(p.x * p.x + p.y * p.y)
-            assertTrue(r <= radius + EPS2, "radial $r exceeds $radius")
-            assertTrue(kotlin.math.abs(p.z) <= size + radius + EPS2, "z out of bounds: $p")
+            assertTrue(r <= radius + _EPS2, "radial $r exceeds $radius")
+            assertTrue(kotlin.math.abs(p.z) <= size + radius + _EPS2, "z out of bounds: $p")
         }
     }
 }
 
+// ============================================================================
+// ======================= IcoSphereMeshTest ==================================
+// ============================================================================
 class IcoSphereMeshTest {
 
     @Test
@@ -66,11 +72,14 @@ class IcoSphereMeshTest {
 
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
-            assertClose2(radius, sqrt(p.x * p.x + p.y * p.y + p.z * p.z))
+            _assertClose2(radius, sqrt(p.x * p.x + p.y * p.y + p.z * p.z))
         }
     }
 }
 
+// ============================================================================
+// ======================= IcosahedronMeshTest ================================
+// ============================================================================
 class IcosahedronMeshTest {
 
     @Test
@@ -81,6 +90,9 @@ class IcosahedronMeshTest {
     }
 }
 
+// ============================================================================
+// ======================= DodecahedronMeshTest ===============================
+// ============================================================================
 class DodecahedronMeshTest {
 
     @Test
@@ -90,11 +102,14 @@ class DodecahedronMeshTest {
 
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
-            assertTrue(sqrt(p.x * p.x + p.y * p.y + p.z * p.z) <= radius + EPS2)
+            assertTrue(sqrt(p.x * p.x + p.y * p.y + p.z * p.z) <= radius + _EPS2)
         }
     }
 }
 
+// ============================================================================
+// ======================= RoundedBoxMeshTest =================================
+// ============================================================================
 class RoundedBoxMeshTest {
 
     @Test
@@ -113,6 +128,9 @@ class RoundedBoxMeshTest {
     }
 }
 
+// ============================================================================
+// ======================= SphericalConeMeshTest ==============================
+// ============================================================================
 class SphericalConeMeshTest {
 
     @Test
@@ -129,34 +147,37 @@ class SphericalConeMeshTest {
     }
 }
 
+// ============================================================================
+// ======================= MeshWrapperTest ====================================
+// ============================================================================
 class MeshWrapperTest {
 
     @Test
     fun repeatMeshOffsetsInstances() {
-        val base = PlaneMeshPublic(Vector2(1.0f, 1.0f), IntPair(1, 1))
+        val base = _PlaneMeshPublic(Vector2(1.0f, 1.0f), IntPair(1, 1))
         val mesh = RepeatMesh(base, 3, Vector3(2.0f, 0.0f, 0.0f))
 
         assertEquals(3 * base.vertices().count(), mesh.vertices().count())
         assertEquals(3 * base.triangles().count(), mesh.triangles().count())
 
-        val xs = mesh.vertices().map { vertex -> vertex.mPosition.x }.toList()
-        assertTrue(xs.any { x -> x > 3.0f })
+        val xs = mesh.vertices().map { vertex: MeshVertex -> vertex.mPosition.x }.toList()
+        assertTrue(xs.any { x: Float -> x > 3.0f })
     }
 
     @Test
     fun rotateMeshRotatesPositions() {
-        val base = PlaneMeshPublic(Vector2(1.0f, 1.0f), IntPair(1, 1))
+        val base = _PlaneMeshPublic(Vector2(1.0f, 1.0f), IntPair(1, 1))
         val mesh = RotateMesh(base, algebra.toRadians(90.0f), Vector3(0.0f, 0.0f, 1.0f))
 
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
-            assertClose2(0.0f, p.z)
+            _assertClose2(0.0f, p.z)
         }
     }
 
     @Test
     fun subdivideMeshSplitsTriangles() {
-        val base = PlaneMeshPublic(Vector2(1.0f, 1.0f), IntPair(1, 1))
+        val base = _PlaneMeshPublic(Vector2(1.0f, 1.0f), IntPair(1, 1))
         val mesh = SubdivideMesh(base)
 
         assertEquals(4 * base.triangles().count(), mesh.triangles().count())
@@ -175,12 +196,12 @@ class MeshWrapperTest {
         assertEquals(2 * path.vertices().count(), merged.vertices().count())
         assertEquals(2 * path.edges().count(), merged.edges().count())
 
-        val maxIndex = merged.edges().maxOf { edge -> edge.mVertices[1] }
+        val maxIndex = merged.edges().maxOf { edge: Edge -> edge.mVertices[1] }
         assertEquals(2 * path.vertices().count() - 1, maxIndex)
     }
 
-    private fun PlaneMeshPublic(size: Vector2, segments: IntPair): GeneratorMesh {
-        return ParametricMesh({ t ->
+    private fun _PlaneMeshPublic(size: Vector2, segments: IntPair): GeneratorMesh {
+        return ParametricMesh({ t: Vector2 ->
             val vertex = MeshVertex()
             vertex.mPosition = Vector3(
                 -size.x + 2.0f * t.x * size.x,
@@ -194,6 +215,9 @@ class MeshWrapperTest {
     }
 }
 
+// ============================================================================
+// ======================= ComposedMeshTest ===================================
+// ============================================================================
 class ComposedMeshTest {
 
     @Test
@@ -242,12 +266,12 @@ class ComposedMeshTest {
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
             val r = sqrt(p.x * p.x + p.y * p.y)
-            assertTrue(r <= radius + EPS2, "radial $r exceeds $radius")
+            assertTrue(r <= radius + _EPS2, "radial $r exceeds $radius")
             minZ = minOf(minZ, p.z)
             maxZ = maxOf(maxZ, p.z)
         }
-        assertClose2(-size, minZ)
-        assertClose2(size, maxZ)
+        _assertClose2(-size, minZ)
+        _assertClose2(size, maxZ)
     }
 
     @Test
@@ -265,16 +289,16 @@ class ComposedMeshTest {
             }
         }
 
-        val zs = mesh.vertices().map { vertex -> vertex.mPosition.z }
-        assertClose2(-1.0f, zs.min())
-        assertClose2(1.0f, zs.max())
+        val zs = mesh.vertices().map { vertex: MeshVertex -> vertex.mPosition.z }
+        _assertClose2(-1.0f, zs.min())
+        _assertClose2(1.0f, zs.max())
     }
 
     @Test
     fun cappedConeClosedBottom() {
         val mesh = CappedConeMesh(mRadius = 1.0f, mSize = 1.0f, mSlices = 8, mSegments = 2, mRings = 2)
-        val zs = mesh.vertices().map { vertex -> vertex.mPosition.z }
-        assertClose2(-1.0f, zs.min())
+        val zs = mesh.vertices().map { vertex: MeshVertex -> vertex.mPosition.z }
+        _assertClose2(-1.0f, zs.min())
         assertTrue(zs.max() > 0.9f)
     }
 
@@ -308,11 +332,14 @@ class ComposedMeshTest {
         assertEquals(32, mesh.triangles().count())
 
         for (vertex in mesh.vertices()) {
-            assertClose2(0.0f, vertex.mPosition.z)
+            _assertClose2(0.0f, vertex.mPosition.z)
         }
     }
 }
 
+// ============================================================================
+// ======================= ShapeWrapperTest ===================================
+// ============================================================================
 class ShapeWrapperTest {
 
     @Test

@@ -2,9 +2,17 @@ package graph
 
 import algebra.*
 
+// ============================================================================
+// ======================= FlycamMoveBits =====================================
+// ============================================================================
+
 enum class FlycamMoveBits {
     NONE, FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN
 }
+
+// ============================================================================
+// ======================= Flycam =============================================
+// ============================================================================
 
 class Flycam {
     private var _fov: Float = 45.0f
@@ -147,12 +155,18 @@ class Flycam {
     fun rotate(azimuthOffset: Float, elevationOffset: Float) {
         _azimuth += azimuthOffset
 
-        if (_azimuth > 360.0f || _azimuth < -360.0f) _azimuth = 0.0f
+        if (_azimuth > 360.0f || _azimuth < -360.0f) {
+            _azimuth = 0.0f
+        }
 
         _elevation += elevationOffset
 
-        if (_elevation > _elevationBound) _elevation = _elevationBound
-        if (_elevation < -_elevationBound) _elevation = -_elevationBound
+        if (_elevation > _elevationBound) {
+            _elevation = _elevationBound
+        }
+        if (_elevation < -_elevationBound) {
+            _elevation = -_elevationBound
+        }
     }
 
     fun traverse() {

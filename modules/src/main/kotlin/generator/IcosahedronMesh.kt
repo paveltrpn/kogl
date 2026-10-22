@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= IcosahedronMesh ====================================
+// ============================================================================
 class IcosahedronMesh(
     mRadius: Float = 1.0f,
     mSegments: Int = 1

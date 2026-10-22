@@ -1,13 +1,17 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
+
+// ============================================================================
+// ======================= AxisSwapShape ======================================
+// ============================================================================
 
 class AxisSwapShape(
     shape: GeneratorShape
-) : TransformShape(shape, axisSwapEval())
+) : TransformShape(shape, _axisSwapEval())
 
-private fun axisSwapEval(): (ShapeVertex) -> Unit {
-    return { vertex ->
+private fun _axisSwapEval(): (ShapeVertex) -> Unit {
+    return { vertex: ShapeVertex ->
         vertex.mPosition = Vector2(vertex.mPosition.y, vertex.mPosition.x)
         vertex.mTangent = Vector2(vertex.mTangent.y, vertex.mTangent.x)
     }

@@ -1,26 +1,26 @@
 package generator
 
-import algebra.Vector3
-import algebra.toRadians
-import kotlin.math.sqrt
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import algebra.*
+import kotlin.math.*
+import kotlin.test.*
 
-private const val EPS = 1e-5f
+private const val _EPS = 1e-5f
 
-private fun assertClose(expected: Float, actual: Float) {
+private fun _assertClose(expected: Float, actual: Float) {
     assertTrue(
-        kotlin.math.abs(expected - actual) <= EPS,
+        kotlin.math.abs(expected - actual) <= _EPS,
         "expected $expected but was $actual"
     )
 }
 
+// ============================================================================
+// ======================= ParametricMeshTest =================================
+// ============================================================================
 class ParametricMeshTest {
 
     @Test
     fun countsMatchSegments() {
-        val mesh = ParametricMesh({ t ->
+        val mesh = ParametricMesh({ t: Vector2 ->
             val vertex = MeshVertex()
             vertex.mTexCoord = t
             vertex
@@ -32,7 +32,7 @@ class ParametricMeshTest {
 
     @Test
     fun zeroSegmentsYieldEmptyMesh() {
-        val mesh = ParametricMesh({ t ->
+        val mesh = ParametricMesh({ t: Vector2 ->
             val vertex = MeshVertex()
             vertex.mTexCoord = t
             vertex
@@ -44,7 +44,7 @@ class ParametricMeshTest {
 
     @Test
     fun triangleOrderingMatchesCpp() {
-        val mesh = ParametricMesh({ t ->
+        val mesh = ParametricMesh({ t: Vector2 ->
             val vertex = MeshVertex()
             vertex.mTexCoord = t
             vertex
@@ -60,6 +60,9 @@ class ParametricMeshTest {
     }
 }
 
+// ============================================================================
+// ======================= SphereMeshTest =====================================
+// ============================================================================
 class SphereMeshTest {
 
     @Test
@@ -76,16 +79,19 @@ class SphereMeshTest {
 
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
-            assertClose(radius, sqrt(p.x * p.x + p.y * p.y + p.z * p.z))
+            _assertClose(radius, sqrt(p.x * p.x + p.y * p.y + p.z * p.z))
 
             val n = vertex.mNormal
-            assertClose(p.x / radius, n.x)
-            assertClose(p.y / radius, n.y)
-            assertClose(p.z / radius, n.z)
+            _assertClose(p.x / radius, n.x)
+            _assertClose(p.y / radius, n.y)
+            _assertClose(p.z / radius, n.z)
         }
     }
 }
 
+// ============================================================================
+// ======================= CylinderMeshTest ===================================
+// ============================================================================
 class CylinderMeshTest {
 
     @Test
@@ -96,12 +102,15 @@ class CylinderMeshTest {
 
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
-            assertClose(radius, sqrt(p.x * p.x + p.y * p.y))
-            assertTrue(kotlin.math.abs(p.z) <= size + EPS)
+            _assertClose(radius, sqrt(p.x * p.x + p.y * p.y))
+            assertTrue(kotlin.math.abs(p.z) <= size + _EPS)
         }
     }
 }
 
+// ============================================================================
+// ======================= TorusMeshTest ======================================
+// ============================================================================
 class TorusMeshTest {
 
     @Test
@@ -114,11 +123,14 @@ class TorusMeshTest {
             val p = vertex.mPosition
             val ringRadius = sqrt(p.x * p.x + p.y * p.y)
             val distance = sqrt((ringRadius - major) * (ringRadius - major) + p.z * p.z)
-            assertClose(minor, distance)
+            _assertClose(minor, distance)
         }
     }
 }
 
+// ============================================================================
+// ======================= BoxMeshTest ========================================
+// ============================================================================
 class BoxMeshTest {
 
     @Test
@@ -135,13 +147,13 @@ class BoxMeshTest {
 
         for (vertex in mesh.vertices()) {
             val p = vertex.mPosition
-            assertTrue(kotlin.math.abs(p.x) <= size.x + EPS, "x out of bounds: $p")
-            assertTrue(kotlin.math.abs(p.y) <= size.y + EPS, "y out of bounds: $p")
-            assertTrue(kotlin.math.abs(p.z) <= size.z + EPS, "z out of bounds: $p")
+            assertTrue(kotlin.math.abs(p.x) <= size.x + _EPS, "x out of bounds: $p")
+            assertTrue(kotlin.math.abs(p.y) <= size.y + _EPS, "y out of bounds: $p")
+            assertTrue(kotlin.math.abs(p.z) <= size.z + _EPS, "z out of bounds: $p")
 
-            val onFaceX = kotlin.math.abs(kotlin.math.abs(p.x) - size.x) <= EPS
-            val onFaceY = kotlin.math.abs(kotlin.math.abs(p.y) - size.y) <= EPS
-            val onFaceZ = kotlin.math.abs(kotlin.math.abs(p.z) - size.z) <= EPS
+            val onFaceX = kotlin.math.abs(kotlin.math.abs(p.x) - size.x) <= _EPS
+            val onFaceY = kotlin.math.abs(kotlin.math.abs(p.y) - size.y) <= _EPS
+            val onFaceZ = kotlin.math.abs(kotlin.math.abs(p.z) - size.z) <= _EPS
             assertTrue(onFaceX || onFaceY || onFaceZ, "vertex not on any face: $p")
         }
     }
@@ -154,6 +166,9 @@ class BoxMeshTest {
     }
 }
 
+// ============================================================================
+// ======================= TubeMeshTest =======================================
+// ============================================================================
 class TubeMeshTest {
 
     @Test
@@ -171,18 +186,21 @@ class TubeMeshTest {
         val inner = 0.5f
         val tube = TubeMesh(mRadius = outer, mInnerRadius = inner, mSlices = 8, mSegments = 2)
 
-        val radii = tube.vertices().map { vertex ->
+        val radii = tube.vertices().map { vertex: MeshVertex ->
             sqrt(vertex.mPosition.x * vertex.mPosition.x + vertex.mPosition.y * vertex.mPosition.y)
         }.toSet()
 
-        assertTrue(radii.any { r -> kotlin.math.abs(r - outer) <= EPS })
-        assertTrue(radii.any { r -> kotlin.math.abs(r - inner) <= EPS })
-        assertTrue(radii.all { r ->
-            kotlin.math.abs(r - outer) <= EPS || kotlin.math.abs(r - inner) <= EPS
+        assertTrue(radii.any { r: Float -> kotlin.math.abs(r - outer) <= _EPS })
+        assertTrue(radii.any { r: Float -> kotlin.math.abs(r - inner) <= _EPS })
+        assertTrue(radii.all { r: Float ->
+            kotlin.math.abs(r - outer) <= _EPS || kotlin.math.abs(r - inner) <= _EPS
         })
     }
 }
 
+// ============================================================================
+// ======================= ConeMeshTest =======================================
+// ============================================================================
 class ConeMeshTest {
 
     @Test
@@ -190,14 +208,17 @@ class ConeMeshTest {
         val size = 1.5f
         val mesh = ConeMesh(mRadius = 1.0f, mSize = size, mSlices = 8, mSegments = 4)
 
-        val hasTip = mesh.vertices().any { vertex ->
-            kotlin.math.abs(vertex.mPosition.z - size) <= EPS &&
-                sqrt(vertex.mPosition.x * vertex.mPosition.x + vertex.mPosition.y * vertex.mPosition.y) <= EPS
+        val hasTip = mesh.vertices().any { vertex: MeshVertex ->
+            kotlin.math.abs(vertex.mPosition.z - size) <= _EPS &&
+                sqrt(vertex.mPosition.x * vertex.mPosition.x + vertex.mPosition.y * vertex.mPosition.y) <= _EPS
         }
         assertTrue(hasTip)
     }
 }
 
+// ============================================================================
+// ======================= ObjAdapterTest =====================================
+// ============================================================================
 class ObjAdapterTest {
 
     @Test
@@ -229,18 +250,21 @@ class ObjAdapterTest {
     }
 }
 
+// ============================================================================
+// ======================= LatheHandednessTest ================================
+// ============================================================================
 class LatheHandednessTest {
 
     @Test
     fun rotationIsCounterClockwiseAroundAxis() {
         val rotated = rotate(Vector3(1.0f, 0.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f), toRadians(90.0f))
-        assertClose(1.0f, rotated.x)
-        assertClose(0.0f, rotated.y)
-        assertClose(0.0f, rotated.z)
+        _assertClose(1.0f, rotated.x)
+        _assertClose(0.0f, rotated.y)
+        _assertClose(0.0f, rotated.z)
 
         val aroundZ = rotate(Vector3(1.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f), toRadians(90.0f))
-        assertClose(0.0f, aroundZ.x)
-        assertClose(1.0f, aroundZ.y)
-        assertClose(0.0f, aroundZ.z)
+        _assertClose(0.0f, aroundZ.x)
+        _assertClose(1.0f, aroundZ.y)
+        _assertClose(0.0f, aroundZ.z)
     }
 }

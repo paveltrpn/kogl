@@ -1,10 +1,18 @@
 package map
 
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+
+// ============================================================================
+// ======================= Meta ===============================================
+// ============================================================================
 
 @Serializable
 data class Meta(val version: Int)
+
+// ============================================================================
+// ======================= MapJson ============================================
+// ============================================================================
 
 @Serializable
 data class MapJson(
@@ -14,14 +22,26 @@ data class MapJson(
     val cameras: List<JsonElement>
 )
 
+// ============================================================================
+// ======================= Root ===============================================
+// ============================================================================
+
 @Serializable
 data class Root(
     val meta: Meta,
     val map: MapJson
 )
 
+// ============================================================================
+// ======================= GraphEntry =========================================
+// ============================================================================
+
 @Serializable
 data class GraphEntry(val node: NodeWrapper)
+
+// ============================================================================
+// ======================= NodeWrapper ========================================
+// ============================================================================
 
 @Serializable
 data class NodeWrapper(
@@ -29,9 +49,21 @@ data class NodeWrapper(
     val payload: JsonObject?
 )
 
+// ============================================================================
+// ======================= DummyNodeData ======================================
+// ============================================================================
+
 class DummyNodeData : NodeData("dummy")
 
+// ============================================================================
+// ======================= GenericNodeData ====================================
+// ============================================================================
+
 class GenericNodeData(override val type: String) : NodeData(type)
+
+// ============================================================================
+// ======================= MapData ============================================
+// ============================================================================
 
 data class MapData(
     val name: String,
@@ -44,7 +76,7 @@ fun parseMapJson(jsonString: String): MapData {
     val parser = Json { ignoreUnknownKeys = true }
     val root = parser.decodeFromString<Root>(jsonString)
 
-    val graphData = root.map.graph.map { parseNode(it.node) }
+    val graphData = root.map.graph.map { graphEntry: GraphEntry -> parseNode(graphEntry.node) }
 
     return MapData(
         name = root.map.name,
@@ -61,7 +93,7 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
         "state_group" -> {
             val payload = payloadJson.jsonObject
             val program = payload["program"]?.jsonPrimitive?.content ?: ""
-            val children = payload["children"]?.jsonArray?.map { childElem ->
+            val children = payload["children"]?.jsonArray?.map { childElem: JsonElement ->
                 val nodeObj = (childElem as? JsonObject)?.get("node") as? JsonObject
                 if (nodeObj != null) {
                     parseNode(nodeObj.parseNodeWrapper())
@@ -78,7 +110,7 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
 
         "group" -> {
             val payload = payloadJson.jsonObject
-            val children = payload["children"]?.jsonArray?.map { childElem ->
+            val children = payload["children"]?.jsonArray?.map { childElem: JsonElement ->
                 val nodeObj = (childElem as? JsonObject)?.get("node") as? JsonObject
                 if (nodeObj != null) {
                     parseNode(nodeObj.parseNodeWrapper())
@@ -95,10 +127,10 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
 
         "transform" -> {
             val payload = payloadJson.jsonObject
-            val matrix = payload["matrix"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val matrix = payload["matrix"]?.jsonArray?.map { matrixElem: JsonElement -> matrixElem.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
             val transformType =
                 payload["transform_type"]?.jsonPrimitive?.content ?: payload["type"]?.jsonPrimitive?.content ?: ""
-            val data = payload["data"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val data = payload["data"]?.jsonArray?.map { dataElem: JsonElement -> dataElem.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
 
             val child = when (val childVal = payload["child"]) {
                 is JsonObject -> {
@@ -145,8 +177,8 @@ fun parseNode(nodeWrapper: NodeWrapper): NodeData {
             val payload = payloadJson.jsonObject
             val mesh = payload["mesh"]?.jsonPrimitive?.content ?: ""
             val material = payload["material"]?.jsonPrimitive?.content ?: ""
-            val origin = payload["origin"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
-            val axis = payload["axis"]?.jsonArray?.map { it.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val origin = payload["origin"]?.jsonArray?.map { originElem: JsonElement -> originElem.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
+            val axis = payload["axis"]?.jsonArray?.map { axisElem: JsonElement -> axisElem.jsonPrimitive.float }?.toFloatArray() ?: floatArrayOf()
             val anglSpeed = payload["anglSpeed"]?.jsonPrimitive?.float ?: 0.0f
 
             FlyaroundDrawableData(

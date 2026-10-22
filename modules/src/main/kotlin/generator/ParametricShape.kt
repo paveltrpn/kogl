@@ -1,5 +1,8 @@
 package generator
 
+// ============================================================================
+// ======================= ParametricShape ====================================
+// ============================================================================
 open class ParametricShape(
     private val _eval: (Float) -> ShapeVertex,
     private val _segments: Int = 16

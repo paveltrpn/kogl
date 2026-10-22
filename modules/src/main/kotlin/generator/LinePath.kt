@@ -1,15 +1,18 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= LinePath ===========================================
+// ============================================================================
 class LinePath(
     mStart: Vector3 = Vector3(0.0f, 0.0f, -1.0f),
     mEnd: Vector3 = Vector3(0.0f, 0.0f, 1.0f),
     mNormal: Vector3 = Vector3(1.0f, 0.0f, 0.0f),
     mSegments: Int = 8
-) : ParametricPath(linePathEval(mStart, mEnd, mNormal), mSegments)
+) : ParametricPath(_linePathEval(mStart, mEnd, mNormal), mSegments)
 
-private fun linePathEval(start: Vector3, end: Vector3, normal: Vector3): (Float) -> PathVertex {
+private fun _linePathEval(start: Vector3, end: Vector3, normal: Vector3): (Float) -> PathVertex {
     val sx = start.x
     val sy = start.y
     val sz = start.z
@@ -23,7 +26,7 @@ private fun linePathEval(start: Vector3, end: Vector3, normal: Vector3): (Float)
     val nx = normal.x
     val ny = normal.y
     val nz = normal.z
-    return { t ->
+    return { t: Float ->
         val vertex = PathVertex()
         vertex.mPosition = Vector3(sx + t * dx, sy + t * dy, sz + t * dz)
         vertex.mTangent = Vector3(tx, ty, tz)

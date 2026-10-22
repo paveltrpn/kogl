@@ -1,12 +1,14 @@
 package render
 
 import org.lwjgl.opengl.GL46.*
-import org.lwjgl.system.MemoryStack
-import org.lwjgl.system.MemoryUtil
-import java.nio.ByteBuffer
-import java.nio.IntBuffer
+import org.lwjgl.system.*
+import java.nio.*
 
 import algebra.*
+
+// ============================================================================
+// ======================= UniformInfo ========================================
+// ============================================================================
 
 data class UniformInfo(
     val location: Int,
@@ -95,7 +97,7 @@ class Program {
         _extensions.addLast(Pair(stage, label))
     }
 
-    private fun parseDefines(defines: List<Pair<Int, String>>): Map<Int, String> {
+    private fun _parseDefines(defines: List<Pair<Int, String>>): Map<Int, String> {
         val result = mutableMapOf<Int, String>()
 
         for ((stage, label) in defines) {
@@ -110,7 +112,7 @@ class Program {
         return result
     }
 
-    private fun parseExtensions(defines: List<Pair<Int, String>>): Map<Int, String> {
+    private fun _parseExtensions(defines: List<Pair<Int, String>>): Map<Int, String> {
         val result = mutableMapOf<Int, String>()
 
         for ((stage, label) in defines) {
@@ -144,7 +146,7 @@ class Program {
 
         for (shader in shadersList) {
             val (source, stage) = shader
-            val compiled = compile(stage, source)
+            val compiled = _compile(stage, source)
 
             glAttachShader(_programHandle, compiled)
         }
@@ -159,10 +161,10 @@ class Program {
             throw RuntimeException("Can't link program  \"$_programName\"!\ntrace:\n$log")
         }
 
-        reflectUniforms(_programHandle)
+        _reflectUniforms(_programHandle)
     }
 
-    private val stageToString: (Int) -> String = { stage ->
+    private val _stageToString: (Int) -> String = { stage: Int ->
         when (stage) {
             GL_VERTEX_SHADER -> "VERTEX"
             GL_FRAGMENT_SHADER -> "FRAGMENT"
@@ -174,13 +176,13 @@ class Program {
         }
     }
 
-    private fun compile(stage: Int, source: String): Int {
+    private fun _compile(stage: Int, source: String): Int {
         val shHandle = glCreateShader(stage)
 
-        val extension = parseExtensions(_extensions)
+        val extension = _parseExtensions(_extensions)
         val thisStageExtensions = extension[stage] ?: ""
 
-        val defines = parseDefines(_defines)
+        val defines = _parseDefines(_defines)
         val thisStageDefines = defines[stage] ?: ""
 
         val fullSource = _versionString + thisStageExtensions + thisStageDefines + source
@@ -195,17 +197,17 @@ class Program {
         if (success == GL_FALSE) {
             val logLength = glGetShaderi(shHandle, GL_INFO_LOG_LENGTH)
             val log = glGetShaderInfoLog(shHandle, logLength)
-            throw RuntimeException("Can't compile program \"$_programName\" stage \"${stageToString(stage)}\"!\ntrace:\n$log")
+            throw RuntimeException("Can't compile program \"$_programName\" stage \"${_stageToString(stage)}\"!\ntrace:\n$log")
         }
 
         return shHandle
     }
 
-    private fun reflectUniforms(programHandle: Int): Unit {
+    private fun _reflectUniforms(programHandle: Int): Unit {
         val numUniforms = glGetProgrami(programHandle, GL_ACTIVE_UNIFORMS)
         val maxLength = glGetProgrami(programHandle, GL_ACTIVE_UNIFORM_MAX_LENGTH)
 
-        MemoryStack.stackPush().use { stack ->
+        MemoryStack.stackPush().use { stack: MemoryStack ->
             val lengthBuf: IntBuffer = stack.mallocInt(1)
             val sizeBuf: IntBuffer = stack.mallocInt(1)
             val typeBuf: IntBuffer = stack.mallocInt(1)
@@ -266,7 +268,7 @@ class Program {
         return false
     }
 
-    private fun uniformLocation(name: String): Int {
+    private fun _uniformLocation(name: String): Int {
         val cached = _uniforms[name]
 
         if (cached != null) {
@@ -285,48 +287,48 @@ class Program {
     }
 
     fun setScalarUniform(name: String, value: Float) {
-        val location = uniformLocation(name)
+        val location = _uniformLocation(name)
         glUniform1f(location, value)
     }
 
     fun setScalarUniform(name: String, value: Double) {
-        val location = uniformLocation(name)
+        val location = _uniformLocation(name)
         glUniform1d(location, value)
     }
 
     fun setScalarUniform(name: String, value: Int) {
-        val location = uniformLocation(name)
+        val location = _uniformLocation(name)
         glUniform1i(location, value)
     }
 
     fun setScalarUniform(name: String, value: UInt) {
-        val location = uniformLocation(name)
+        val location = _uniformLocation(name)
         glUniform1ui(location, value.toInt())
     }
 
     fun setVectorUniform(id: String, value: Vector2) {
-        val location = uniformLocation(id)
+        val location = _uniformLocation(id)
         _floatBuffer.clear().put(0, value.data, 0, 2).flip()
         _floatBuffer.position(0).limit(2)
         glUniform3fv(location, _floatBuffer)
     }
 
     fun setVectorUniform(id: String, value: Vector3) {
-        val location = uniformLocation(id)
+        val location = _uniformLocation(id)
         _floatBuffer.clear().put(0, value.data, 0, 3).flip()
         _floatBuffer.position(0).limit(3)
         glUniform3fv(location, _floatBuffer)
     }
 
     fun setVectorUniform(id: String, value: Vector4) {
-        val location = uniformLocation(id)
+        val location = _uniformLocation(id)
         _floatBuffer.clear().put(0, value.data, 0, 4).flip()
         _floatBuffer.position(0).limit(4)
         glUniform3fv(location, _floatBuffer)
     }
 
     fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix2) {
-        val location = uniformLocation(id)
+        val location = _uniformLocation(id)
         _floatBuffer.clear().put(0, value.data, 0, 4).flip()
         _floatBuffer.position(0).limit(4)
         glUniformMatrix2fv(location, transpose, _floatBuffer)
@@ -334,7 +336,7 @@ class Program {
     }
 
     fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix3) {
-        val location = uniformLocation(id)
+        val location = _uniformLocation(id)
         _floatBuffer.clear().put(0, value.data, 0, 9).flip()
         _floatBuffer.position(0).limit(9)
         glUniformMatrix3fv(location, transpose, _floatBuffer)
@@ -348,7 +350,7 @@ class Program {
     }
 
     fun setMatrixUniform(id: String, transpose: Boolean, value: Matrix4) {
-        val location = uniformLocation(id)
+        val location = _uniformLocation(id)
         _floatBuffer.clear().put(value.data).flip()
         glUniformMatrix4fv(location, transpose, _floatBuffer)
     }
@@ -413,6 +415,8 @@ class Program {
         }
 }
 
+// ============================================================================
+// ======================= UniformSetter ======================================
 // ============================================================================
 
 interface UniformSetter<T> {

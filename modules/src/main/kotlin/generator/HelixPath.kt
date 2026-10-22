@@ -1,23 +1,25 @@
 package generator
 
-import algebra.Vector3
-import algebra.toRadians
+import algebra.*
 
+// ============================================================================
+// ======================= HelixPath ==========================================
+// ============================================================================
 class HelixPath(
     mRadius: Float = 1.0f,
     mSize: Float = 1.0f,
     mSegments: Int = 32,
     mStart: Float = 0.0f,
     mSweep: Float = toRadians(720.0f)
-) : ParametricPath(helixPathEval(mRadius, mSize, mStart, mSweep), mSegments)
+) : ParametricPath(_helixPathEval(mRadius, mSize, mStart, mSweep), mSegments)
 
-private fun helixPathEval(
+private fun _helixPathEval(
     radius: Float,
     size: Float,
     start: Float,
     sweep: Float
 ): (Float) -> PathVertex {
-    return { t ->
+    return { t: Float ->
         val vertex = PathVertex()
         val angle = start + t * sweep
         val sine = kotlin.math.sin(angle)

@@ -3,33 +3,29 @@ package graph
 import org.lwjgl.opengl.GL46.*
 
 import algebra.*
-import generator.IcoSphereMesh
-import generator.toObjMesh
-import graphdsl.buildState
-import mesh.SeparatedArraysMesh
+import generator.*
+import graphdsl.*
+import mesh.*
 import render.*
 
 // ============================================================================
 // ======================= DrawCallVisitorBase ================================
 // ============================================================================
 
-abstract class DrawCallVisitorBase(delta: Float, viewMatrix: Matrix4) : Visitor() {
-    protected val _delta: Float
-    protected var _viewMatrix: Matrix4
-
-    protected var _program: Program = Program()
-    protected var _modelMatrixStack = MatrixStack()
-
-    protected var _drawCallsCount = 0
+abstract class DrawCallVisitorBase(delta: Float, viewMatrix: Matrix4) : TransformVisitor() {
+    protected val mDelta: Float
+    protected var mViewMatrix: Matrix4
+    protected var mProgram: Program = Program()
+    protected var mDrawCallsCount = 0
 
     init {
-        _delta = delta
-        _viewMatrix = viewMatrix
+        mDelta = delta
+        mViewMatrix = viewMatrix
     }
 
     val drawCallsCount: Int
         get(): Int {
-            return _drawCallsCount
+            return mDrawCallsCount
         }
 
     override fun apply(node: Switch): Unit {
@@ -37,23 +33,15 @@ abstract class DrawCallVisitorBase(delta: Float, viewMatrix: Matrix4) : Visitor(
     }
 
     override fun apply(node: StateGroup): Unit {
-        _program = node.program
+        mProgram = node.program
 
-        _program.use()
+        mProgram.use()
 
         node.traverse(this)
     }
 
     override fun apply(node: Group): Unit {
         node.traverse(this)
-    }
-
-    override fun apply(node: TransformGroup): Unit {
-        with(_modelMatrixStack) {
-            push(node)
-            node.traverse(this@DrawCallVisitorBase)
-            pop()
-        }
     }
 }
 
@@ -86,22 +74,22 @@ class DrawableVisitor(
     }
 
     override fun apply(node: StateGroup): Unit {
-        _program = node.program
+        mProgram = node.program
 
-        _program.use()
+        mProgram.use()
 
-        if (_program.hasUniform("lightsCount")) {
+        if (mProgram.hasUniform("lightsCount")) {
             val count = minOf(lights.size, MAX_LIGHTS)
 
-            _program.set("lightsCount" to count)
+            mProgram.set("lightsCount" to count)
 
             for (i in 0 until count) {
                 val light = lights[i]
 
-                _program.set("lights[$i].pos" to light.position)
-                _program.set("lights[$i].color" to light.color)
-                _program.set("lights[$i].intensity" to light.intensity)
-                _program.set("lights[$i].radius" to light.radius)
+                mProgram.set("lights[$i].pos" to light.position)
+                mProgram.set("lights[$i].color" to light.color)
+                mProgram.set("lights[$i].intensity" to light.intensity)
+                mProgram.set("lights[$i].radius" to light.radius)
             }
         }
 
@@ -112,7 +100,7 @@ class DrawableVisitor(
         when (node) {
             is OmniLight -> {
                 if (lightDummiesVisible) {
-                    val position = _modelMatrixStack.top.vecMultiply(Vector3(0.0f, 0.0f, 0.0f))
+                    val position = mModelMatrixStack.top.vecMultiply(Vector3(0.0f, 0.0f, 0.0f))
 
                     val offset = algebra.offset(position)
                     offset.transpose()
@@ -126,7 +114,7 @@ class DrawableVisitor(
                     _dummyProgram.use()
 
                     with(_dummyProgram) {
-                        set("view_matrix" to _viewMatrix, false)
+                        set("view_matrix" to mViewMatrix, false)
                         set("model_matrix" to dummy.modelMatrix, false)
                         this assign value("color" to dummy.color)
                     }
@@ -135,27 +123,27 @@ class DrawableVisitor(
                     dummy.draw()
                     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-                    _program.use()
+                    mProgram.use()
 
-                    _drawCallsCount++
+                    mDrawCallsCount++
                 }
             }
 
             is Drawable -> {
                 when (node) {
                     is SpinableDrawable -> {
-                        val local = node.updateLocal(_delta)
+                        val local = node.updateLocal(mDelta)
 
-                        val top = _modelMatrixStack.top.copy()
+                        val top = mModelMatrixStack.top.copy()
                         top.transpose()
 
                         node.applyTransform(local.multiply(top))
                     }
 
                     is FlyaroundDrawable -> {
-                        val local = node.updateLocal(_delta)
+                        val local = node.updateLocal(mDelta)
 
-                        val top = _modelMatrixStack.top.copy()
+                        val top = mModelMatrixStack.top.copy()
                         top.transpose()
 
                         node.applyTransform(local.multiply(top))
@@ -163,8 +151,8 @@ class DrawableVisitor(
                 }
 
                 // ...update shader uniform...
-                with(_program) {
-                    set("view_matrix" to _viewMatrix, false)
+                with(mProgram) {
+                    set("view_matrix" to mViewMatrix, false)
                     this assign value("model_matrix" to node.modelMatrix, false)
                     // set("model_matrix" to node.modelMatrix, false)
 
@@ -175,7 +163,7 @@ class DrawableVisitor(
                 // ...and draw call.
                 node.draw()
 
-                _drawCallsCount++
+                mDrawCallsCount++
             }
         }
     }
@@ -190,8 +178,8 @@ class GridDrawVisitor(delta: Float, val cameraPos: Vector3, viewMatrix: Matrix4)
     override fun apply(node: Leaf): Unit {
         when (node) {
             is Grid -> {
-                with(_program) {
-                    set("view_matrix" to _viewMatrix, false)
+                with(mProgram) {
+                    set("view_matrix" to mViewMatrix, false)
                     set("model_matrix" to Matrix4(), false)
 
                     set("scale" to 512.0f)
@@ -217,7 +205,7 @@ class GridDrawVisitor(delta: Float, val cameraPos: Vector3, viewMatrix: Matrix4)
                 node.draw()
                 glDisable(GL_BLEND)
 
-                _drawCallsCount++
+                mDrawCallsCount++
             }
         }
     }

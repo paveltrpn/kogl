@@ -1,9 +1,9 @@
 package gldebug
 
 import org.lwjgl.opengl.GL46.*
-import org.lwjgl.opengl.GLDebugMessageCallbackI
-import org.lwjgl.system.MemoryUtil
-import java.nio.IntBuffer
+import org.lwjgl.opengl.*
+import org.lwjgl.system.*
+import java.nio.*
 
 fun mapGLDebugMsgInfo(
     source: Int,
@@ -43,6 +43,10 @@ fun mapGLDebugMsgInfo(
     return Triple(sourceStr, typeStr, severityStr)
 }
 
+// ============================================================================
+// ======================= GLDebugCallbackBase ================================
+// ============================================================================
+
 abstract class GLDebugCallbackBase : GLDebugMessageCallbackI {
     fun message(length: Int, message: Long): String {
         val buffer = MemoryUtil.memByteBuffer(message, length)
@@ -51,6 +55,10 @@ abstract class GLDebugCallbackBase : GLDebugMessageCallbackI {
         }.decodeToString()
     }
 }
+
+// ============================================================================
+// ======================= GLDebugCallbackAll =================================
+// ============================================================================
 
 class GLDebugCallbackAll : GLDebugCallbackBase() {
     override fun invoke(
@@ -71,6 +79,10 @@ class GLDebugCallbackAll : GLDebugCallbackBase() {
         println("[$sourceStr] [$typeStr] [$severityStr] $msg")
     }
 }
+
+// ============================================================================
+// ======================= GLDebugApiErrorHight ===============================
+// ============================================================================
 
 class GLDebugApiErrorHight : GLDebugCallbackBase() {
     override fun invoke(
@@ -96,6 +108,10 @@ class GLDebugApiErrorHight : GLDebugCallbackBase() {
         }
     }
 }
+
+// ============================================================================
+// ======================= GLDebugDiscardNotification =========================
+// ============================================================================
 
 class GLDebugDiscardNotification : GLDebugCallbackBase() {
     override fun invoke(

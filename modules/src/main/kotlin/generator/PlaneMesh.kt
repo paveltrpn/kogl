@@ -1,17 +1,19 @@
 package generator
 
-import algebra.Vector2
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= PlaneMesh ==========================================
+// ============================================================================
 internal class PlaneMesh(
     size: Vector2,
     segments: IntPair
-) : ParametricMesh(planeEval(size), segments)
+) : ParametricMesh(_planeEval(size), segments)
 
-private fun planeEval(size: Vector2): (Vector2) -> MeshVertex {
+private fun _planeEval(size: Vector2): (Vector2) -> MeshVertex {
     val sx = size.x
     val sy = size.y
-    return { t ->
+    return { t: Vector2 ->
         val vertex = MeshVertex()
         vertex.mPosition = Vector3(
             -sx + 2.0f * t.x * sx,

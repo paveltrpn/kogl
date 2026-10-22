@@ -3,9 +3,15 @@ package graphdsl
 import algebra.*
 import graph.*
 
+// ============================================================================
+// ======================= TransformGroupBuilderDslMarker =====================
+// ============================================================================
 @DslMarker
 annotation class TransformGroupBuilderDslMarker
 
+// ============================================================================
+// ======================= TransformGroupBuilder ==============================
+// ============================================================================
 @TransformGroupBuilderDslMarker
 class TransformGroupBuilder : NodeBuilder() {
     private var _offset = Vector3()

@@ -1,12 +1,14 @@
 package render
 
-import kotlin.use
-
 import org.lwjgl.opengl.GL46.*
-import org.lwjgl.system.MemoryStack
-import java.nio.FloatBuffer
+import org.lwjgl.system.*
+import java.nio.*
 
 import algebra.*
+
+// ============================================================================
+// ======================= QuadsBuffer ========================================
+// ============================================================================
 
 class QuadsBuffer(capacity: Int) {
     private var _vao: Int
@@ -55,7 +57,7 @@ class QuadsBuffer(capacity: Int) {
 
         glBindBuffer(GL_ARRAY_BUFFER, _vbo)
 
-        MemoryStack.stackPush().use { stack ->
+        MemoryStack.stackPush().use { stack: MemoryStack ->
             val buffer: FloatBuffer = stack.callocFloat(vertices.size)
             buffer.put(vertices)
             buffer.flip()
@@ -64,7 +66,7 @@ class QuadsBuffer(capacity: Int) {
 
         glBindBuffer(GL_ARRAY_BUFFER, _tbo)
 
-        MemoryStack.stackPush().use { stack ->
+        MemoryStack.stackPush().use { stack: MemoryStack ->
             val buffer: FloatBuffer = stack.callocFloat(txcoords.size)
             buffer.put(txcoords)
             buffer.flip()

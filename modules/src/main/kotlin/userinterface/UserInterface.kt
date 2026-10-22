@@ -1,8 +1,11 @@
 package userinterface
 
 import events.*
-import render.UiDrawable
+import render.*
 
+// ============================================================================
+// ======================= Userinterface ======================================
+// ============================================================================
 class Userinterface : WindowEventEmitter() {
     private val _nuklearBackend: NuklearGlBackend = NuklearGlBackend()
     private val _nuklearInterface: NuklearUi = NuklearUi(_nuklearBackend)

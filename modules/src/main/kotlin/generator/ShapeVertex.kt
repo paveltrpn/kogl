@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
 
+// ============================================================================
+// ======================= ShapeVertex ========================================
+// ============================================================================
 class ShapeVertex {
     var mPosition: Vector2 = Vector2()
     var mTangent: Vector2 = Vector2()

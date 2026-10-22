@@ -1,8 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= SphericalTriangleMesh ==============================
+// ============================================================================
 class SphericalTriangleMesh : GeneratorMesh {
 
     private val _v0: Vector3

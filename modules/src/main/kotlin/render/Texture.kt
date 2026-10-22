@@ -1,11 +1,15 @@
 package render
 
-import java.nio.ByteBuffer
+import java.nio.*
 
 import org.lwjgl.opengl.GL46.*
-import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.*
 
 import image.*
+
+// ============================================================================
+// ======================= Texture ============================================
+// ============================================================================
 
 class Texture(image: Image) {
     private val _texture: Int
@@ -22,7 +26,7 @@ class Texture(image: Image) {
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
-        MemoryStack.stackPush().use { stack ->
+        MemoryStack.stackPush().use { stack: MemoryStack ->
             val buffer: ByteBuffer = stack.calloc(image.data.size)
             buffer.put(image.data)
             buffer.flip()

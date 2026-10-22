@@ -1,8 +1,16 @@
 package events
 
+// ============================================================================
+// ======================= WindowEventObserver ================================
+// ============================================================================
+
 interface WindowEventObserver {
     fun onWindowEvent(event: WindowEvent)
 }
+
+// ============================================================================
+// ======================= WindowEventEmitter =================================
+// ============================================================================
 
 open class WindowEventEmitter {
     private val _observers: MutableList<WindowEventObserver> = mutableListOf()

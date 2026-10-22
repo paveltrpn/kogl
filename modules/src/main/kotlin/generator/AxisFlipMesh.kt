@@ -1,6 +1,10 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
+
+// ============================================================================
+// ======================= AxisFlipMesh =======================================
+// ============================================================================
 
 class AxisFlipMesh(
     mMesh: GeneratorMesh,
@@ -9,7 +13,7 @@ class AxisFlipMesh(
     mZ: Boolean
 ) : GeneratorMesh {
 
-    private val _mesh: TransformMesh = TransformMesh(mMesh, axisFlipMutator(mX, mY, mZ))
+    private val _mesh: TransformMesh = TransformMesh(mMesh, _axisFlipMutator(mX, mY, mZ))
     private val _flip: Boolean
 
     init {
@@ -28,7 +32,7 @@ class AxisFlipMesh(
 
     override fun vertices(): Sequence<MeshVertex> = _mesh.vertices()
 
-    override fun triangles(): Sequence<Triangle> = _mesh.triangles().map { triangle ->
+    override fun triangles(): Sequence<Triangle> = _mesh.triangles().map { triangle: Triangle ->
         if (_flip) {
             Triangle(
                 triangle.mVertices[2],
@@ -41,8 +45,8 @@ class AxisFlipMesh(
     }
 }
 
-private fun axisFlipMutator(x: Boolean, y: Boolean, z: Boolean): (MeshVertex) -> Unit {
-    return { vertex ->
+private fun _axisFlipMutator(x: Boolean, y: Boolean, z: Boolean): (MeshVertex) -> Unit {
+    return { vertex: MeshVertex ->
         if (x) {
             vertex.mPosition = Vector3(
                 -vertex.mPosition.x,

@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
 
+// ============================================================================
+// ======================= RectangleShape =====================================
+// ============================================================================
 class RectangleShape(
     mSize: Vector2 = Vector2(1.0f, 1.0f),
     mSegments: IntPair = IntPair(8, 8)

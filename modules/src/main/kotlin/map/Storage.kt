@@ -1,7 +1,11 @@
 package map
 
 import mesh.*
-import java.io.File
+import java.io.*
+
+// ============================================================================
+// ======================= Storage ============================================
+// ============================================================================
 
 class Storage private constructor(storagePath: String) {
     private val _bodyStorage: Map<String, Mesh>
@@ -9,16 +13,16 @@ class Storage private constructor(storagePath: String) {
 
     companion object {
         @Volatile
-        private var instance: Storage? = null
+        private var _instance: Storage? = null
 
         fun init(storagePath: String): Storage {
-            return instance ?: synchronized(this) {
-                instance ?: Storage(storagePath).also { instance = it }
+            return _instance ?: synchronized(this) {
+                _instance ?: Storage(storagePath).also { newStorage: Storage -> _instance = newStorage }
             }
         }
 
         fun instance(): Storage {
-            return instance ?: throw IllegalStateException(
+            return _instance ?: throw IllegalStateException(
                 "BodyStorage must be initialized by calling init() first."
             )
         }
@@ -30,7 +34,7 @@ class Storage private constructor(storagePath: String) {
             throw RuntimeException("Wrong storage directory \"$storagePath\"!")
         }
 
-        val objFiles = storageDir.listFiles { file ->
+        val objFiles = storageDir.listFiles { file: File ->
             file.isFile && file.extension.equals("obj", ignoreCase = true)
         } ?: throw RuntimeException("Wrong storage directory content \"$storagePath\"!")
 

@@ -1,17 +1,20 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= TranslatePath ======================================
+// ============================================================================
 class TranslatePath(
     path: GeneratorPath,
     delta: Vector3
-) : TransformPath(path, translatePathEval(delta))
+) : TransformPath(path, _translatePathEval(delta))
 
-private fun translatePathEval(delta: Vector3): (PathVertex) -> Unit {
+private fun _translatePathEval(delta: Vector3): (PathVertex) -> Unit {
     val dx = delta.x
     val dy = delta.y
     val dz = delta.z
-    return { vertex ->
+    return { vertex: PathVertex ->
         vertex.mPosition = Vector3(
             vertex.mPosition.x + dx,
             vertex.mPosition.y + dy,

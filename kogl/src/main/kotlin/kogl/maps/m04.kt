@@ -14,7 +14,7 @@ import render.*
 // a T. Rope bridges sag between them all, dipping toward a river that
 // exists only in the imagination of the grid - while crystals spin above
 // the planks and a torus knot turns on the spur, lit by a magenta heart.
-private fun ropeBridgePath(a: Vector3, b: Vector3, sag: Float, segments: Int = 24): ParametricPath {
+private fun _ropeBridgePath(a: Vector3, b: Vector3, sag: Float, segments: Int = 24): ParametricPath {
     val dx = b.x - a.x
     val dy = b.y - a.y
     val dz = b.z - a.z
@@ -45,25 +45,25 @@ fun m04(): List<Locale> {
     val bridgeABMesh: Mesh = SeparatedArraysMesh(
         ExtrudeMesh(
             RectangleShape(Vector2(0.1f, 0.7f), IntPair(1, 1)),
-            ropeBridgePath(Vector3(3.2f, 6.5f, -0.6f), Vector3(16.9f, 6.7f, -1.8f), 1.6f)
+            _ropeBridgePath(Vector3(3.2f, 6.5f, -0.6f), Vector3(16.9f, 6.7f, -1.8f), 1.6f)
         ).toObjMesh("bridgeAB")
     )
     val bridgeBCMesh: Mesh = SeparatedArraysMesh(
         ExtrudeMesh(
             RectangleShape(Vector2(0.1f, 0.7f), IntPair(1, 1)),
-            ropeBridgePath(Vector3(23.0f, 6.7f, -1.2f), Vector3(35.2f, 6.2f, 2.6f), 1.4f)
+            _ropeBridgePath(Vector3(23.0f, 6.7f, -1.2f), Vector3(35.2f, 6.2f, 2.6f), 1.4f)
         ).toObjMesh("bridgeBC")
     )
     val bridgeCDMesh: Mesh = SeparatedArraysMesh(
         ExtrudeMesh(
             RectangleShape(Vector2(0.1f, 0.7f), IntPair(1, 1)),
-            ropeBridgePath(Vector3(41.0f, 6.2f, 2.4f), Vector3(53.2f, 7.4f, -1.4f), 1.7f)
+            _ropeBridgePath(Vector3(41.0f, 6.2f, 2.4f), Vector3(53.2f, 7.4f, -1.4f), 1.7f)
         ).toObjMesh("bridgeCD")
     )
     val bridgeBEMesh: Mesh = SeparatedArraysMesh(
         ExtrudeMesh(
             RectangleShape(Vector2(0.1f, 0.7f), IntPair(1, 1)),
-            ropeBridgePath(Vector3(20.0f, 6.7f, 0.6f), Vector3(20.0f, 6.7f, 11.4f), 1.4f)
+            _ropeBridgePath(Vector3(20.0f, 6.7f, 0.6f), Vector3(20.0f, 6.7f, 11.4f), 1.4f)
         ).toObjMesh("bridgeBE")
     )
     val knotTubeMesh: Mesh = SeparatedArraysMesh(TorusKnotMesh(2, 3, 16, 96).toObjMesh("knotTube"))

@@ -1,8 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.toRadians
+import algebra.*
 
+// ============================================================================
+// ======================= SphereMesh =========================================
+// ============================================================================
 class SphereMesh(
     mRadius: Float = 1.0f,
     mSlices: Int = 32,

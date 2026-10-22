@@ -1,11 +1,14 @@
 package generator
 
+// ============================================================================
+// ======================= TransformShape =====================================
+// ============================================================================
 open class TransformShape(
     private val _shape: GeneratorShape,
     private val _mutate: (ShapeVertex) -> Unit
 ) : GeneratorShape {
 
-    override fun vertices(): Sequence<ShapeVertex> = _shape.vertices().map { vertex ->
+    override fun vertices(): Sequence<ShapeVertex> = _shape.vertices().map { vertex: ShapeVertex ->
         _mutate(vertex)
         vertex
     }

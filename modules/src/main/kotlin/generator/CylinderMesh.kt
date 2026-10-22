@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.toRadians
+import algebra.*
+
+// ============================================================================
+// ======================= CylinderMesh =======================================
+// ============================================================================
 
 class CylinderMesh(
     mRadius: Float = 1.0f,

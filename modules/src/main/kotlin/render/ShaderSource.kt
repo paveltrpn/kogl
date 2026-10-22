@@ -1,9 +1,13 @@
 package render
 
 import org.lwjgl.opengl.GL46.*
-import java.io.File
+import java.io.*
 
-import config.Config
+import config.*
+
+// ============================================================================
+// ======================= ShaderSource =======================================
+// ============================================================================
 
 class ShaderSource(val programName: String) {
     // Shader files list with corresponding stage types.
@@ -14,15 +18,15 @@ class ShaderSource(val programName: String) {
         val bp = Config.instance().basePath
         _shadersPath = "$bp/assets/shaders"
 
-        val allShadersList = parseDirectory(_shadersPath)
-        val programShaders = extractProgramShaders(allShadersList, programName)
+        val allShadersList = _parseDirectory(_shadersPath)
+        val programShaders = _extractProgramShaders(allShadersList, programName)
 
         // Must exist at least 2 shaders to form some program
         if (programShaders.size < 2) {
             throw IllegalStateException("Program '$programName' requires at least 2 shaders, found ${programShaders.size}")
         }
 
-        _shadersList = readShaders(programShaders)
+        _shadersList = _readShaders(programShaders)
     }
 
     val shadersList: List<Pair<String, Int>>
@@ -30,23 +34,23 @@ class ShaderSource(val programName: String) {
             return _shadersList
         }
 
-    private fun parseDirectory(path: String): List<String> {
+    private fun _parseDirectory(path: String): List<String> {
         val directory = File(path)
         val filesList = directory.listFiles()
 
-        val onlyGlsl = filesList?.filter { it.isFile && it.extension.equals("glsl", ignoreCase = true) }
-            ?.map { it.name } ?: emptyList()
+        val onlyGlsl = filesList?.filter { file: File -> file.isFile && file.extension.equals("glsl", ignoreCase = true) }
+            ?.map { file: File -> file.name } ?: emptyList()
 
 
         return onlyGlsl
     }
 
-    private fun extractProgramShaders(allShaders: List<String>, programName: String): List<String> {
+    private fun _extractProgramShaders(allShaders: List<String>, programName: String): List<String> {
         val pattern = "^gl_${programName}_.*\\.glsl$".toRegex()
-        return allShaders.filter { it.matches(pattern) }
+        return allShaders.filter { shaderName: String -> shaderName.matches(pattern) }
     }
 
-    private fun readShaders(programShaders: List<String>): List<Pair<String, Int>> {
+    private fun _readShaders(programShaders: List<String>): List<Pair<String, Int>> {
         val shaderStageMap = mapOf(
             "VERTEX" to GL_VERTEX_SHADER,
             "FRAGMENT" to GL_FRAGMENT_SHADER,
@@ -58,7 +62,7 @@ class ShaderSource(val programName: String) {
 
         val bp = Config.instance().basePath
 
-        return programShaders.map { fileName ->
+        return programShaders.map { fileName: String ->
             val filePath = "$_shadersPath/$fileName"
             val source = File(filePath).readText()
             val stageName = fileName.substringAfter("gl_${programName}_").substringBeforeLast(".glsl").uppercase()

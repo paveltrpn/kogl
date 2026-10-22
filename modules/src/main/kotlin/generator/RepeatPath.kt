@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= RepeatPath =========================================
+// ============================================================================
 class RepeatPath(
     private val _path: GeneratorPath,
     val mInstances: Int,

@@ -1,7 +1,6 @@
 package generator
 
-import mesh.OBJMesh
-import mesh.ObjTriangleIndices
+import mesh.*
 
 fun GeneratorMesh.toObjMesh(name: String): OBJMesh {
     val vertexList = vertices().toList()
@@ -10,7 +9,7 @@ fun GeneratorMesh.toObjMesh(name: String): OBJMesh {
     val normals = ArrayList<Float>()
     val texcoords = ArrayList<Float>()
 
-    val triangles = triangles().map { triangle ->
+    val triangles = triangles().map { triangle: Triangle ->
         val a = vertexList[triangle.mVertices[0]]
         val b = vertexList[triangle.mVertices[1]]
         val c = vertexList[triangle.mVertices[2]]

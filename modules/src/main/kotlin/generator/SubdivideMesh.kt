@@ -1,8 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= SubdivideMesh ======================================
+// ============================================================================
 class SubdivideMesh(
     private val _mesh: GeneratorMesh,
     private val _t: Float = 0.5f
@@ -15,7 +17,7 @@ class SubdivideMesh(
     init {
         val vertices = ArrayList<MeshVertex>()
         for (vertex in _mesh.vertices()) {
-            vertices.add(copyVertex(vertex))
+            vertices.add(_copyVertex(vertex))
         }
         val edges = ArrayList<IntPair>()
         val edgeMap = HashMap<Long, Int>()
@@ -29,7 +31,7 @@ class SubdivideMesh(
                     a = b
                     b = temp
                 }
-                val key = edgeKey(a, b)
+                val key = _edgeKey(a, b)
                 if (!edgeMap.containsKey(key)) {
                     edgeMap[key] = edges.size
                     edges.add(IntPair(a, b))
@@ -43,7 +45,7 @@ class SubdivideMesh(
 
     override fun vertices(): Sequence<MeshVertex> = sequence {
         for (vertex in _vertexCache) {
-            yield(copyVertex(vertex))
+            yield(_copyVertex(vertex))
         }
         for (edge in _edgeCache) {
             val v1 = _vertexCache[edge.mX]
@@ -92,15 +94,15 @@ class SubdivideMesh(
             first = second
             second = temp
         }
-        return _vertexCache.size + _edgeMap.getValue(edgeKey(first, second))
+        return _vertexCache.size + _edgeMap.getValue(_edgeKey(first, second))
     }
 }
 
-private fun edgeKey(a: Int, b: Int): Long {
+private fun _edgeKey(a: Int, b: Int): Long {
     return (a.toLong() shl 32) or (b.toLong() and 0xffffffffL)
 }
 
-private fun copyVertex(vertex: MeshVertex): MeshVertex {
+private fun _copyVertex(vertex: MeshVertex): MeshVertex {
     val copy = MeshVertex()
     copy.mPosition = Vector3(
         vertex.mPosition.x,

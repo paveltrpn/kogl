@@ -1,7 +1,7 @@
 package render
 
-import java.text.DecimalFormat
-import java.math.RoundingMode
+import java.text.*
+import java.math.*
 
 import org.lwjgl.opengl.GL46.*
 
@@ -10,6 +10,10 @@ import events.*
 import graph.*
 import userinterface.*
 import image.*
+
+// ============================================================================
+// ======================= Render =============================================
+// ============================================================================
 
 class Render : WindowEventObserver {
     private val _ui: UiGL = UiGL()
@@ -44,9 +48,14 @@ class Render : WindowEventObserver {
 
         glDisable(GL_DEPTH_TEST)
 
-        val TEXT_START_POS_X = -30.0f
-        val TEXT_START_POS_Y = 30.0f
+        val TEXT_START_POS_X = 14.2f
+        val TEXT_START_POS_Y = 31.0f
+        val TEXT_LINE_WIDTH = 1.6f
+        val TEXT_LETTER_SPACE = 0.0f
+        val TEXT_LETTER_SCALE = 1.0f
+        var textLineCount = 0
         val TEXT_PLANE_Z = 0.4f
+        val TEXT_PADDING = 0.5f
 
         val cameraPosLabel = Label().apply {
             val df = DecimalFormat("0.000").apply {
@@ -62,41 +71,59 @@ class Render : WindowEventObserver {
 
             text = "pos: ${cx} ${cy} ${cz} ${az} ${el}"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
             z = TEXT_PLANE_Z - 0.1f
-            letterSpace = 0.0f
-            letterScale = 1.0f
+            letterSpace = TEXT_LETTER_SPACE
+            letterScale = TEXT_LETTER_SCALE
             color = Color(255, 255, 255, 255)
+
+            textLineCount++
         }
 
         val drawCallsLabel = Label().apply {
             text = "draw calls: ${scene.drawCallsCount}"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - 2.2f)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
             z = TEXT_PLANE_Z + 0.1f
-            letterSpace = 0.0f
-            letterScale = 1.0f
+            letterSpace = TEXT_LETTER_SPACE
+            letterScale = TEXT_LETTER_SCALE
             color = Color(255, 255, 255, 255)
+
+            textLineCount++
         }
 
         val gridToggleLable = Label().apply {
             text = "\"t\" - toggle grid visibility"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - 4.4f)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
             z = TEXT_PLANE_Z + 0.1f
-            letterSpace = 0.0f
-            letterScale = 1.0f
+            letterSpace = TEXT_LETTER_SPACE
+            letterScale = TEXT_LETTER_SCALE
             color = Color(255, 255, 255, 255)
+
+            textLineCount++
+        }
+
+        val holdCameraToggleLable = Label().apply {
+            text = "\"g\" - toggle hold camera"
+
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            z = TEXT_PLANE_Z + 0.1f
+            letterSpace = TEXT_LETTER_SPACE
+            letterScale = TEXT_LETTER_SCALE
+            color = Color(255, 255, 255, 255)
+
+            textLineCount++
         }
 
         val b1 = Billboard().apply {
-            size = Vector2(18.0f, 7.5f)
-            position = Vector2(-30.5f, 30.5f)
+            size = Vector2(18.0f, TEXT_LINE_WIDTH * textLineCount + TEXT_PADDING * 2.0f)
+            position = Vector2(TEXT_START_POS_X - TEXT_PADDING, TEXT_START_POS_Y + TEXT_PADDING)
             z = TEXT_PLANE_Z
             color = Color(255, 200, 128, 64)
         }
 
-        _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, b1))
+        _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, holdCameraToggleLable, b1))
 
         _ui.flush()
 

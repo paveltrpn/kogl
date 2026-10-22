@@ -1,26 +1,27 @@
 package graph
 
-import algebra.Vector3
-import graphdsl.buildLight
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import algebra.*
+import graphdsl.*
+import kotlin.test.*
 
-private const val EPS = 1e-5f
+private const val _EPS = 1e-5f
 
-private fun assertClose(expected: Float, actual: Float) {
+private fun _assertClose(expected: Float, actual: Float) {
     assertTrue(
-        kotlin.math.abs(expected - actual) <= EPS,
+        kotlin.math.abs(expected - actual) <= _EPS,
         "expected $expected but was $actual"
     )
 }
 
-private fun assertClose(expected: Vector3, actual: Vector3) {
-    assertClose(expected.x, actual.x)
-    assertClose(expected.y, actual.y)
-    assertClose(expected.z, actual.z)
+private fun _assertClose(expected: Vector3, actual: Vector3) {
+    _assertClose(expected.x, actual.x)
+    _assertClose(expected.y, actual.y)
+    _assertClose(expected.z, actual.z)
 }
 
+// ============================================================================
+// ======================= LightCollectorVisitorTest ==========================
+// ============================================================================
 class LightCollectorVisitorTest {
 
     @Test
@@ -48,10 +49,10 @@ class LightCollectorVisitorTest {
         assertEquals(1, collector.omniLights.size)
 
         val collected = collector.omniLights[0]
-        assertClose(Vector3(11.0f, 10.0f, 13.0f), collected.position)
-        assertClose(Vector3(1.0f, 0.9f, 0.7f), collected.color)
-        assertClose(2.0f, collected.intensity)
-        assertClose(40.0f, collected.radius)
+        _assertClose(Vector3(11.0f, 10.0f, 13.0f), collected.position)
+        _assertClose(Vector3(1.0f, 0.9f, 0.7f), collected.color)
+        _assertClose(2.0f, collected.intensity)
+        _assertClose(40.0f, collected.radius)
     }
 
     @Test
@@ -74,8 +75,8 @@ class LightCollectorVisitorTest {
         root.accept(collector)
 
         assertEquals(2, collector.omniLights.size)
-        assertClose(Vector3(5.0f, 0.0f, 0.0f), collector.omniLights[0].position)
-        assertClose(Vector3(-5.0f, 3.0f, 0.0f), collector.omniLights[1].position)
+        _assertClose(Vector3(5.0f, 0.0f, 0.0f), collector.omniLights[0].position)
+        _assertClose(Vector3(-5.0f, 3.0f, 0.0f), collector.omniLights[1].position)
     }
 
     @Test
@@ -107,6 +108,6 @@ class LightCollectorVisitorTest {
         root.accept(collector)
 
         assertEquals(1, collector.omniLights.size)
-        assertClose(Vector3(0.0f, 7.0f, 0.0f), collector.omniLights[0].position)
+        _assertClose(Vector3(0.0f, 7.0f, 0.0f), collector.omniLights[0].position)
     }
 }

@@ -1,5 +1,8 @@
 package generator
 
+// ============================================================================
+// ======================= UvFlipMesh =========================================
+// ============================================================================
 class UvFlipMesh(
     mMesh: GeneratorMesh,
     mU: Boolean,
@@ -8,7 +11,7 @@ class UvFlipMesh(
 
     private val _mesh: TransformMesh = TransformMesh(
         mMesh,
-        { vertex ->
+        { vertex: MeshVertex ->
             if (mU) {
                 vertex.mTexCoord.x = 1.0f - vertex.mTexCoord.x
             }

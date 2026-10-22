@@ -1,9 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.Vector3
-import algebra.toRadians
+import algebra.*
 
+// ============================================================================
+// ======================= LatheMesh ==========================================
+// ============================================================================
 class LatheMesh(
     private val _shape: GeneratorShape,
     axis: Vector2,

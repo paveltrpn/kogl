@@ -2,10 +2,13 @@
 
 Follow it and all will be ok.
 
-- Don not commit changes, the one do it by himself.
-- Do not run an aplication, if you need check only build it, the one do it by himself.
+- Use this COMMANDMENTS to understand what everything is for.
 
-- Use COMMANDMENTS.md to understand what everything is for.
+- Each commitment must make sense.
+
+- Do not commit changes, the one do it by himself.
+- Do not run an aplication, if you need check only build it, the one run code by himself.
+
 - If a plan is implemented, give a good middle-sized commit message in MD format.
 
 - Start all private class members with `_`.
@@ -17,7 +20,7 @@ Follow it and all will be ok.
 - "No ternary operators, only explicit if statements" not ban Elvis operator.
 - No "short" if statements, always brace-enclosed.
 - Use maximum verbose lambda syntax.
-- Class declaration must preambule with three lines - commented quals sign lone, class name enclosed with equals signs line end enclosing equals signs line.
+- Class declaration must preambule with three lines - commented quals sign line, class name enclosed with equals signs line end enclosing equals signs line.
 
 - This is an application that renders a scene.
 - OpenGL is used as the rendering API.

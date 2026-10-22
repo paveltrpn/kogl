@@ -1,28 +1,32 @@
 package graph
 
+// ============================================================================
+// ======================= Group ==============================================
+// ============================================================================
+
 open class Group : Node() {
-    protected var _children: MutableList<Node> = mutableListOf()
+    protected var mChildren: MutableList<Node> = mutableListOf()
 
     override fun accept(visitor: Visitor): Unit {
         visitor.apply(this)
     }
 
     override fun traverse(visitor: Visitor): Unit {
-        for (child in _children) {
+        for (child in mChildren) {
             child.accept(visitor)
         }
     }
 
     var children: MutableList<Node>
         get(): MutableList<Node> {
-            return _children
+            return mChildren
         }
         set(value) {
-            _children = value
+            mChildren = value
         }
 
     fun addChild(child: Node): Unit {
-        _children.addLast(child)
+        mChildren.addLast(child)
     }
 
     /**
@@ -34,7 +38,7 @@ open class Group : Node() {
 
     val cildrenCount: Int
         get(): Int {
-            return _children.size
+            return mChildren.size
         }
 
     val isEmpty: Boolean

@@ -4,6 +4,9 @@ import algebra.*
 
 fun Char.isHexDigit(): Boolean = this in '0'..'9' || this in 'a'..'f' || this in 'A'..'F'
 
+// ============================================================================
+// ======================= Color ==============================================
+// ============================================================================
 class Color() {
     var data = IntArray(4)
 
@@ -96,11 +99,11 @@ class Color() {
         }
 
         val hex = color.substring(1) // Remove '#'
-        if (hex.length != 8 || !hex.all { it.isHexDigit() }) {
+        if (hex.length != 8 || !hex.all { digit: Char -> digit.isHexDigit() }) {
             throw RuntimeException("Color string must contain exactly 8 valid hexadecimal digits after '#', got: $hex")
         }
 
-        data = IntArray(4) { i ->
+        data = IntArray(4) { i: Int ->
             val start = i * 2
             val hexPair = hex.substring(start, start + 2)
             hexPair.toInt(radix = 16)

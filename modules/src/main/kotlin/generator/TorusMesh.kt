@@ -1,8 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.toRadians
+import algebra.*
 
+// ============================================================================
+// ======================= TorusMesh ==========================================
+// ============================================================================
 class TorusMesh(
     mMinor: Float = 0.25f,
     mMajor: Float = 1.0f,

@@ -1,15 +1,16 @@
 package userinterface
 
-import kotlin.Float
-
 import algebra.*
-import image.Color
+import image.*
 
+// ============================================================================
+// ======================= Billboard ==========================================
+// ============================================================================
 class Billboard : UiComponent() {
-    private val VERTICIES_PER_QUAD = 6
+    private val _VERTICIES_PER_QUAD = 6
 
-    private val _quadVerticies = FloatArray(1 * VERTICIES_PER_QUAD * 3) { 0.0f }
-    private val _quadTexcrds = FloatArray(1 * VERTICIES_PER_QUAD * 2) { 0.0f }
+    private val _quadVerticies = FloatArray(1 * _VERTICIES_PER_QUAD * 3) { 0.0f }
+    private val _quadTexcrds = FloatArray(1 * _VERTICIES_PER_QUAD * 2) { 0.0f }
 
     private var _position: Vector3 = Vector3()
 
@@ -125,13 +126,13 @@ class Billboard : UiComponent() {
         _quadTexcrds[10] = topLeftTc.x
         _quadTexcrds[11] = topLeftTc.y
 
-        _quadsCount++
+        mQuadsCount++
     }
 
 
     val quadsCount: Int
         get(): Int {
-            return _quadsCount
+            return mQuadsCount
         }
 
     val vertices: FloatArray
@@ -143,4 +144,4 @@ class Billboard : UiComponent() {
         get():FloatArray {
             return _quadTexcrds
         }
-};
+}

@@ -1,6 +1,6 @@
 package image
 
-import java.io.File
+import java.io.*
 
 fun toUnsignedValue(value: Byte): Int {
     return value.toInt() and 0xFF
@@ -15,43 +15,46 @@ fun toSignedByte(value: Int): Byte {
 }
 
 // 32 bit per pixel RGBA image.
+// ============================================================================
+// ======================= Image ==============================================
+// ============================================================================
 abstract class Image {
-    protected var _width: Int
-    protected var _height: Int
-    protected var _data: ByteArray
+    protected var mWidth: Int
+    protected var mHeight: Int
+    protected var mData: ByteArray
 
-    protected val _components = 4
-    protected val _bits = 32
+    protected val mComponents = 4
+    protected val mBits = 32
 
     init {
-        _width = 0
-        _height = 0
-        _data = byteArrayOf()
+        mWidth = 0
+        mHeight = 0
+        mData = byteArrayOf()
     }
 
     val width: Int
         get() {
-            return _width
+            return mWidth
         }
 
     val height: Int
         get() {
-            return _height
+            return mHeight
         }
 
     val components: Int
         get() {
-            return _components
+            return mComponents
         }
 
     val bits: Int
         get() {
-            return _bits
+            return mBits
         }
 
     val data: ByteArray
         get() {
-            return _data
+            return mData
         }
 
     fun asPPM(): String {
@@ -62,9 +65,9 @@ abstract class Image {
         // Write body.
         for (j in 0..<(width * height)) {
             val base = j * components
-            val ir = toUnsignedValue(_data[base + 0])
-            val ig = toUnsignedValue(_data[base + 1])
-            val ib = toUnsignedValue(_data[base + 2])
+            val ir = toUnsignedValue(mData[base + 0])
+            val ig = toUnsignedValue(mData[base + 1])
+            val ib = toUnsignedValue(mData[base + 2])
 
             // NOTE: no alpha in PPM.
             //val ia = toUnsignedValue(data[base + 3])

@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
 
+// ============================================================================
+// ======================= RepeatShape ========================================
+// ============================================================================
 class RepeatShape(
     private val _shape: GeneratorShape,
     mInstances: Int,

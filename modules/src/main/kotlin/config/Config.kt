@@ -1,10 +1,13 @@
 package config
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import java.io.File
+import kotlinx.serialization.json.*
+import java.io.*
 
-@Serializable
+// ============================================================================
+// ======================= Konfig =============================================
+// ============================================================================
+
+@kotlinx.serialization.Serializable
 data class Konfig(
     val application_name: String,
     val engine_name: String,
@@ -23,46 +26,50 @@ data class Konfig(
     val ui_font: String
 )
 
-private val DEFAULT_KONFIG = Konfig(
-    application_name = "kogl",
-    engine_name = "kogl",
-    fullscreen = false,
-    resizeable = true,
-    window_width = 1920,
-    window_height = 1080,
-    window_pos_x = 100,
-    window_pos_y = 100,
-    maximized = false,
-    background_color = "#0c0c1cff",
-    doublebuffer = true,
-    frame_count = 3,
-    enable_vsync = true,
-    enable_debug_output = false,
-    ui_font = "DejaVu-Sans-Mono-1024-512-32-64-alpha.tga"
-)
+// ============================================================================
+// ======================= Config =============================================
+// ============================================================================
 
 class Config private constructor() {
     private val _basePath: String
     private var _konfig: Konfig
     private var _dirty: Boolean = false
 
+    private val _DEFAULT_KONFIG = Konfig(
+        application_name = "kogl",
+        engine_name = "kogl",
+        fullscreen = false,
+        resizeable = true,
+        window_width = 1280,
+        window_height = 720,
+        window_pos_x = 100,
+        window_pos_y = 100,
+        maximized = false,
+        background_color = "#0c0c1cff",
+        doublebuffer = true,
+        frame_count = 3,
+        enable_vsync = true,
+        enable_debug_output = false,
+        ui_font = "DejaVu-Sans-Mono-1024-512-32-64-alpha.tga"
+    )
+
     init {
-        _basePath = initBasePath()
-        _konfig = initConfigFromJson()
+        _basePath = _initBasePath()
+        _konfig = _initConfigFromJson()
     }
 
     companion object {
         @Volatile
-        private var instance: Config? = null
+        private var _instance: Config? = null
 
         fun init(): Config {
-            return instance ?: synchronized(this) {
-                instance ?: Config().also { instance = it }
+            return _instance ?: synchronized(this) {
+                _instance ?: Config().also { newConfig: Config -> _instance = newConfig }
             }
         }
 
         fun instance(): Config {
-            return instance ?: throw IllegalStateException(
+            return _instance ?: throw IllegalStateException(
                 "Config must be initialized by calling init() first."
             )
         }
@@ -98,16 +105,16 @@ class Config private constructor() {
             return
         }
 
-        saveKonfig(_konfig)
+        _saveKonfig(_konfig)
         _dirty = false
     }
 
-    private fun initBasePath(): String {
+    private fun _initBasePath(): String {
         val pathString = System.getProperty("user.dir")
         return pathString
     }
 
-    private fun saveKonfig(konfig: Konfig) {
+    private fun _saveKonfig(konfig: Konfig) {
         val file = File("${_basePath}/assets/config.json")
         val json = Json {
             prettyPrint = true
@@ -116,12 +123,12 @@ class Config private constructor() {
         file.writeText(json.encodeToString(konfig))
     }
 
-    private fun initConfigFromJson(): Konfig {
+    private fun _initConfigFromJson(): Konfig {
         val file = File("${_basePath}/assets/config.json")
 
         if (!file.exists()) {
-            saveKonfig(DEFAULT_KONFIG)
-            return DEFAULT_KONFIG
+            _saveKonfig(_DEFAULT_KONFIG)
+            return _DEFAULT_KONFIG
         }
 
         val jsonString = file.readText()

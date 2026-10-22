@@ -1,18 +1,19 @@
 package generator
 
-import algebra.Vector3
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import algebra.*
+import kotlin.test.*
 
-private fun vec(a: FloatArray, i: Int): Vector3 {
+private fun _vec(a: FloatArray, i: Int): Vector3 {
     return Vector3(a[i * 3], a[i * 3 + 1], a[i * 3 + 2])
 }
 
-private fun dot(a: Vector3, b: Vector3): Float {
+private fun _dot(a: Vector3, b: Vector3): Float {
     return a.x * b.x + a.y * b.y + a.z * b.z
 }
 
+// ============================================================================
+// ======================= ObjAdapterNormalsTest ==============================
+// ============================================================================
 class ObjAdapterNormalsTest {
 
     @Test
@@ -22,15 +23,15 @@ class ObjAdapterNormalsTest {
         assertEquals(mesh.triangles.size * 3, mesh.verticesCount)
 
         for (i in 0 until mesh.verticesCount) {
-            val p = vec(mesh.vertices, i)
-            val n = vec(mesh.vnormals, i)
+            val p = _vec(mesh.vertices, i)
+            val n = _vec(mesh.vnormals, i)
 
             val len = n.length()
             assertTrue(len > 0.99f && len < 1.01f, "normal not unit: $len")
 
             val plen = p.length()
             assertTrue(plen > 0.0f)
-            val d = dot(n, p.scale(1.0f / plen))
+            val d = _dot(n, p.scale(1.0f / plen))
             assertTrue(d > 0.5f, "normal not outward: dot=$d")
         }
     }
@@ -41,7 +42,7 @@ class ObjAdapterNormalsTest {
 
         val distinct = HashSet<String>()
         for (i in 0 until mesh.verticesCount) {
-            val n = vec(mesh.vnormals, i)
+            val n = _vec(mesh.vnormals, i)
             val len = n.length()
             assertTrue(len > 0.99f && len < 1.01f, "normal not unit: $len")
             val nx = if (kotlin.math.abs(n.x) < 1e-6f) 0.0f else n.x

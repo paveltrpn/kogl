@@ -1,23 +1,26 @@
 package render
 
-import algebra.Vector4
+import algebra.*
 import org.lwjgl.opengl.GL46.*
 
 import userinterface.*
 import image.*
 import config.*
-import org.lwjgl.system.MemoryStack
-import kotlin.use
+import org.lwjgl.system.*
+
+// ============================================================================
+// ======================= UiGL ===============================================
+// ============================================================================
 
 class UiGL : Ui() {
-    private val OUTPUT_QUADS_CAPACITY = 128
+    private val _OUTPUT_QUADS_CAPACITY = 256
 
     private val _program: Program
 
     private val _font: Texture
 
-    private val _labelBuffer = QuadsBuffer(OUTPUT_QUADS_CAPACITY)
-    private val _billboardBuffer = QuadsBuffer(OUTPUT_QUADS_CAPACITY)
+    private val _labelBuffer = QuadsBuffer(_OUTPUT_QUADS_CAPACITY)
+    private val _billboardBuffer = QuadsBuffer(_OUTPUT_QUADS_CAPACITY)
 
     init {
         val uiProgramSource = ShaderSource("ui")
@@ -35,7 +38,7 @@ class UiGL : Ui() {
         var labelBufOffset = 0
         var billboardBufOffset = 0
 
-        for (component in _componentsList) {
+        for (component in mComponentsList) {
             when (component) {
                 is Billboard -> {
                     _billboardBuffer.fill(
@@ -100,6 +103,6 @@ class UiGL : Ui() {
 
         glDisable(GL_BLEND)
 
-        _componentsList.clear()
+        mComponentsList.clear()
     }
 }

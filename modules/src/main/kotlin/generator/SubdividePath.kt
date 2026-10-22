@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= SubdividePath ======================================
+// ============================================================================
 class SubdividePath(
     private val _path: GeneratorPath
 ) : GeneratorPath {

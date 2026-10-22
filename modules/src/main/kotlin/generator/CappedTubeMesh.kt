@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector3
-import algebra.toRadians
+import algebra.*
+
+// ============================================================================
+// ======================= TubeCap ============================================
+// ============================================================================
 
 private class TubeCap(
     mRadius: Float,
@@ -22,6 +25,10 @@ private class TubeCap(
 
     override fun triangles(): Sequence<Triangle> = _impl.triangles()
 }
+
+// ============================================================================
+// ======================= CappedTubeMesh =====================================
+// ============================================================================
 
 class CappedTubeMesh(
     mRadius: Float = 1.0f,

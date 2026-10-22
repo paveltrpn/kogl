@@ -1,7 +1,10 @@
 package mesh
 
-import java.io.File
-import java.io.FileNotFoundException
+import java.io.*
+
+// ============================================================================
+// ======================= ObjFormatToken =====================================
+// ============================================================================
 
 private enum class ObjFormatToken {
     GEOMETRIC_VERTICES,
@@ -42,7 +45,7 @@ private enum class ObjFormatToken {
     COMMENT,
 }
 
-private val tokensMap: Map<ObjFormatToken, String> = mapOf(
+private val _tokensMap: Map<ObjFormatToken, String> = mapOf(
     ObjFormatToken.GEOMETRIC_VERTICES to "v ",
     ObjFormatToken.TEXTURE_VERTICES to "vt ",
     ObjFormatToken.VERTEX_NORMALS to "vn ",
@@ -81,7 +84,7 @@ private val tokensMap: Map<ObjFormatToken, String> = mapOf(
     ObjFormatToken.COMMENT to "# "
 )
 
-private fun split(str: String, delim: Char): List<String> {
+private fun _split(str: String, delim: Char): List<String> {
     val result = mutableListOf<String>()
     var left = 0
     for (i in str.indices) {
@@ -96,36 +99,36 @@ private fun split(str: String, delim: Char): List<String> {
     return result
 }
 
-private fun parseVertexString(str: String): Triple<Float, Float, Float> {
-    val vertexValuesString = split(str, ' ')
+private fun _parseVertexString(str: String): Triple<Float, Float, Float> {
+    val vertexValuesString = _split(str, ' ')
     val x = vertexValuesString[0].toFloat()
     val y = vertexValuesString[1].toFloat()
     val z = vertexValuesString[2].toFloat()
     return Triple(x, y, z)
 }
 
-private fun parseNormalString(str: String): Triple<Float, Float, Float> {
-    val normalValuesString = split(str, ' ')
+private fun _parseNormalString(str: String): Triple<Float, Float, Float> {
+    val normalValuesString = _split(str, ' ')
     val x = normalValuesString[0].toFloat()
     val y = normalValuesString[1].toFloat()
     val z = normalValuesString[2].toFloat()
     return Triple(x, y, z)
 }
 
-private fun parseTexCoordString(str: String): Pair<Float, Float> {
-    val texCoordValuesString = split(str, ' ')
+private fun _parseTexCoordString(str: String): Pair<Float, Float> {
+    val texCoordValuesString = _split(str, ' ')
     val u = texCoordValuesString[0].toFloat()
     val v = texCoordValuesString[1].toFloat()
     return Pair(u, v)
 }
 
-private fun parseTriangleString(str: String): ObjTriangleIndices {
-    val indicesString = split(str, ' ')
+private fun _parseTriangleString(str: String): ObjTriangleIndices {
+    val indicesString = _split(str, ' ')
 
     val triangle = ObjTriangleIndices()
 
     for ((i, indexString) in indicesString.withIndex()) {
-        val indices = split(indexString, '/')
+        val indices = _split(indexString, '/')
         val v = indices[0].toInt()
         val t = indices[1].toInt()
         val n = indices[2].toInt()
@@ -157,47 +160,49 @@ fun readWavefrontObjFile(filePath: String): OBJMesh {
 
     for (line in fileHandle.lineSequence()) {
         val str = line.trim()
-        if (str.isEmpty()) continue
+        if (str.isEmpty()) {
+            continue
+        }
 
         when {
-            str.startsWith(tokensMap[ObjFormatToken.COMMENT]!!) -> {
+            str.startsWith(_tokensMap[ObjFormatToken.COMMENT]!!) -> {
                 continue
             }
 
-            str.startsWith(tokensMap[ObjFormatToken.OBJECT_NAME]!!) -> {
-                name = str.substring(tokensMap[ObjFormatToken.OBJECT_NAME]!!.length).trim()
+            str.startsWith(_tokensMap[ObjFormatToken.OBJECT_NAME]!!) -> {
+                name = str.substring(_tokensMap[ObjFormatToken.OBJECT_NAME]!!.length).trim()
                 continue
             }
 
-            str.startsWith(tokensMap[ObjFormatToken.GEOMETRIC_VERTICES]!!) -> {
-                val vertexString = str.substring(tokensMap[ObjFormatToken.GEOMETRIC_VERTICES]!!.length)
-                val (x, y, z) = parseVertexString(vertexString)
+            str.startsWith(_tokensMap[ObjFormatToken.GEOMETRIC_VERTICES]!!) -> {
+                val vertexString = str.substring(_tokensMap[ObjFormatToken.GEOMETRIC_VERTICES]!!.length)
+                val (x, y, z) = _parseVertexString(vertexString)
                 vertices.addLast(x)
                 vertices.addLast(y)
                 vertices.addLast(z)
                 continue
             }
 
-            str.startsWith(tokensMap[ObjFormatToken.VERTEX_NORMALS]!!) -> {
-                val normalString = str.substring(tokensMap[ObjFormatToken.VERTEX_NORMALS]!!.length)
-                val (nx, ny, nz) = parseNormalString(normalString)
+            str.startsWith(_tokensMap[ObjFormatToken.VERTEX_NORMALS]!!) -> {
+                val normalString = str.substring(_tokensMap[ObjFormatToken.VERTEX_NORMALS]!!.length)
+                val (nx, ny, nz) = _parseNormalString(normalString)
                 vnormals.addLast(nx)
                 vnormals.addLast(ny)
                 vnormals.addLast(nz)
                 continue
             }
 
-            str.startsWith(tokensMap[ObjFormatToken.TEXTURE_VERTICES]!!) -> {
-                val texcrdString = str.substring(tokensMap[ObjFormatToken.TEXTURE_VERTICES]!!.length)
-                val (u, v) = parseTexCoordString(texcrdString)
+            str.startsWith(_tokensMap[ObjFormatToken.TEXTURE_VERTICES]!!) -> {
+                val texcrdString = str.substring(_tokensMap[ObjFormatToken.TEXTURE_VERTICES]!!.length)
+                val (u, v) = _parseTexCoordString(texcrdString)
                 txcoords.addLast(u)
                 txcoords.addLast(v)
                 continue
             }
 
-            str.startsWith(tokensMap[ObjFormatToken.FACE]!!) -> {
-                val triangleString = str.substring(tokensMap[ObjFormatToken.FACE]!!.length)
-                val triangle = parseTriangleString(triangleString)
+            str.startsWith(_tokensMap[ObjFormatToken.FACE]!!) -> {
+                val triangleString = str.substring(_tokensMap[ObjFormatToken.FACE]!!.length)
+                val triangle = _parseTriangleString(triangleString)
                 triangles.addLast(triangle)
                 continue
             }

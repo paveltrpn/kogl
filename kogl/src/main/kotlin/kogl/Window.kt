@@ -2,11 +2,9 @@ package kogl
 
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.opengl.GL.createCapabilities
-import org.lwjgl.system.Configuration
-import org.lwjgl.opengl.GL11.glClearColor
-import org.lwjgl.opengl.GL11.glViewport
-import org.lwjgl.system.MemoryUtil
+import org.lwjgl.opengl.GL.*
+import org.lwjgl.opengl.GL11.*
+import org.lwjgl.system.*
 
 import config.*
 import render.*
@@ -16,13 +14,16 @@ import graph.*
 import image.*
 import map.*
 
+// ============================================================================
+// ======================= Window =============================================
+// ============================================================================
 class Window {
-    private var mAllocator: GLFWAllocator? = null
+    private var _allocator: GLFWAllocator? = null
 
     private var _window: Long = 0
 
-    private val mRender: Render
-    private val mUserinterface: Userinterface
+    private val _render: Render
+    private val _userinterface: Userinterface
 
     val isMaximized: Boolean
         get() {
@@ -50,7 +51,7 @@ class Window {
         // NOTE: set default stack size - 128 kb!!!
         Configuration.STACK_SIZE.set(128 * 1024)
 
-        mAllocator = GLFWAllocator.calloc()
+        _allocator = GLFWAllocator.calloc()
             .allocate(GLFWAllocateCallbackI { size: Long, user: Long -> MemoryUtil.nmemAllocChecked(size) })
             .reallocate(GLFWReallocateCallbackI { block: Long, size: Long, user: Long ->
                 MemoryUtil.nmemReallocChecked(
@@ -60,7 +61,7 @@ class Window {
             })
             .deallocate(GLFWDeallocateCallbackI { block: Long, user: Long -> MemoryUtil.nmemFree(block) })
 
-        glfwInitAllocator(mAllocator)
+        glfwInitAllocator(_allocator)
 
         GLFWErrorCallback.createPrint().set()
 
@@ -102,16 +103,22 @@ class Window {
             Config.instance().konfig.window_pos_y
         )
 
-        glfwSetKeyCallback(_window, { window, key, scancode, action, mods ->
+        // Force window resize at startup.
+        glfwSetWindowSize(
+            _window, inititalWindowWidth,
+            inititalWindowHeight
+        )
+
+        glfwSetKeyCallback(_window, { window: Long, key: Int, scancode: Int, action: Int, mods: Int ->
             if (action == GLFW_PRESS) {
                 val keyEvent = WindowKeyPressEvent(key)
-                mUserinterface.notify(keyEvent)
+                _userinterface.notify(keyEvent)
 
                 when (key) {
                     GLFW_KEY_G -> {
-                        mUserinterface.mHoldMouse = !mUserinterface.mHoldMouse
+                        _userinterface.mHoldMouse = !_userinterface.mHoldMouse
 
-                        if (mUserinterface.mHoldMouse) {
+                        if (_userinterface.mHoldMouse) {
                             glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN)
                         } else {
                             glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL)
@@ -126,56 +133,56 @@ class Window {
 
             if (action == GLFW_RELEASE) {
                 val keyEvent = WindowKeyReleaseEvent(key)
-                mUserinterface.notify(keyEvent)
+                _userinterface.notify(keyEvent)
             }
         })
 
-        glfwSetCursorPosCallback(_window, { window, xpos, ypos ->
-            if (!mUserinterface.mHoldMouse) {
+        glfwSetCursorPosCallback(_window, { window: Long, xpos: Double, ypos: Double ->
+            if (!_userinterface.mHoldMouse) {
                 val mouseEvent = WindowMouseMoveEvent(xpos.toInt(), ypos.toInt())
-                mUserinterface.notify(mouseEvent)
+                _userinterface.notify(mouseEvent)
             } else {
-                val offsetX = mUserinterface.windowWidth / 2 - xpos.toInt()
-                val offsetY = mUserinterface.windowHeight / 2 - ypos.toInt()
+                val offsetX = _userinterface.windowWidth / 2 - xpos.toInt()
+                val offsetY = _userinterface.windowHeight / 2 - ypos.toInt()
 
                 val mouseEvent = WindowMouseOffsetEvent(offsetX, offsetY)
-                mUserinterface.notify(mouseEvent)
+                _userinterface.notify(mouseEvent)
             }
         })
 
-        glfwSetWindowPosCallback(_window, { window, xpos, ypos ->
+        glfwSetWindowPosCallback(_window, { window: Long, xpos: Int, ypos: Int ->
             val posEvent = WindowMoveEvent(xpos, ypos)
-            mUserinterface.notify(posEvent)
+            _userinterface.notify(posEvent)
 
-            mUserinterface.windowPosX = xpos
-            mUserinterface.mWindowPosY = ypos
+            _userinterface.windowPosX = xpos
+            _userinterface.mWindowPosY = ypos
 
             Config.instance().updatePosition(xpos, ypos)
         })
 
-        glfwSetWindowSizeCallback(_window, { window, width, height ->
+        glfwSetWindowSizeCallback(_window, { window: Long, width: Int, height: Int ->
             if (width > 0 && height > 0) {
                 val sizeEvent = WindowResizeEvent(width, height)
-                mUserinterface.notify(sizeEvent)
+                _userinterface.notify(sizeEvent)
 
                 glViewport(0, 0, width, height)
 
-                mUserinterface.windowWidth = width
-                mUserinterface.windowHeight = height
+                _userinterface.windowWidth = width
+                _userinterface.windowHeight = height
 
                 Config.instance().updateSize(width, height)
             }
         })
 
-        glfwSetMouseButtonCallback(_window, { window, button, action, mods ->
+        glfwSetMouseButtonCallback(_window, { window: Long, button: Int, action: Int, mods: Int ->
             if (action == GLFW_PRESS) {
                 val mouseEvent = WindowMousePress(button)
-                mUserinterface.notify(mouseEvent)
+                _userinterface.notify(mouseEvent)
             }
 
             if (action == GLFW_RELEASE) {
                 val mouseEvent = WindowMouseRelease(button)
-                mUserinterface.notify(mouseEvent)
+                _userinterface.notify(mouseEvent)
             }
         })
 
@@ -191,11 +198,11 @@ class Window {
 
 
         // Create userinterface object. GL context is current at this point.
-        mUserinterface = Userinterface()
-        mUserinterface.windowWidth = Config.instance().konfig.window_width
-        mUserinterface.windowHeight = Config.instance().konfig.window_height
-        mUserinterface.windowPosX = Config.instance().konfig.window_pos_x
-        mUserinterface.mWindowPosY = Config.instance().konfig.window_pos_y
+        _userinterface = Userinterface()
+        _userinterface.windowWidth = Config.instance().konfig.window_width
+        _userinterface.windowHeight = Config.instance().konfig.window_height
+        _userinterface.windowPosX = Config.instance().konfig.window_pos_x
+        _userinterface.mWindowPosY = Config.instance().konfig.window_pos_y
 
         // Main scene init.
         val mainScene = Scene()
@@ -221,13 +228,13 @@ class Window {
 //        }
 
         // Render init.
-        mRender = Render()
+        _render = Render()
 
-        mUserinterface.attach(mRender)
+        _userinterface.attach(_render)
 
-        mRender.mUi = mUserinterface.mUi
+        _render.mUi = _userinterface.mUi
 
-        with(mRender) {
+        with(_render) {
             scene = mainScene
         }
     }
@@ -235,32 +242,32 @@ class Window {
     fun run() {
         val cc = Color(Config.instance().konfig.background_color)
 
-        glViewport(0, 0, mUserinterface.windowWidth, mUserinterface.windowHeight)
+        glViewport(0, 0, _userinterface.windowWidth, _userinterface.windowHeight)
         glClearColor(cc.rf, cc.gf, cc.bf, 1.0f)
 
-        mRender.preLoop()
+        _render.preLoop()
 
         while (!glfwWindowShouldClose(_window)) {
-            if (mUserinterface.mHoldMouse) {
-                glfwSetCursorPos(_window, mUserinterface.windowWidth / 2.0, mUserinterface.windowHeight / 2.0)
+            if (_userinterface.mHoldMouse) {
+                glfwSetCursorPos(_window, _userinterface.windowWidth / 2.0, _userinterface.windowHeight / 2.0)
             }
 
             glfwPollEvents()
 
-            mUserinterface.update()
+            _userinterface.update()
 
-            mRender.frame()
+            _render.frame()
 
             glfwSwapBuffers(_window)
         }
 
-        mRender.postLoop()
+        _render.postLoop()
 
         // === Destroy === //
         if (_window != MemoryUtil.NULL) {
-            Config.instance().updateMaximized(_isMaximized())
+            Config.instance().updateMaximized(isMaximized)
 
-            if (!_isMaximized() && !_isIconified()) {
+            if (!isMaximized && !isIconified) {
                 val width = IntArray(1)
                 val height = IntArray(1)
                 glfwGetWindowSize(_window, width, height)
@@ -279,7 +286,7 @@ class Window {
 
         Config.instance().save()
 
-        mUserinterface.free()
+        _userinterface.free()
 
         glfwDestroyWindow(_window)
 

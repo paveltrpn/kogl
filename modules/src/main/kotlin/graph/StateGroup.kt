@@ -2,6 +2,10 @@ package graph
 
 import render.*
 
+// ============================================================================
+// ======================= StateGroup =========================================
+// ============================================================================
+
 /**
  * StateGroup sits on top of scene subgraph, connects direct to locale object
  * and holds shader program that bind on every traversal begin.

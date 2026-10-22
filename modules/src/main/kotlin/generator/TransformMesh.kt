@@ -1,11 +1,14 @@
 package generator
 
+// ============================================================================
+// ======================= TransformMesh ======================================
+// ============================================================================
 open class TransformMesh(
     private val _mesh: GeneratorMesh,
     private val _mutate: (MeshVertex) -> Unit
 ) : GeneratorMesh {
 
-    override fun vertices(): Sequence<MeshVertex> = _mesh.vertices().map { vertex ->
+    override fun vertices(): Sequence<MeshVertex> = _mesh.vertices().map { vertex: MeshVertex ->
         _mutate(vertex)
         vertex
     }

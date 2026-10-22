@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.Vector3
+import algebra.*
+
+// ============================================================================
+// ======================= ConvexPolygonMesh ==================================
+// ============================================================================
 
 class ConvexPolygonMesh : GeneratorMesh {
 
@@ -19,7 +22,7 @@ class ConvexPolygonMesh : GeneratorMesh {
         mSides: Int = 5,
         mSegments: Int = 4,
         mRings: Int = 4
-    ) : this(makeVertices(mRadius, mSides), mSegments, mRings)
+    ) : this(_makeVertices(mRadius, mSides), mSegments, mRings)
 
     constructor(
         mVertices: List<Vector3>,
@@ -29,8 +32,8 @@ class ConvexPolygonMesh : GeneratorMesh {
         _vertices = mVertices
         _segments = mSegments
         _rings = mRings
-        _center = calcCenter(mVertices)
-        _normal = calcNormal(_center, mVertices)
+        _center = _calcCenter(mVertices)
+        _normal = _calcNormal(_center, mVertices)
         if (mVertices.isNotEmpty()) {
             val tangent = normalize(sub(mVertices[0], _center))
             val bitangent = cross(_normal, tangent)
@@ -152,10 +155,10 @@ class ConvexPolygonMesh : GeneratorMesh {
             mSegments: Int = 1,
             mRings: Int = 1
         ): ConvexPolygonMesh {
-            return ConvexPolygonMesh(convertVertices(mVertices), mSegments, mRings)
+            return ConvexPolygonMesh(_convertVertices(mVertices), mSegments, mRings)
         }
 
-        private fun makeVertices(radius: Float, sides: Int): List<Vector3> {
+        private fun _makeVertices(radius: Float, sides: Int): List<Vector3> {
             val result = ArrayList<Vector3>()
             for (shapeVertex in CircleShape(radius, sides).vertices()) {
                 result.add(Vector3(shapeVertex.mPosition.x, shapeVertex.mPosition.y, 0.0f))
@@ -166,7 +169,7 @@ class ConvexPolygonMesh : GeneratorMesh {
             return result
         }
 
-        private fun convertVertices(vertices: List<Vector2>): List<Vector3> {
+        private fun _convertVertices(vertices: List<Vector2>): List<Vector3> {
             val result = ArrayList<Vector3>(vertices.size)
             for (vertex in vertices) {
                 result.add(Vector3(vertex.x, vertex.y, 0.0f))
@@ -174,7 +177,7 @@ class ConvexPolygonMesh : GeneratorMesh {
             return result
         }
 
-        private fun calcCenter(vertices: List<Vector3>): Vector3 {
+        private fun _calcCenter(vertices: List<Vector3>): Vector3 {
             var result = Vector3(0.0f, 0.0f, 0.0f)
             if (vertices.isEmpty()) {
                 return result
@@ -185,7 +188,7 @@ class ConvexPolygonMesh : GeneratorMesh {
             return scale(result, 1.0f / vertices.size)
         }
 
-        private fun calcNormal(center: Vector3, vertices: List<Vector3>): Vector3 {
+        private fun _calcNormal(center: Vector3, vertices: List<Vector3>): Vector3 {
             var result = Vector3(0.0f, 0.0f, 0.0f)
             if (vertices.isEmpty()) {
                 return result

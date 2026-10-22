@@ -1,8 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.toRadians
+import algebra.*
 
+// ============================================================================
+// ======================= RoundedRectangleShape ==============================
+// ============================================================================
 class RoundedRectangleShape(
     mRadius: Float = 0.25f,
     mSize: Vector2 = Vector2(0.75f, 0.75f),

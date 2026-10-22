@@ -1,6 +1,6 @@
 package kogl.testgraph
 
-import kotlin.random.Random
+import kotlin.random.*
 
 import org.lwjgl.opengl.GL46.*
 
@@ -50,14 +50,14 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
     }
 
     val randomVector3: (Float, Float) -> Vector3 = { from: Float, to: Float ->
-        val list = List(3) { from + Random.nextFloat() * (to - from) }
+        val list = List(3) { index: Int -> from + Random.nextFloat() * (to - from) }
         Vector3(list[0], list[1], list[2])
     }
 
     val diamondStateGroup = buildState {
         stateGroup {
             program = flatshadeProgram
-            repeat(16) {
+            repeat(16) { index: Int ->
                 attachDrawable {
                     spinableDrawable {
                         mesh = diamondMesh
@@ -71,7 +71,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
         }
     }
 
-    repeat(16) {
+    repeat(16) { index: Int ->
         val item = FlyaroundDrawable(frameMesh).apply {
             color = randomVector3(0.1f, 0.9f)
             origin = Vector3(0.0f, 0.0f, 0.0f)
@@ -100,7 +100,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
         frameStateGroup.addChild(transform)
     }
 
-    repeat(16) {
+    repeat(16) { index: Int ->
         val item = FlyaroundDrawable(arch01dMesh).apply {
             color = randomVector3(0.1f, 0.9f)
             origin = Vector3(0.0f, 0.0f, 0.0f)

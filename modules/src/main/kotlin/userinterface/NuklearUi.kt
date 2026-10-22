@@ -1,15 +1,18 @@
 package userinterface
 
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.*
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.nuklear.*
 import org.lwjgl.nuklear.Nuklear.*
 
-import config.Config
+import config.*
 import events.*
-import render.UiDrawable
+import render.*
 
+// ============================================================================
+// ======================= NuklearUi ==========================================
+// ============================================================================
 class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserver {
     private val _allocator: NkAllocator = NkAllocator.create()
         .alloc(NkPluginAllocI { handle: Long, old: Long, size: Long -> nmemAllocChecked(size) })
@@ -43,7 +46,7 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
 
         var bakedFont: NkFont?
 
-        MemoryStack.stackPush().use { stack ->
+        MemoryStack.stackPush().use { stack: MemoryStack ->
             bakedFont =
                 nk_font_atlas_add_from_file(
                     _atlas,
@@ -176,7 +179,7 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
 
         nk_input_end(_ctx)
 
-        buildWidgets()
+        _buildWidgets()
 
         mBackend.convert(_ctx, _cmds, _vbuf, _ebuf, _convertConfig)
 
@@ -208,7 +211,7 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
         _allocator.free()
     }
 
-    private fun buildWidgets() {
+    private fun _buildWidgets() {
         if (nk_begin(
                 _ctx,
                 "panel",

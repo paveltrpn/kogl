@@ -1,16 +1,19 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
 
+// ============================================================================
+// ======================= RotateShape ========================================
+// ============================================================================
 class RotateShape(
     shape: GeneratorShape,
     angle: Float
-) : TransformShape(shape, rotateEval(angle))
+) : TransformShape(shape, _rotateEval(angle))
 
-private fun rotateEval(angle: Float): (ShapeVertex) -> Unit {
+private fun _rotateEval(angle: Float): (ShapeVertex) -> Unit {
     val cosine = kotlin.math.cos(angle)
     val sine = kotlin.math.sin(angle)
-    return { vertex ->
+    return { vertex: ShapeVertex ->
         vertex.mPosition = Vector2(
             vertex.mPosition.x * cosine - vertex.mPosition.y * sine,
             vertex.mPosition.x * sine + vertex.mPosition.y * cosine

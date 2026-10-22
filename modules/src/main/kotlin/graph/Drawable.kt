@@ -1,7 +1,6 @@
 package graph
 
-import algebra.Vector3
-import algebra.Matrix4
+import algebra.*
 import render.*
 import mesh.*
 
@@ -13,14 +12,14 @@ abstract class Drawable : Leaf {
     private var _mesh: Mesh? = null
     private var _buffer: MeshBuffer? = null
 
-    protected var _color = Vector3(1.0f, 1.0f, 1.0f)
-    protected var _modelMatrix = Matrix4().idtt()
+    protected var mColor = Vector3(1.0f, 1.0f, 1.0f)
+    protected var mModelMatrix = Matrix4().idtt()
 
-    protected var _origin = Vector3(0.0f, 0.0f, 0.0f)
-    protected var _scale = Vector3(1.0f, 1.0f, 1.0f)
-    protected var _axis = Vector3(0.0f, 1.0f, 0.0f)
-    protected var _angl = 0.0f
-    protected var _anglSpeed = 0.0f
+    protected var mOrigin = Vector3(0.0f, 0.0f, 0.0f)
+    protected var mScale = Vector3(1.0f, 1.0f, 1.0f)
+    protected var mAxis = Vector3(0.0f, 1.0f, 0.0f)
+    protected var mAngl = 0.0f
+    protected var mAnglSpeed = 0.0f
 
     constructor() : super() {}
 
@@ -64,44 +63,44 @@ abstract class Drawable : Leaf {
 
     var origin: Vector3
         get(): Vector3 {
-            return _origin
+            return mOrigin
         }
         set(value) {
-            _origin = value
+            mOrigin = value
         }
 
     var scale: Vector3
         get(): Vector3 {
-            return _scale
+            return mScale
         }
         set(value) {
-            _scale = value
+            mScale = value
         }
 
     var axis: Vector3
         get(): Vector3 {
-            return _axis
+            return mAxis
         }
         set(value: Vector3) {
             // TODO: assert zero length vector.
-            _axis = value
-            _axis.normalizeSelf()
+            mAxis = value
+            mAxis.normalizeSelf()
         }
 
     var angl: Float
         get(): Float {
-            return _angl
+            return mAngl
         }
         set(value) {
-            _angl = value
+            mAngl = value
         }
 
     var anglSpeed: Float
         get(): Float {
-            return _anglSpeed
+            return mAnglSpeed
         }
         set(value) {
-            _anglSpeed = value
+            mAnglSpeed = value
         }
 
     open fun draw(): Unit {
@@ -109,43 +108,45 @@ abstract class Drawable : Leaf {
     }
 
     fun applyTransform(tr: Matrix4): Unit {
-        _modelMatrix = tr
+        mModelMatrix = tr
     }
 
     var modelMatrix: Matrix4
         get(): Matrix4 {
-            return _modelMatrix
+            return mModelMatrix
         }
         set(value) {
-            _modelMatrix = value
+            mModelMatrix = value
         }
 
     var color: Vector3
         get(): Vector3 {
-            return _color
+            return mColor
         }
         set(value) {
-            _color = value
+            mColor = value
         }
 
-    protected val offsetMatrix: Matrix4
+    protected val mOffsetMatrix: Matrix4
         get(): Matrix4 {
-            val offset = algebra.offset(_origin)
+            val offset = algebra.offset(mOrigin)
             offset.transpose()
             return offset
         }
 
-    protected val scaleMatrix: Matrix4
+    protected val mScaleMatrix: Matrix4
         get(): Matrix4 {
-            return algebra.scale(_scale)
+            return algebra.scale(mScale)
         }
 
-    protected fun updateAnglAndGetSpinMatrix(dt: Float): Matrix4 {
-        _angl += anglSpeed * dt
+    protected fun mUpdateAnglAndGetSpinMatrix(dt: Float): Matrix4 {
+        mAngl += anglSpeed * dt
 
-        if (_angl > 360.0f || _angl < -360.0f) _angl = 0.0f
+        if (mAngl > 360.0f || mAngl < -360.0f) {
+            mAngl = 0.0f
+        }
 
-        return algebra.rotation(_axis, _angl)
+        return algebra.rotation(mAxis, mAngl)
     }
 }
 
@@ -159,9 +160,9 @@ class SpinableDrawable : Drawable {
     constructor(mesh: Mesh) : super(mesh) {}
 
     fun updateLocal(dt: Float): Matrix4 {
-        val spinMatrix = updateAnglAndGetSpinMatrix(dt)
-        val t = scaleMatrix.multiply(spinMatrix)
-        return t.multiply(offsetMatrix)
+        val spinMatrix = mUpdateAnglAndGetSpinMatrix(dt)
+        val t = mScaleMatrix.multiply(spinMatrix)
+        return t.multiply(mOffsetMatrix)
     }
 }
 
@@ -175,8 +176,8 @@ class FlyaroundDrawable : Drawable {
     constructor(mesh: Mesh) : super(mesh) {}
 
     fun updateLocal(dt: Float): Matrix4 {
-        val spinMatrix = updateAnglAndGetSpinMatrix(dt)
-        val t = offsetMatrix.multiply(scaleMatrix)
+        val spinMatrix = mUpdateAnglAndGetSpinMatrix(dt)
+        val t = mOffsetMatrix.multiply(mScaleMatrix)
         return t.multiply(spinMatrix)
     }
 }

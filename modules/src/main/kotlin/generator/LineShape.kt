@@ -1,14 +1,17 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
 
+// ============================================================================
+// ======================= LineShape ==========================================
+// ============================================================================
 class LineShape(
     start: Vector2,
     end: Vector2,
     segments: Int = 16
-) : ParametricShape(lineEval(start, end), segments)
+) : ParametricShape(_lineEval(start, end), segments)
 
-private fun lineEval(start: Vector2, end: Vector2): (Float) -> ShapeVertex {
+private fun _lineEval(start: Vector2, end: Vector2): (Float) -> ShapeVertex {
     val sx = start.x
     val sy = start.y
     val dx = end.x - start.x
@@ -16,7 +19,7 @@ private fun lineEval(start: Vector2, end: Vector2): (Float) -> ShapeVertex {
     val tangent = normalize(Vector2(dx, dy))
     val tx = tangent.x
     val ty = tangent.y
-    return { t ->
+    return { t: Float ->
         val vertex = ShapeVertex()
         vertex.mPosition = Vector2(sx + t * dx, sy + t * dy)
         vertex.mTangent = Vector2(tx, ty)

@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= RepeatMesh =========================================
+// ============================================================================
 class RepeatMesh(
     private val _mesh: GeneratorMesh,
     private val _instances: Int,

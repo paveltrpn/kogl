@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
 
+// ============================================================================
+// ======================= ParametricMesh =====================================
+// ============================================================================
 open class ParametricMesh(
     private val _eval: (Vector2) -> MeshVertex,
     private val _segments: IntPair

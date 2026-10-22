@@ -1,16 +1,20 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
+
+// ============================================================================
+// ======================= AxisSwapPath =======================================
+// ============================================================================
 
 class AxisSwapPath(
     path: GeneratorPath,
     mX: Axis,
     mY: Axis,
     mZ: Axis
-) : TransformPath(path, axisSwapPathEval(mX, mY, mZ))
+) : TransformPath(path, _axisSwapPathEval(mX, mY, mZ))
 
-private fun axisSwapPathEval(x: Axis, y: Axis, z: Axis): (PathVertex) -> Unit {
-    return { vertex ->
+private fun _axisSwapPathEval(x: Axis, y: Axis, z: Axis): (PathVertex) -> Unit {
+    return { vertex: PathVertex ->
         vertex.mPosition = Vector3(
             componentAt(vertex.mPosition, x),
             componentAt(vertex.mPosition, y),

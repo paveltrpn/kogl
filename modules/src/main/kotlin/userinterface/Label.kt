@@ -1,20 +1,21 @@
 package userinterface
 
-import kotlin.Float
-
 import image.*
 import algebra.*
 
+// ============================================================================
+// ======================= Label ==============================================
+// ============================================================================
 class Label : UiComponent() {
     private var _text: String = ""
 
     // Size of "Letters buffer" - this is the number of all characters
     // from all draw() calls that can one instance of this class operates
-    private val VERTICIES_PER_QUAD = 6
-    private val MAX_LETTERS_COUNT = 64
+    private val _VERTICIES_PER_QUAD = 6
+    private val _MAX_LETTERS_COUNT = 64
 
-    private val _letterQuadsVertices = FloatArray(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD * 3) { 0.0f }
-    private val _letterQuadsTxcoords = FloatArray(MAX_LETTERS_COUNT * VERTICIES_PER_QUAD * 2) { 0.0f }
+    private val _letterQuadsVertices = FloatArray(_MAX_LETTERS_COUNT * _VERTICIES_PER_QUAD * 3) { 0.0f }
+    private val _letterQuadsTxcoords = FloatArray(_MAX_LETTERS_COUNT * _VERTICIES_PER_QUAD * 2) { 0.0f }
 
     private var _letterScale = 1.0f
     private var _letterSpace = 0.0f
@@ -114,7 +115,7 @@ class Label : UiComponent() {
             val bottomLeftVt = Vector3((offset + 0.0f) + _position.x, -letterHeight + _position.y, _position.z)
 
             // Fill vertices array.
-            val vertexOffset = i * VERTICIES_PER_QUAD * 3
+            val vertexOffset = i * _VERTICIES_PER_QUAD * 3
 
             _letterQuadsVertices[vertexOffset + 0] = topLeftVt.x
             _letterQuadsVertices[vertexOffset + 1] = topLeftVt.y
@@ -147,7 +148,7 @@ class Label : UiComponent() {
             val bottomLeftTc = Vector2((tcGapX * glyphX) + 0.0f, (tcGapY * glyphY) + tcGapY)
 
             // Fill texture coordinates array.
-            val txOffset = i * VERTICIES_PER_QUAD * 2
+            val txOffset = i * _VERTICIES_PER_QUAD * 2
 
             _letterQuadsTxcoords[txOffset + 0] = topLeftTc.x
             _letterQuadsTxcoords[txOffset + 1] = topLeftTc.y
@@ -168,13 +169,13 @@ class Label : UiComponent() {
             _letterQuadsTxcoords[txOffset + 11] = topLeftTc.y
 
             // Increment outputt quads (letters) count
-            _quadsCount++
+            mQuadsCount++
         }
     }
 
     val quadsCount: Int
         get(): Int {
-            return _quadsCount
+            return mQuadsCount
         }
 
     val vertices: FloatArray
@@ -186,4 +187,4 @@ class Label : UiComponent() {
         get(): FloatArray {
             return _letterQuadsTxcoords
         }
-};
+}

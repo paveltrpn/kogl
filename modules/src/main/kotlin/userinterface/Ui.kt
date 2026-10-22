@@ -2,17 +2,23 @@ package userinterface
 
 import algebra.*
 
+// ============================================================================
+// ======================= UiComponent ========================================
+// ============================================================================
 abstract class UiComponent {
-    protected var _quadsCount = 0
+    protected var mQuadsCount = 0
     abstract fun draw(): Unit
 }
 
+// ============================================================================
+// ======================= Ui =================================================
+// ============================================================================
 abstract class Ui {
-    protected val _componentsList: MutableList<UiComponent> = mutableListOf()
+    protected val mComponentsList: MutableList<UiComponent> = mutableListOf()
 
     fun add(item: UiComponent): Unit {
         item.draw()
-        _componentsList.addLast(item)
+        mComponentsList.addLast(item)
     }
 
     fun add(items: List<UiComponent>): Unit {

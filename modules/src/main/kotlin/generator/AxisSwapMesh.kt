@@ -1,6 +1,10 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
+
+// ============================================================================
+// ======================= AxisSwapMesh =======================================
+// ============================================================================
 
 class AxisSwapMesh(
     private val _mesh: GeneratorMesh,
@@ -28,7 +32,7 @@ class AxisSwapMesh(
         _flip = flip
     }
 
-    override fun vertices(): Sequence<MeshVertex> = _mesh.vertices().map { vertex ->
+    override fun vertices(): Sequence<MeshVertex> = _mesh.vertices().map { vertex: MeshVertex ->
         vertex.mPosition = Vector3(
             componentAt(vertex.mPosition, _x),
             componentAt(vertex.mPosition, _y),
@@ -42,7 +46,7 @@ class AxisSwapMesh(
         vertex
     }
 
-    override fun triangles(): Sequence<Triangle> = _mesh.triangles().map { triangle ->
+    override fun triangles(): Sequence<Triangle> = _mesh.triangles().map { triangle: Triangle ->
         if (_flip) {
             Triangle(
                 triangle.mVertices[2],

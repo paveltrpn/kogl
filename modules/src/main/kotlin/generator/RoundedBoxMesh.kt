@@ -1,9 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.Vector3
-import algebra.toRadians
+import algebra.*
 
+// ============================================================================
+// ======================= BoxEdge ============================================
+// ============================================================================
 internal class BoxEdge(
     position: Vector2,
     radius: Float,
@@ -22,6 +23,9 @@ internal class BoxEdge(
     override fun triangles(): Sequence<Triangle> = _impl.triangles()
 }
 
+// ============================================================================
+// ======================= BoxEdges ===========================================
+// ============================================================================
 internal class BoxEdges(
     size: Vector3,
     radius: Float,
@@ -42,6 +46,9 @@ internal class BoxEdges(
     override fun triangles(): Sequence<Triangle> = _impl.triangles()
 }
 
+// ============================================================================
+// ======================= BoxCorner ==========================================
+// ============================================================================
 internal class BoxCorner(
     position: Vector3,
     radius: Float,
@@ -63,6 +70,9 @@ internal class BoxCorner(
     override fun triangles(): Sequence<Triangle> = _impl.triangles()
 }
 
+// ============================================================================
+// ======================= BoxCorners =========================================
+// ============================================================================
 internal class BoxCorners(
     size: Vector3,
     radius: Float,
@@ -85,6 +95,9 @@ internal class BoxCorners(
     override fun triangles(): Sequence<Triangle> = _impl.triangles()
 }
 
+// ============================================================================
+// ======================= RoundedBoxMesh =====================================
+// ============================================================================
 class RoundedBoxMesh(
     mRadius: Float = 0.25f,
     mSize: Vector3 = Vector3(0.75f, 0.75f, 0.75f),
@@ -144,4 +157,3 @@ class RoundedBoxMesh(
 
     override fun triangles(): Sequence<Triangle> = _impl.triangles()
 }
-

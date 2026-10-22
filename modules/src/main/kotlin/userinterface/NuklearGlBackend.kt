@@ -1,21 +1,19 @@
 package userinterface
 
 import org.lwjgl.opengl.GL46.*
-import org.lwjgl.system.MemoryUtil
-import org.lwjgl.nuklear.NkBuffer
-import org.lwjgl.nuklear.NkContext
-import org.lwjgl.nuklear.NkConvertConfig
-import org.lwjgl.nuklear.NkDrawCommand
+import org.lwjgl.system.*
+import org.lwjgl.nuklear.*
 import org.lwjgl.nuklear.Nuklear.*
 
-import config.Config
-import render.Program
-import render.ShaderSource
+import config.*
+import render.*
 
-import java.nio.ByteBuffer
-import kotlin.math.ceil
-import kotlin.math.floor
+import java.nio.*
+import kotlin.math.*
 
+// ============================================================================
+// ======================= NuklearGlBackend ===================================
+// ============================================================================
 class NuklearGlBackend {
     private val _INITIAL_VERTEX_SIZE = 512L * 1024L
     private val _INITIAL_INDEX_SIZE = 128L * 1024L

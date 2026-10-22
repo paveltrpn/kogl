@@ -1,6 +1,6 @@
 package algebra
 
-import kotlin.math.PI
+import kotlin.math.*
 
 fun toRadians(degrees: Float): Float {
     return degrees * PI.toFloat() / 180.0f

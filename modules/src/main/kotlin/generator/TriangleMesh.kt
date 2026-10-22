@@ -1,8 +1,10 @@
 package generator
 
-import algebra.Vector2
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= TriangleMesh =======================================
+// ============================================================================
 class TriangleMesh : GeneratorMesh {
 
     private val _v0: Vector3

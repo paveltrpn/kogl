@@ -1,5 +1,9 @@
 package generator
 
+// ============================================================================
+// ======================= GeneratorMesh ======================================
+// ============================================================================
+
 interface GeneratorMesh {
     fun vertices(): Sequence<MeshVertex>
     fun triangles(): Sequence<Triangle>

@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= PathVertex =========================================
+// ============================================================================
 class PathVertex {
     var mNormal: Vector3 = Vector3()
     var mPosition: Vector3 = Vector3()

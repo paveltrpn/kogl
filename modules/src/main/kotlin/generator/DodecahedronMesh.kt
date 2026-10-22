@@ -1,6 +1,10 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
+
+// ============================================================================
+// ======================= DodecahedronMesh ===================================
+// ============================================================================
 
 class DodecahedronMesh(
     mRadius: Float = 1.0f,
@@ -15,7 +19,7 @@ class DodecahedronMesh(
 
     override fun vertices(): Sequence<MeshVertex> = sequence {
         for (faceIndex in _POLYGONS.indices) {
-            val faceMesh = ConvexPolygonMesh(makeVertices(faceIndex), _segments, _rings)
+            val faceMesh = ConvexPolygonMesh(_makeVertices(faceIndex), _segments, _rings)
             for (vertex in faceMesh.vertices()) {
                 vertex.mPosition = scale(vertex.mPosition, _radius)
                 yield(vertex)
@@ -25,7 +29,7 @@ class DodecahedronMesh(
 
     override fun triangles(): Sequence<Triangle> = sequence {
         for (faceIndex in _POLYGONS.indices) {
-            val faceMesh = ConvexPolygonMesh(makeVertices(faceIndex), _segments, _rings)
+            val faceMesh = ConvexPolygonMesh(_makeVertices(faceIndex), _segments, _rings)
             val base = faceIndex * _faceVertexCount
             for (triangle in faceMesh.triangles()) {
                 yield(Triangle(
@@ -82,7 +86,7 @@ class DodecahedronMesh(
             intArrayOf(0, 16, 2, 9, 8)
         )
 
-        private fun makeVertices(faceIndex: Int): List<Vector3> {
+        private fun _makeVertices(faceIndex: Int): List<Vector3> {
             val result = ArrayList<Vector3>(5)
             for (i in 0 until 5) {
                 result.add(normalize(_VERTICES[_POLYGONS[faceIndex][i]]))

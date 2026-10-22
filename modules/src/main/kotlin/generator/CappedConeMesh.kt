@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector3
-import algebra.toRadians
+import algebra.*
+
+// ============================================================================
+// ======================= CappedConeMesh =====================================
+// ============================================================================
 
 class CappedConeMesh(
     mRadius: Float = 1.0f,

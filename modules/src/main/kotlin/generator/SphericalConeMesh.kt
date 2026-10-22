@@ -1,10 +1,11 @@
 package generator
 
-import algebra.Vector3
-import algebra.toRadians
-import kotlin.math.asin
-import kotlin.math.sqrt
+import algebra.*
+import kotlin.math.*
 
+// ============================================================================
+// ======================= SphericalConeMesh ==================================
+// ============================================================================
 class SphericalConeMesh(
     mRadius: Float = 1.0f,
     mSize: Float = 1.0f,
@@ -19,7 +20,7 @@ class SphericalConeMesh(
         MergeMesh(
             ConeMesh(
                 mRadius,
-                calcSphericalConeSize(mRadius, mSize),
+                _calcSphericalConeSize(mRadius, mSize),
                 mSlices,
                 mSegments,
                 mStart,
@@ -36,14 +37,14 @@ class SphericalConeMesh(
                         0.0f,
                         asin(mRadius / (2.0f * mSize))
                     ),
-                    Vector3(0.0f, 0.0f, -calcSphericalConeSize(mRadius, mSize))
+                    Vector3(0.0f, 0.0f, -_calcSphericalConeSize(mRadius, mSize))
                 ),
                 false,
                 false,
                 true
             )
         ),
-        Vector3(0.0f, 0.0f, mSize - calcSphericalConeSize(mRadius, mSize))
+        Vector3(0.0f, 0.0f, mSize - _calcSphericalConeSize(mRadius, mSize))
     )
 
     override fun vertices(): Sequence<MeshVertex> = _impl.vertices()
@@ -51,6 +52,6 @@ class SphericalConeMesh(
     override fun triangles(): Sequence<Triangle> = _impl.triangles()
 }
 
-private fun calcSphericalConeSize(radius: Float, size: Float): Float {
+private fun _calcSphericalConeSize(radius: Float, size: Float): Float {
     return 0.5f * sqrt(2.0f * size * 2.0f * size - radius * radius)
 }

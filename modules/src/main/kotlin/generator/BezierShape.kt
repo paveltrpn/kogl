@@ -1,24 +1,28 @@
 package generator
 
-import algebra.Vector2
+import algebra.*
+
+// ============================================================================
+// ======================= BezierShape ========================================
+// ============================================================================
 
 class BezierShape(
     mControlPoints: List<Vector2>,
     mSegments: Int = 16
-) : ParametricShape(bezierEval(mControlPoints), mSegments)
+) : ParametricShape(_bezierEval(mControlPoints), mSegments)
 
-private fun bezierEval(controlPoints: List<Vector2>): (Float) -> ShapeVertex {
+private fun _bezierEval(controlPoints: List<Vector2>): (Float) -> ShapeVertex {
     require(controlPoints.size > 1) { "BezierShape requires more than one control point." }
     val count = controlPoints.size
-    val xs = FloatArray(count) { index -> controlPoints[index].x }
-    val ys = FloatArray(count) { index -> controlPoints[index].y }
+    val xs = FloatArray(count) { index: Int -> controlPoints[index].x }
+    val ys = FloatArray(count) { index: Int -> controlPoints[index].y }
     val epsilon = 1.1920929e-7f
-    return { t ->
+    return { t: Float ->
         val vertex = ShapeVertex()
-        vertex.mPosition = bezierPoint(xs, ys, t)
-        var tangent = bezierTangent(xs, ys, t)
+        vertex.mPosition = _bezierPoint(xs, ys, t)
+        var tangent = _bezierTangent(xs, ys, t)
         if (dot(tangent, tangent) < epsilon) {
-            tangent = bezierTangent(xs, ys, t + 10.0f * epsilon)
+            tangent = _bezierTangent(xs, ys, t + 10.0f * epsilon)
         }
         vertex.mTangent = normalize(tangent)
         vertex.mTexCoord = t
@@ -26,7 +30,7 @@ private fun bezierEval(controlPoints: List<Vector2>): (Float) -> ShapeVertex {
     }
 }
 
-private fun bezierPoint(xs: FloatArray, ys: FloatArray, t: Float): Vector2 {
+private fun _bezierPoint(xs: FloatArray, ys: FloatArray, t: Float): Vector2 {
     val count = xs.size
     val tempX = xs.copyOf()
     val tempY = ys.copyOf()
@@ -40,10 +44,10 @@ private fun bezierPoint(xs: FloatArray, ys: FloatArray, t: Float): Vector2 {
     return Vector2(tempX[0], tempY[0])
 }
 
-private fun bezierTangent(xs: FloatArray, ys: FloatArray, t: Float): Vector2 {
+private fun _bezierTangent(xs: FloatArray, ys: FloatArray, t: Float): Vector2 {
     val count = xs.size
     val factor = (count - 1).toFloat()
-    val dx = FloatArray(count - 1) { index -> factor * (xs[index + 1] - xs[index]) }
-    val dy = FloatArray(count - 1) { index -> factor * (ys[index + 1] - ys[index]) }
-    return bezierPoint(dx, dy, t)
+    val dx = FloatArray(count - 1) { index: Int -> factor * (xs[index + 1] - xs[index]) }
+    val dy = FloatArray(count - 1) { index: Int -> factor * (ys[index + 1] - ys[index]) }
+    return _bezierPoint(dx, dy, t)
 }

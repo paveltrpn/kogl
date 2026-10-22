@@ -1,7 +1,10 @@
 package algebra
 
+// ============================================================================
+// ======================= Vector4 ============================================
+// ============================================================================
 class Vector4 {
-    private var _data = FloatArray(4) { it -> 0.0f }
+    private var _data = FloatArray(4) { index: Int -> 0.0f }
 
     override fun toString(): String {
         return "x: $x, y: $y, z: $z, w: $w"

@@ -1,1 +1,1 @@
-- Read a COMMANDMENTS and all will be ok.
+- Read COMMANDMENTS and all will be ok.

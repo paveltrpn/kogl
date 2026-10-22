@@ -3,9 +3,15 @@ package graphdsl
 import graph.*
 import mesh.*
 
+// ============================================================================
+// ======================= DrawableBuilderDslMarker ===========================
+// ============================================================================
 @DslMarker
 annotation class DrawableBuilderDslMarker
 
+// ============================================================================
+// ======================= DrawableBuilder ====================================
+// ============================================================================
 @DrawableBuilderDslMarker
 class DrawableBuilder : NodeBuilder() {
     private var _drawable: Drawable? = null

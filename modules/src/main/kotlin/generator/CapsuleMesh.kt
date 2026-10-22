@@ -1,7 +1,10 @@
 package generator
 
-import algebra.Vector3
-import algebra.toRadians
+import algebra.*
+
+// ============================================================================
+// ======================= CapsuleMesh ========================================
+// ============================================================================
 
 class CapsuleMesh(
     mRadius: Float = 1.0f,

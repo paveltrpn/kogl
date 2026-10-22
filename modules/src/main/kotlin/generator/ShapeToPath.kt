@@ -1,12 +1,15 @@
 package generator
 
-import algebra.Vector3
+import algebra.*
 
+// ============================================================================
+// ======================= ShapeToPath ========================================
+// ============================================================================
 class ShapeToPath(
     private val _shape: GeneratorShape
 ) : GeneratorPath {
 
-    override fun vertices(): Sequence<PathVertex> = _shape.vertices().map { shapeVertex ->
+    override fun vertices(): Sequence<PathVertex> = _shape.vertices().map { shapeVertex: ShapeVertex ->
         val vertex = PathVertex()
         vertex.mPosition = Vector3(
             shapeVertex.mPosition.x,

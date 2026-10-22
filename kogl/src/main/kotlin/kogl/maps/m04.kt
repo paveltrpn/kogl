@@ -328,7 +328,7 @@ fun m04(): List<Locale> {
                 }
                 attachTransform {
                     offset {
-                        offset = Vector3(20.0f, 10.0f, 14.0f)
+                        offset = Vector3(20.0f, 11.0f, 14.0f)
                         attachDrawable {
                             spinableDrawable {
                                 mesh = knotTubeMesh
@@ -350,7 +350,7 @@ fun m04(): List<Locale> {
                 }
                 attachTransform {
                     offset {
-                        offset = Vector3(0.0f, 7.6f, 0.0f)
+                        offset = Vector3(0.0f, 15.6f, 0.0f)
                         attachDrawable {
                             spinableDrawable {
                                 mesh = crystalMesh
@@ -365,7 +365,7 @@ fun m04(): List<Locale> {
                 }
                 attachTransform {
                     offset {
-                        offset = Vector3(38.0f, 7.3f, 3.0f)
+                        offset = Vector3(38.0f, 7.3f, 13.0f)
                         attachDrawable {
                             spinableDrawable {
                                 mesh = crystalMesh
@@ -380,7 +380,7 @@ fun m04(): List<Locale> {
                 }
                 attachTransform {
                     offset {
-                        offset = Vector3(0.0f, 8.2f, 0.0f)
+                        offset = Vector3(0.0f, 9.0f, 0.0f)
                         attachDrawable {
                             spinableDrawable {
                                 mesh = knotAMesh

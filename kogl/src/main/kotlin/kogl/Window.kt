@@ -23,8 +23,8 @@ class Window {
 
     private var _window: Long = 0
 
-    private val _width: Int
-    private val _height: Int
+    private var _width: Int
+    private var _height: Int
 
     private val mRender: Render
     private val mUserinterface: Userinterface
@@ -116,6 +116,8 @@ class Window {
     }
 
     fun destroy() {
+        Config.instance().save()
+
         mUserinterface.free()
 
         if (_window != MemoryUtil.NULL) {
@@ -147,7 +149,11 @@ class Window {
             throw RuntimeException("Unable to initialize GLFW.")
         }
 
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
+        if (Config.instance().konfig.resizeable) {
+            glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
+        } else {
+            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
+        }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
@@ -168,25 +174,18 @@ class Window {
 
         createCapabilities()
 
-        glfwSetWindowSizeLimits(_window, _width, _height, GLFW_DONT_CARE, GLFW_DONT_CARE)
+        if (Config.instance().konfig.resizeable) {
+            glfwSetWindowSizeLimits(_window, 640, 480, GLFW_DONT_CARE, GLFW_DONT_CARE)
+        } else {
+            glfwSetWindowSizeLimits(_window, _width, _height, GLFW_DONT_CARE, GLFW_DONT_CARE)
+        }
 
         //glfwSetWindowAspectRatio(window, 1, 1)
-        val monitor = glfwGetPrimaryMonitor()
-
-        val vidmode: GLFWVidMode = glfwGetVideoMode(monitor) ?: throw RuntimeException("VideoMode is undefined!")
-
-        // val posx = Config.instance().konfig.window_pos_x
-        // val posy = Config.instance().konfig.window_pos_y
 
         glfwSetWindowPos(
             _window,
-            (vidmode.width() - _width) / 2,
-            (vidmode.height() - _height) / 2
-        )
-
-        glfwSetWindowPos(
-            _window,
-            100, 100
+            Config.instance().konfig.window_pos_x,
+            Config.instance().konfig.window_pos_y
         )
 
         glfwSetKeyCallback(_window, { window, key, scancode, action, mods ->
@@ -227,6 +226,29 @@ class Window {
 
                 val mouseEvent = WindowMouseOffsetEvent(offsetX, offsetY)
                 mUserinterface.notify(mouseEvent)
+            }
+        })
+
+        glfwSetWindowPosCallback(_window, { window, xpos, ypos ->
+            mUserinterface.mWindowPosX = xpos
+            mUserinterface.mWindowPosY = ypos
+
+            Config.instance().updatePosition(xpos, ypos)
+        })
+
+        glfwSetWindowSizeCallback(_window, { window, width, height ->
+            if (width > 0 && height > 0) {
+                _width = width
+                _height = height
+
+                glViewport(0, 0, width, height)
+
+                mRender.scene.camera.aspect = width.toFloat() / height.toFloat()
+
+                mUserinterface.mWindowWidth = width
+                mUserinterface.mWindowHeight = height
+
+                Config.instance().updateSize(width, height)
             }
         })
 

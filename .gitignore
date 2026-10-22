@@ -9,6 +9,7 @@ gradlew.bat
 
 kogl/build
 kogl/*.log
+kogl/assets/config.json
 modules/build
 
 out/*

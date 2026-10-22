@@ -26,6 +26,16 @@ class Window {
     private var _width: Int
     private var _height: Int
 
+    private val _fitSlackPx = 16
+
+    private fun _isMaximized(): Boolean {
+        return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE
+    }
+
+    private fun _isIconified(): Boolean {
+        return glfwGetWindowAttrib(_window, GLFW_ICONIFIED) == GLFW_TRUE
+    }
+
     private val mRender: Render
     private val mUserinterface: Userinterface
 
@@ -131,19 +141,23 @@ class Window {
 
     fun destroy() {
         if (_window != MemoryUtil.NULL) {
-            val width = IntArray(1)
-            val height = IntArray(1)
-            glfwGetWindowSize(_window, width, height)
+            Config.instance().updateMaximized(_isMaximized())
 
-            if (width[0] > 0 && height[0] > 0) {
-                Config.instance().updateSize(width[0], height[0])
+            if (!_isMaximized() && !_isIconified()) {
+                val width = IntArray(1)
+                val height = IntArray(1)
+                glfwGetWindowSize(_window, width, height)
+
+                if (width[0] > 0 && height[0] > 0) {
+                    Config.instance().updateSize(width[0], height[0])
+                }
+
+                val posX = IntArray(1)
+                val posY = IntArray(1)
+                glfwGetWindowPos(_window, posX, posY)
+
+                Config.instance().updatePosition(posX[0], posY[0])
             }
-
-            val posX = IntArray(1)
-            val posY = IntArray(1)
-            glfwGetWindowPos(_window, posX, posY)
-
-            Config.instance().updatePosition(posX[0], posY[0])
         }
 
         Config.instance().save()
@@ -179,11 +193,40 @@ class Window {
             throw RuntimeException("Unable to initialize GLFW.")
         }
 
+        var windowPosX = Config.instance().konfig.window_pos_x
+        var windowPosY = Config.instance().konfig.window_pos_y
+
+        val videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor())
+
+        if (videoMode != null) {
+            val fits = _width <= videoMode.width() + _fitSlackPx &&
+                    _height <= videoMode.height() + _fitSlackPx &&
+                    windowPosX >= -_fitSlackPx &&
+                    windowPosY >= -_fitSlackPx &&
+                    windowPosX + _width <= videoMode.width() + _fitSlackPx &&
+                    windowPosY + _height <= videoMode.height() + _fitSlackPx
+
+            if (!fits) {
+                _width = 1920
+                _height = 1080
+                windowPosX = 100
+                windowPosY = 100
+
+                if (_width > videoMode.width() || _height > videoMode.height()) {
+                    _width = videoMode.width()
+                    _height = videoMode.height()
+                    windowPosX = 0
+                    windowPosY = 0
+                }
+            }
+        }
+
         if (Config.instance().konfig.resizeable) {
             glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
         } else {
             glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
         }
+
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
@@ -214,8 +257,8 @@ class Window {
 
         glfwSetWindowPos(
             _window,
-            Config.instance().konfig.window_pos_x,
-            Config.instance().konfig.window_pos_y
+            windowPosX,
+            windowPosY
         )
 
         glfwSetKeyCallback(_window, { window, key, scancode, action, mods ->
@@ -263,7 +306,9 @@ class Window {
             mUserinterface.mWindowPosX = xpos
             mUserinterface.mWindowPosY = ypos
 
-            Config.instance().updatePosition(xpos, ypos)
+            if (!_isMaximized() && !_isIconified()) {
+                Config.instance().updatePosition(xpos, ypos)
+            }
         })
 
         glfwSetWindowSizeCallback(_window, { window, width, height ->
@@ -278,7 +323,9 @@ class Window {
                 mUserinterface.mWindowWidth = width
                 mUserinterface.mWindowHeight = height
 
-                Config.instance().updateSize(width, height)
+                if (!_isMaximized() && !_isIconified()) {
+                    Config.instance().updateSize(width, height)
+                }
             }
         })
 
@@ -295,5 +342,9 @@ class Window {
         })
 
         glfwShowWindow(_window)
+
+        if (Config.instance().konfig.maximized) {
+            glfwMaximizeWindow(_window)
+        }
     }
 }

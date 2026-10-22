@@ -14,6 +14,7 @@ data class Konfig(
     val window_height: Int,
     val window_pos_x: Int,
     val window_pos_y: Int,
+    val maximized: Boolean = false,
     val background_color: String,
     val doublebuffer: Boolean,
     val frame_count: Int,
@@ -31,6 +32,7 @@ private val DEFAULT_KONFIG = Konfig(
     window_height = 1080,
     window_pos_x = 100,
     window_pos_y = 100,
+    maximized = false,
     background_color = "#0c0c1cff",
     doublebuffer = true,
     frame_count = 3,
@@ -83,6 +85,11 @@ class Config private constructor() {
 
     fun updateSize(width: Int, height: Int) {
         _konfig = _konfig.copy(window_width = width, window_height = height)
+        _dirty = true
+    }
+
+    fun updateMaximized(maximized: Boolean) {
+        _konfig = _konfig.copy(maximized = maximized)
         _dirty = true
     }
 

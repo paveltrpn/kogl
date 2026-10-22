@@ -27,5 +27,5 @@ abstract class Ui {
         }
     }
 
-    abstract fun flush(): Unit
+    abstract fun flushAndDraw(): Unit
 }

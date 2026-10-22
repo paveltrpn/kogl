@@ -1,12 +1,10 @@
 package render
 
-import algebra.*
 import org.lwjgl.opengl.GL46.*
 
 import userinterface.*
 import image.*
 import config.*
-import org.lwjgl.system.*
 
 // ============================================================================
 // ======================= UiGL ===============================================
@@ -34,7 +32,7 @@ class UiGL : Ui() {
         _font = Texture(fontImage)
     }
 
-    override fun flush(): Unit {
+    override fun flushAndDraw(): Unit {
         var labelBufOffset = 0
         var billboardBufOffset = 0
 

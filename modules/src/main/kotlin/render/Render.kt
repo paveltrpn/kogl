@@ -191,7 +191,7 @@ class Render : WindowEventObserver {
 
         _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, postEffectLable, holdCameraToggleLable, b1))
 
-        _ui.flush()
+        _ui.flushAndDraw()
 
         mUi?.draw()
     }

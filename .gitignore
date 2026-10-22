@@ -17,3 +17,5 @@ out/*
 dep/*
 !dep/*.jar
 !dep/.gitkeep
+
+.kilo/*

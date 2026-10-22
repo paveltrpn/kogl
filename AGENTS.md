@@ -1,5 +1,6 @@
 # Rules  
 - Use COMMANDMENTS.md to understand for what is for.
+- If plan is implemented give good middle sized commit message in MD format.
 
 # Code  
 - Start all private class members from "_".  

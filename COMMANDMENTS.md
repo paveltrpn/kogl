@@ -6,7 +6,7 @@ Scenegraph is what we render here.
 A unit of scene graph - is a map.
 Place new maps alongside with others and name it "m{next number}.kt"
 A map is kt source file with DSL for scenegraph. 
-Good and human radable scnes is a good path.
+Good and human readable scenes is a good path.
 
 Follow scenegraph rules:
     Scene is a root.
@@ -20,6 +20,5 @@ Every frame performed several steps:
     Traverse for collect a collision detection inforamtion.
     Traverse for obtain light information.
     Traverse to perform render.
-
-Every step is a visitor.
+    Every step is a visitor.
 

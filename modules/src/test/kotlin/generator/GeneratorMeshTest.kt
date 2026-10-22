@@ -205,9 +205,9 @@ class ObjAdapterTest {
         val mesh = SphereMesh(mRadius = 1.0f, mSlices = 8, mSegments = 4)
         val obj = mesh.toObjMesh("sphere")
 
-        assertEquals(45, obj.verticesCount)
-        assertEquals(45 * 3, obj.vnormals.size)
-        assertEquals(45 * 2, obj.txcoords.size)
+        assertEquals(192, obj.verticesCount)
+        assertEquals(192 * 3, obj.vnormals.size)
+        assertEquals(192 * 2, obj.txcoords.size)
         assertEquals(64, obj.triangles.size)
 
         for (triangle in obj.triangles) {
@@ -215,7 +215,15 @@ class ObjAdapterTest {
             for (i in 0 until 3) {
                 assertEquals(triangle.vertexIndex[i], triangle.normalIndex[i])
                 assertEquals(triangle.vertexIndex[i], triangle.texCoordIndex[i])
-                assertTrue(triangle.vertexIndex[i] in 0 until 45)
+                assertTrue(triangle.vertexIndex[i] in 0 until 192)
+            }
+
+            val base = triangle.normalIndex[0] * 3
+            for (i in 1 until 3) {
+                val corner = triangle.normalIndex[i] * 3
+                for (c in 0 until 3) {
+                    assertEquals(obj.vnormals[base + c], obj.vnormals[corner + c])
+                }
             }
         }
     }

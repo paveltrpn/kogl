@@ -35,7 +35,7 @@ Follow it and all will be ok.
 - **Scene** is the root.
 - **Locale** is the origin of a subgraph.
 - **StateGroup** holds all OpenGL state-related things — shaders, blend, depth, stencil, and other parameters are set
-  here.
+  here. StateGroup must be root of subgraph with draw calls.
 - **Drawable** is a draw call.
 - **Light** is for lights.
 - **Obstacles** are for viewer camera and other geometry collision detection.

@@ -3,7 +3,10 @@ package graph
 import org.lwjgl.opengl.GL46.*
 
 import algebra.*
+import generator.IcoSphereMesh
+import generator.toObjMesh
 import graphdsl.buildState
+import mesh.SeparatedArraysMesh
 import render.*
 
 // ============================================================================
@@ -58,9 +61,86 @@ abstract class DrawCallVisitorBase(delta: Float, viewMatrix: Matrix4) : Visitor(
 // ======================= DrawableVisitor ====================================
 // ============================================================================
 
-class DrawableVisitor(delta: Float, viewMatrix: Matrix4) : DrawCallVisitorBase(delta, viewMatrix) {
+class DrawableVisitor(
+    delta: Float,
+    viewMatrix: Matrix4,
+    val lights: List<OmniLightData> = emptyList(),
+    val lightDummiesVisible: Boolean = true
+) : DrawCallVisitorBase(delta, viewMatrix) {
+    companion object {
+        private const val MAX_LIGHTS = 8
+
+        private val _dummyDrawable: SpinableDrawable by lazy {
+            SpinableDrawable().apply {
+                mesh = SeparatedArraysMesh(IcoSphereMesh(1.0f, 1).toObjMesh("lightDummy"))
+                anglSpeed = 0.0f
+            }
+        }
+
+        private val _dummyProgram: Program by lazy {
+            Program().apply {
+                source = ShaderSource("lightDummy")
+                build()
+            }
+        }
+    }
+
+    override fun apply(node: StateGroup): Unit {
+        _program = node.program
+
+        _program.use()
+
+        if (_program.hasUniform("lightsCount")) {
+            val count = minOf(lights.size, MAX_LIGHTS)
+
+            _program.set("lightsCount" to count)
+
+            for (i in 0 until count) {
+                val light = lights[i]
+
+                _program.set("lights[$i].pos" to light.position)
+                _program.set("lights[$i].color" to light.color)
+                _program.set("lights[$i].intensity" to light.intensity)
+                _program.set("lights[$i].radius" to light.radius)
+            }
+        }
+
+        node.traverse(this)
+    }
+
     override fun apply(node: Leaf): Unit {
         when (node) {
+            is OmniLight -> {
+                if (lightDummiesVisible) {
+                    val position = _modelMatrixStack.top.vecMultiply(Vector3(0.0f, 0.0f, 0.0f))
+
+                    val offset = algebra.offset(position)
+                    offset.transpose()
+
+                    val model = algebra.scale(0.3f).multiply(offset)
+
+                    val dummy = _dummyDrawable
+                    dummy.modelMatrix = model
+                    dummy.color = node.color
+
+                    _dummyProgram.use()
+
+                    with(_dummyProgram) {
+                        set("view_matrix" to _viewMatrix, false)
+                        set("model_matrix" to dummy.modelMatrix, false)
+                        this assign value("color" to dummy.color)
+                    }
+
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+                    dummy.draw()
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
+                    _program.use()
+
+                    _drawCallsCount++
+                }
+            }
+
             is Drawable -> {
                 when (node) {
                     is SpinableDrawable -> {
@@ -163,6 +243,8 @@ class Scene {
 
     private var _drawCallsCount = 0
 
+    var lightDummiesVisible = true
+
     val drawCallsCount: Int
         get(): Int {
             return _drawCallsCount
@@ -214,7 +296,12 @@ class Scene {
         val g = GridDrawVisitor(1.0f, _camera.eye, _camera.viewMatrix)
         _grid.accept(g)
 
-        val r = DrawableVisitor(1.0f, _camera.viewMatrix)
+        val c = LightCollectorVisitor()
+        for (locale in _locales) {
+            locale.root.accept(c)
+        }
+
+        val r = DrawableVisitor(1.0f, _camera.viewMatrix, c.omniLights, lightDummiesVisible)
         for (locale in _locales) {
             locale.root.accept(r)
         }

@@ -251,9 +251,37 @@ class Program {
         }
     }
 
+    fun hasUniform(name: String): Boolean {
+        if (_uniforms.containsKey(name)) {
+            return true
+        }
+
+        val location = glGetUniformLocation(_programHandle, name)
+
+        if (location != -1) {
+            _uniforms[name] = UniformInfo(location, 0, 1)
+            return true
+        }
+
+        return false
+    }
+
     private fun uniformLocation(name: String): Int {
-        return _uniforms[name]?.location
-            ?: throw RuntimeException("Error: program \"$_programName\" not contains uniform \"$name\".")
+        val cached = _uniforms[name]
+
+        if (cached != null) {
+            return cached.location
+        }
+
+        val location = glGetUniformLocation(_programHandle, name)
+
+        if (location == -1) {
+            throw RuntimeException("Error: program \"$_programName\" not contains uniform \"$name\".")
+        }
+
+        _uniforms[name] = UniformInfo(location, 0, 1)
+
+        return location
     }
 
     fun setScalarUniform(name: String, value: Float) {

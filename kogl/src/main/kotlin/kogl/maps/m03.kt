@@ -9,8 +9,8 @@ import mesh.*
 import render.*
 
 fun m03(): List<Locale> {
-    val flatshadeProgram = Program().apply {
-        source = ShaderSource("flatshade")
+    val forwardLightProgram = Program().apply {
+        source = ShaderSource("forwardLight")
         build()
         set("color" to Vector3(1.0f, 0.0f, 0.0f))
     }
@@ -25,7 +25,31 @@ fun m03(): List<Locale> {
         origin = Vector3(60.0f, 0.0f, 0.0f)
         attachState {
             stateGroup {
-                program = flatshadeProgram
+                program = forwardLightProgram
+                attachTransform {
+                    offset {
+                        offset = Vector3(0.0f, 10.0f, 0.0f)
+                        attachLight {
+                            omniLight {
+                                color = Vector3(1.0f, 0.6f, 0.9f)
+                                intensity = 1.0f
+                                radius = 40.0f
+                            }
+                        }
+                    }
+                }
+                attachTransform {
+                    offset {
+                        offset = Vector3(12.0f, 4.0f, -6.0f)
+                        attachLight {
+                            omniLight {
+                                color = Vector3(0.5f, 0.8f, 1.0f)
+                                intensity = 1.0f
+                                radius = 25.0f
+                            }
+                        }
+                    }
+                }
                 attachTransform {
                     offset {
                         offset = Vector3(0.0f, 4.0f, 0.0f)

@@ -198,13 +198,13 @@ class Window {
 
         // Create userinterface object. GL context is current at this point.
         _userinterface = Userinterface()
-        _userinterface.windowWidth = Config.instance().konfig.window_width
-        _userinterface.windowHeight = Config.instance().konfig.window_height
+        _userinterface.windowWidth = inititalWindowWidth
+        _userinterface.windowHeight = inititalWindowHeight
         _userinterface.windowPosX = Config.instance().konfig.window_pos_x
         _userinterface.mWindowPosY = Config.instance().konfig.window_pos_y
 
         // Render init.
-        _render = Render()
+        _render = Render(_userinterface.windowWidth, _userinterface.windowHeight)
 
         _userinterface.attach(_render)
 

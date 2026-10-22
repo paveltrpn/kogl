@@ -16,26 +16,23 @@ import image.*
 // ======================= Render =============================================
 // ============================================================================
 
-class Render : WindowEventObserver {
+class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObserver {
     private val _ui: UiGL = UiGL()
 
     private var _scene: Scene? = null
 
     private val _mouseSensitivity = 0.005f
 
-    private lateinit var _framebuffer: Framebuffer
-    private lateinit var _quadBuffer: QuadsBuffer
-    private lateinit var _frameProgram: Program
+    private var _framebuffer: Framebuffer
+    private var _quadBuffer: QuadsBuffer
+    private var _frameProgram: Program
 
-    private lateinit var _ssaoFramebuffer: Framebuffer
-    private lateinit var _ssaoBlurFramebuffer: Framebuffer
-    private lateinit var _ssaoProgram: Program
-    private lateinit var _ssaoBlurProgram: Program
-    private var _ssaoNoiseTexture: Int = 0
-    private lateinit var _ssaoKernel: List<Vector3>
-
-    private var _viewportWidth: Int = 0
-    private var _viewportHeight: Int = 0
+    private var _ssaoFramebuffer: Framebuffer
+    private var _ssaoBlurFramebuffer: Framebuffer
+    private var _ssaoProgram: Program
+    private var _ssaoBlurProgram: Program
+    private var _ssaoNoiseTexture: Int
+    private var _ssaoKernel: List<Vector3>
 
     private var _effect = 2
 
@@ -51,15 +48,8 @@ class Render : WindowEventObserver {
             _scene = value
         }
 
-    fun preLoop(): Unit {
-        if (_scene == null) {
-            throw RuntimeException("Scene is null! Nothing to render!")
-        }
+    init {
 
-        val viewport = IntArray(4)
-        glGetIntegerv(GL_VIEWPORT, viewport)
-
-        _framebuffer = Framebuffer(viewport[2], viewport[3])
 
         _quadBuffer = QuadsBuffer(1)
         _quadBuffer.fill(
@@ -92,15 +82,6 @@ class Render : WindowEventObserver {
             set("mouseFocusPoint" to Vector2(0.5f, 0.5f))
         }
 
-        _viewportWidth = viewport[2]
-        _viewportHeight = viewport[3]
-
-        _ssaoFramebuffer = Framebuffer(viewport[2], viewport[3], withDepth = false, colorFormat = GL_RED)
-        _ssaoBlurFramebuffer = Framebuffer(viewport[2], viewport[3], withDepth = false, colorFormat = GL_RED)
-
-        _ssaoKernel = _buildSsaoKernel()
-        _ssaoNoiseTexture = _buildSsaoNoiseTexture()
-
         _ssaoProgram = Program().apply {
             source = ShaderSource("ssao")
             build()
@@ -117,6 +98,19 @@ class Render : WindowEventObserver {
             build()
             use()
             set("ssaoInput" to 0)
+        }
+
+        _framebuffer = Framebuffer(viewportWidth, viewportHeight)
+        _ssaoFramebuffer = Framebuffer(viewportWidth, viewportHeight,  withDepth = false, colorFormat = GL_RED)
+        _ssaoBlurFramebuffer = Framebuffer(viewportWidth,viewportHeight, withDepth = false, colorFormat = GL_RED)
+
+        _ssaoKernel = _buildSsaoKernel()
+        _ssaoNoiseTexture = _buildSsaoNoiseTexture()
+    }
+
+    fun preLoop(): Unit {
+        if (_scene == null) {
+            throw RuntimeException("Scene is null! Nothing to render!")
         }
     }
 
@@ -192,7 +186,7 @@ class Render : WindowEventObserver {
         _ssaoProgram.set("farPlane" to scene.camera.fcp)
         _ssaoProgram.set("fov" to scene.camera.fov)
         _ssaoProgram.set("aspect" to scene.camera.aspect)
-        _ssaoProgram.set("noiseScale" to Vector2(_viewportWidth / 4.0f, _viewportHeight / 4.0f))
+        _ssaoProgram.set("noiseScale" to Vector2(viewportWidth / 4.0f, viewportHeight / 4.0f))
 
         for (index in _ssaoKernel.indices) {
             _ssaoProgram.set("samples[$index]" to _ssaoKernel[index])
@@ -344,11 +338,14 @@ class Render : WindowEventObserver {
     fun postLoop(): Unit {
         _quadBuffer.clean()
         _framebuffer.clean()
+
         _frameProgram.clean()
         _ssaoProgram.clean()
         _ssaoBlurProgram.clean()
+
         _ssaoFramebuffer.clean()
         _ssaoBlurFramebuffer.clean()
+
         glDeleteTextures(_ssaoNoiseTexture)
     }
 
@@ -422,11 +419,13 @@ class Render : WindowEventObserver {
 
             is WindowResizeEvent -> {
                 scene.camera.aspect = event.width.toFloat() / event.height.toFloat()
+
                 _framebuffer.resize(event.width, event.height)
                 _ssaoFramebuffer.resize(event.width, event.height)
                 _ssaoBlurFramebuffer.resize(event.width, event.height)
-                _viewportWidth = event.width
-                _viewportHeight = event.height
+
+                viewportWidth = event.width
+                viewportHeight = event.height
             }
 
             else -> {

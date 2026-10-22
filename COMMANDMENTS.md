@@ -12,8 +12,10 @@ Follow it and all will be ok.
 - If a plan is implemented, give a good middle-sized commit message in MD format.
 - Commit message must be "pastable", do not use extra characters or guard them or give full pastable git command.
 
-- Start all private class members with `_`.
-- Start all protected class members with `m` in camelCase.
+- Try to avoid `lateinit` marked definitions, place initialization in `init` section or construcors.
+- Start all private class data members with `_`.
+- Start all protected class data members with `m` in camelCase.
+- Obviously, not use this pattern for private and protected class methods!
 - All "user facing" properties of class (that have explicit getters and setters) must have exact name (no underscore or "m")
 - No trailing semicolons.
 - No ternary operators, only explicit `if` statements.

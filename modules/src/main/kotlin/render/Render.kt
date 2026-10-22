@@ -165,6 +165,10 @@ class Render : WindowEventObserver {
                 )
             }
 
+            is WindowResizeEvent -> {
+                scene.camera.aspect = event.width.toFloat() / event.height.toFloat()
+            }
+
             else -> {
             }
         }

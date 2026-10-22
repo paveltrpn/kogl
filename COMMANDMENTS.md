@@ -22,3 +22,5 @@ Every frame performed several steps:
     Traverse to perform render.
     Every step is a visitor.
 
+When you create or update a map - add artful description of what it is.
+

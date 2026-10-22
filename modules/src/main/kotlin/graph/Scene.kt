@@ -245,9 +245,9 @@ class Scene {
             ncp = 0.1f
             fcp = 100.0f
 
-            eye = Vector3(-18.0f, -13.5f, -14.5f)
-            azimuth = 54.0f
-            elevation = -31.0f
+            eye = Vector3(-77.0f, -15.5f, -22.5f)
+            azimuth = 56.0f
+            elevation = -16.0f
         }
 
         _gridSwitch = Switch()

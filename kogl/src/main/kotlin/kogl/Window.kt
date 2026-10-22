@@ -196,7 +196,6 @@ class Window {
         println("Debug output ENABLED! Disable it in ${this::class.constructors.first()}")
         gldebug.enableDebugContext(gldebug.GLDebugDiscardNotification())
 
-
         // Create userinterface object. GL context is current at this point.
         _userinterface = Userinterface()
         _userinterface.windowWidth = Config.instance().konfig.window_width
@@ -204,37 +203,20 @@ class Window {
         _userinterface.windowPosX = Config.instance().konfig.window_pos_x
         _userinterface.mWindowPosY = Config.instance().konfig.window_pos_y
 
-        // Main scene init.
-        val mainScene = Scene()
-
-//        with(mainScene) {
-//            val file = File("${basePath}/assets/m01.json")
-//            val jsonString = file.readText()
-//            val mapData = parseMapJson(jsonString)
-//            val sg = buildStateGroups(mapData, Storage.instance().bodyStorage)
-//
-//            val m01Loc = Locale(Vector3(0.0f, 0.0f, 10.0f))
-//            m01Loc.addStateGroups(sg)
-//            addLocale(m01Loc)
-//        }
-
-        with(mainScene) {
-            val m = kogl.maps.m04()
-            addLocales(m)
-        }
-
-//        with(mainScene) {
-//            camera = Flycam()
-//        }
-
         // Render init.
         _render = Render()
 
         _userinterface.attach(_render)
 
-        _render.mUi = _userinterface.mUi
-
         with(_render) {
+            mUi = _userinterface.mUi
+
+            val mainScene = Scene()
+            with(mainScene) {
+                val m = kogl.maps.m04()
+                addLocales(m)
+            }
+
             scene = mainScene
         }
     }

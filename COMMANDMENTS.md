@@ -21,7 +21,7 @@ Follow it and all will be ok.
 - "No ternary operators, only explicit if statements" not ban Elvis operator.
 - No "short" if statements, always brace-enclosed.
 - Use maximum verbose lambda syntax.
-- Class declaration must preambule with three lines - commented quals sign line, class name enclosed with equals signs line end enclosing equals signs line.
+- Class declaration must preamble with 79-char three-line class preamble banners - commented quals sign line, class name enclosed with equals signs line end enclosing equals signs line.
 
 - This is an application that renders a scene.
 - OpenGL is used as the rendering API.

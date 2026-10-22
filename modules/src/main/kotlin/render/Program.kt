@@ -310,7 +310,7 @@ class Program {
         val location = _uniformLocation(id)
         _floatBuffer.clear().put(0, value.data, 0, 2).flip()
         _floatBuffer.position(0).limit(2)
-        glUniform3fv(location, _floatBuffer)
+        glUniform2fv(location, _floatBuffer)
     }
 
     fun setVectorUniform(id: String, value: Vector3) {

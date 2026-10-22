@@ -1,12 +1,12 @@
-
-#version 450 core
 out vec4 FragColor;
-  
+
 in vec2 TexCoords;
 
 uniform sampler2D frameTexture;
 
 uniform vec2 mouseFocusPoint;
+
+uniform int effect;
 
 vec4 chromaticAbberations() {
     float redOffset   =  0.009;
@@ -47,8 +47,12 @@ vec4 pixelization() {
 }
 
 void main()
-{ 
-    // FragColor = pixelization();
-    FragColor = chromaticAbberations();
-    // FragColor = texture(frameTexture, TexCoords);
+{
+    if (effect == 1) {
+        FragColor = chromaticAbberations();
+    } else if (effect == 2) {
+        FragColor = pixelization();
+    } else {
+        FragColor = texture(frameTexture, TexCoords);
+    }
 }

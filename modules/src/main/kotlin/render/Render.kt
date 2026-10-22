@@ -22,6 +22,12 @@ class Render : WindowEventObserver {
 
     private val _mouseSensitivity = 0.005f
 
+    private lateinit var _framebuffer: Framebuffer
+    private lateinit var _quadBuffer: QuadsBuffer
+    private lateinit var _frameProgram: Program
+
+    private var _effect = 0
+
     var mUi: UiDrawable? = null
 
     var scene: Scene
@@ -36,9 +42,46 @@ class Render : WindowEventObserver {
         if (_scene == null) {
             throw RuntimeException("Scene is null! Nothing to render!")
         }
+
+        val viewport = IntArray(4)
+        glGetIntegerv(GL_VIEWPORT, viewport)
+
+        _framebuffer = Framebuffer(viewport[2], viewport[3])
+
+        _quadBuffer = QuadsBuffer(1)
+        _quadBuffer.fill(
+            0,
+            Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+            floatArrayOf(
+                -1.0f, -1.0f, 0.0f,
+                1.0f, -1.0f, 0.0f,
+                1.0f, 1.0f, 0.0f,
+                -1.0f, -1.0f, 0.0f,
+                1.0f, 1.0f, 0.0f,
+                -1.0f, 1.0f, 0.0f
+            ),
+            floatArrayOf(
+                0.0f, 0.0f,
+                1.0f, 0.0f,
+                1.0f, 1.0f,
+                0.0f, 0.0f,
+                1.0f, 1.0f,
+                0.0f, 1.0f
+            )
+        )
+
+        _frameProgram = Program().apply {
+            source = ShaderSource("frameProgram")
+            build()
+            use()
+            set("frameTexture" to 0)
+            set("mouseFocusPoint" to Vector2(0.5f, 0.5f))
+        }
     }
 
     fun frame(): Unit {
+        _framebuffer.bind()
+
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
         glEnable(GL_DEPTH_TEST)
@@ -47,6 +90,17 @@ class Render : WindowEventObserver {
         scene.walk()
 
         glDisable(GL_DEPTH_TEST)
+
+        _framebuffer.unbind()
+
+        glClear(GL_COLOR_BUFFER_BIT)
+
+        _frameProgram.use()
+        _frameProgram.set("effect" to _effect)
+
+        _framebuffer.bindTexture()
+
+        _quadBuffer.draw()
 
         val TEXT_START_POS_X = 14.2f
         val TEXT_START_POS_Y = 31.0f
@@ -104,6 +158,18 @@ class Render : WindowEventObserver {
             textLineCount++
         }
 
+        val postEffectLable = Label().apply {
+            text = "\"p\" - cycle post effect"
+
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            z = TEXT_PLANE_Z + 0.1f
+            letterSpace = TEXT_LETTER_SPACE
+            letterScale = TEXT_LETTER_SCALE
+            color = Color(255, 255, 255, 255)
+
+            textLineCount++
+        }
+
         val holdCameraToggleLable = Label().apply {
             text = "\"g\" - toggle hold camera"
 
@@ -123,7 +189,7 @@ class Render : WindowEventObserver {
             color = Color(255, 200, 128, 64)
         }
 
-        _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, holdCameraToggleLable, b1))
+        _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, postEffectLable, holdCameraToggleLable, b1))
 
         _ui.flush()
 
@@ -131,7 +197,9 @@ class Render : WindowEventObserver {
     }
 
     fun postLoop(): Unit {
-
+        _quadBuffer.clean()
+        _framebuffer.clean()
+        _frameProgram.clean()
     }
 
     override fun onWindowEvent(event: WindowEvent) {
@@ -161,6 +229,11 @@ class Render : WindowEventObserver {
                     // t
                     84 -> {
                         scene.toggleGridVisibility()
+                    }
+
+                    // p
+                    80 -> {
+                        _effect = (_effect + 1) % 3
                     }
                 }
             }
@@ -194,6 +267,7 @@ class Render : WindowEventObserver {
 
             is WindowResizeEvent -> {
                 scene.camera.aspect = event.width.toFloat() / event.height.toFloat()
+                _framebuffer.resize(event.width, event.height)
             }
 
             else -> {

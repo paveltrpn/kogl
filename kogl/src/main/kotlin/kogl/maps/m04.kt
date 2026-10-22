@@ -13,7 +13,10 @@ import render.*
 // crowned with a thick deck of planks sunk into the stone, and a fifth
 // juts aside to make
 // the chain a T. Rope bridges sag between them all, dipping toward a
-// river that exists only in the imagination of the grid. Above the four
+// river that exists only in the imagination of the grid - and now as a
+// real bezier surface of deep blue silk rippling far beneath the spans,
+// wide and long, lit from above by three strong cold lanterns.
+// Above the four
 // decks of the line hover crowned structures, each with a light of its
 // own hue held a step outside the structure: a violet (3,4) torus knot,
 // a copper teapot, a sea-green dodecahedron, and an amber spherical
@@ -77,6 +80,37 @@ fun m04(): List<Locale> {
     val teapotMesh: Mesh = SeparatedArraysMesh(TeapotMesh(10).toObjMesh("teapot"))
     val dodecaMesh: Mesh = SeparatedArraysMesh(DodecahedronMesh(1.0f, 2, 2).toObjMesh("dodeca"))
     val spherConeMesh: Mesh = SeparatedArraysMesh(SphericalConeMesh(1.0f, 1.0f, 24, 8, 4).toObjMesh("spherCone"))
+    val riverMesh: Mesh = SeparatedArraysMesh(
+        BezierMesh(
+            arrayOf(
+                arrayOf(
+                    Vector3(-20.0f, -2.0f, -26.0f),
+                    Vector3(20.0f, -3.0f, -26.0f),
+                    Vector3(50.0f, -1.5f, -26.0f),
+                    Vector3(80.0f, -2.5f, -26.0f)
+                ),
+                arrayOf(
+                    Vector3(-20.0f, -2.5f, -9.0f),
+                    Vector3(20.0f, -1.5f, -9.0f),
+                    Vector3(50.0f, -3.0f, -9.0f),
+                    Vector3(80.0f, -2.0f, -9.0f)
+                ),
+                arrayOf(
+                    Vector3(-20.0f, -1.5f, 9.0f),
+                    Vector3(20.0f, -2.5f, 9.0f),
+                    Vector3(50.0f, -2.0f, 9.0f),
+                    Vector3(80.0f, -3.0f, 9.0f)
+                ),
+                arrayOf(
+                    Vector3(-20.0f, -3.0f, 26.0f),
+                    Vector3(20.0f, -2.0f, 26.0f),
+                    Vector3(50.0f, -2.5f, 26.0f),
+                    Vector3(80.0f, -1.5f, 26.0f)
+                )
+            ),
+            IntPair(32, 16)
+        ).toObjMesh("river")
+    )
 
     val l1 = buildLocale {
         origin = Vector3(0.0f, 0.0f, 0.0f)
@@ -448,6 +482,52 @@ fun m04(): List<Locale> {
                                         radius = 14.0f
                                     }
                                 }
+                            }
+                        }
+                    }
+                }
+                attachDrawable {
+                    spinableDrawable {
+                        mesh = riverMesh
+                        color = Vector3(0.15f, 0.3f, 0.45f)
+                        origin = Vector3(0.0f, 0.0f, 0.0f)
+                        axis = Vector3(0.0f, 1.0f, 0.0f)
+                        scale = Vector3(1.0f, 1.0f, 1.0f)
+                        anglSpeed = 0.0f
+                    }
+                }
+                attachTransform {
+                    offset {
+                        offset = Vector3(10.0f, 6.0f, 0.0f)
+                        attachLight {
+                            omniLight {
+                                color = Vector3(0.6f, 0.8f, 1.0f)
+                                intensity = 1.0f
+                                radius = 45.0f
+                            }
+                        }
+                    }
+                }
+                attachTransform {
+                    offset {
+                        offset = Vector3(48.0f, 6.0f, 0.0f)
+                        attachLight {
+                            omniLight {
+                                color = Vector3(0.7f, 0.9f, 1.0f)
+                                intensity = 1.0f
+                                radius = 45.0f
+                            }
+                        }
+                    }
+                }
+                attachTransform {
+                    offset {
+                        offset = Vector3(29.0f, 7.0f, 14.0f)
+                        attachLight {
+                            omniLight {
+                                color = Vector3(0.5f, 0.7f, 1.0f)
+                                intensity = 1.0f
+                                radius = 40.0f
                             }
                         }
                     }

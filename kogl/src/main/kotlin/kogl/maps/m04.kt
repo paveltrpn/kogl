@@ -9,11 +9,11 @@ import mesh.*
 import render.*
 
 // m04 - "Ferryman's Crossing".
-// West of the world-origin, four brooding rocks stand chained in a line,
-// each crowned with a bare platform. Three rope bridges sag between them,
-// dipping toward a river that exists only in the imagination of the grid -
-// while crystals spin above the planks, catching an orange lantern-light
-// on one shore and a cold cyan glimmer on the other.
+// Four brooding rocks stand chained in a line at the world-origin, each
+// crowned with a bare platform, and a fifth juts aside to make the chain
+// a T. Rope bridges sag between them all, dipping toward a river that
+// exists only in the imagination of the grid - while crystals spin above
+// the planks and a torus knot turns on the spur, lit by a magenta heart.
 private fun ropeBridgePath(a: Vector3, b: Vector3, sag: Float, segments: Int = 24): ParametricPath {
     val dx = b.x - a.x
     val dy = b.y - a.y
@@ -60,9 +60,16 @@ fun m04(): List<Locale> {
             ropeBridgePath(Vector3(41.0f, 6.2f, 2.4f), Vector3(53.2f, 7.4f, -1.4f), 1.7f)
         ).toObjMesh("bridgeCD")
     )
+    val bridgeBEMesh: Mesh = SeparatedArraysMesh(
+        ExtrudeMesh(
+            RectangleShape(Vector2(0.1f, 0.7f), IntPair(1, 1)),
+            ropeBridgePath(Vector3(20.0f, 6.7f, 0.6f), Vector3(20.0f, 6.7f, 11.4f), 1.4f)
+        ).toObjMesh("bridgeBE")
+    )
+    val knotTubeMesh: Mesh = SeparatedArraysMesh(TorusKnotMesh(2, 3, 16, 96).toObjMesh("knotTube"))
 
     val l1 = buildLocale {
-        origin = Vector3(-60.0f, 0.0f, 0.0f)
+        origin = Vector3(0.0f, 0.0f, 0.0f)
         attachState {
             stateGroup {
                 program = forwardLightProgram
@@ -147,6 +154,21 @@ fun m04(): List<Locale> {
                 }
                 attachTransform {
                     offset {
+                        offset = Vector3(20.0f, 1.0f, 14.0f)
+                        attachDrawable {
+                            spinableDrawable {
+                                mesh = rockMesh
+                                color = Vector3(0.5f, 0.46f, 0.52f)
+                                origin = Vector3(0.0f, 0.0f, 0.0f)
+                                axis = Vector3(0.0f, 1.0f, 0.0f)
+                                scale = Vector3(9.0f, 6.0f, 7.0f)
+                                anglSpeed = 0.0f
+                            }
+                        }
+                    }
+                }
+                attachTransform {
+                    offset {
                         offset = Vector3(0.0f, 6.4f, 0.0f)
                         attachDrawable {
                             spinableDrawable {
@@ -205,6 +227,21 @@ fun m04(): List<Locale> {
                         }
                     }
                 }
+                attachTransform {
+                    offset {
+                        offset = Vector3(20.0f, 6.6f, 14.0f)
+                        attachDrawable {
+                            spinableDrawable {
+                                mesh = platformMesh
+                                color = Vector3(0.45f, 0.38f, 0.3f)
+                                origin = Vector3(0.0f, 0.0f, 0.0f)
+                                axis = Vector3(0.0f, 1.0f, 0.0f)
+                                scale = Vector3(1.0f, 1.0f, 1.0f)
+                                anglSpeed = 0.0f
+                            }
+                        }
+                    }
+                }
                 attachDrawable {
                     spinableDrawable {
                         mesh = bridgeABMesh
@@ -233,6 +270,38 @@ fun m04(): List<Locale> {
                         axis = Vector3(0.0f, 1.0f, 0.0f)
                         scale = Vector3(1.0f, 1.0f, 1.0f)
                         anglSpeed = 0.0f
+                    }
+                }
+                attachDrawable {
+                    spinableDrawable {
+                        mesh = bridgeBEMesh
+                        color = Vector3(0.4f, 0.28f, 0.18f)
+                        origin = Vector3(0.0f, 0.0f, 0.0f)
+                        axis = Vector3(0.0f, 1.0f, 0.0f)
+                        scale = Vector3(1.0f, 1.0f, 1.0f)
+                        anglSpeed = 0.0f
+                    }
+                }
+                attachTransform {
+                    offset {
+                        offset = Vector3(20.0f, 10.0f, 14.0f)
+                        attachDrawable {
+                            spinableDrawable {
+                                mesh = knotTubeMesh
+                                color = Vector3(0.6f, 0.4f, 1.0f)
+                                origin = Vector3(0.0f, 0.0f, 0.0f)
+                                axis = Vector3(0.0f, 1.0f, 0.0f)
+                                scale = Vector3(2.0f, 2.0f, 2.0f)
+                                anglSpeed = 0.3f
+                            }
+                        }
+                        attachLight {
+                            omniLight {
+                                color = Vector3(1.0f, 0.6f, 0.9f)
+                                intensity = 1.0f
+                                radius = 20.0f
+                            }
+                        }
                     }
                 }
                 attachTransform {

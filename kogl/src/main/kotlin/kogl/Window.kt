@@ -56,25 +56,6 @@ class Window {
         // Main scene init.
         val mainScene = Scene()
 
-        with(mainScene) {
-            val (dimonds, frames, arches) = kogl.testgraph.sparseObjectsGraph()
-
-            val dimondsLoc = buildLocale {
-                origin = Vector3(0.0f, 0.0f, 0.0f)
-                this attach dimonds
-            }
-
-            val framesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {
-                addStateGroup(frames)
-            }
-
-            val archesLoc = Locale(Vector3(0.0f, 0.0f, 0.0f)).apply {
-                addStateGroup(arches)
-            }
-
-            addLocales(listOf(dimondsLoc, framesLoc, archesLoc))
-        }
-
 //        with(mainScene) {
 //            val file = File("${basePath}/assets/m01.json")
 //            val jsonString = file.readText()
@@ -85,16 +66,6 @@ class Window {
 //            m01Loc.addStateGroups(sg)
 //            addLocale(m01Loc)
 //        }
-
-        with(mainScene) {
-            val m = kogl.maps.m02()
-            addLocales(m)
-        }
-
-        with(mainScene) {
-            val m = kogl.maps.m03()
-            addLocales(m)
-        }
 
         with(mainScene) {
             val m = kogl.maps.m04()

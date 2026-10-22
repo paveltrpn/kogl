@@ -19,8 +19,8 @@ import render.*
 // Above the four
 // decks of the line hover crowned structures, each with a light of its
 // own hue held a step outside the structure: a violet (3,4) torus knot,
-// a copper teapot, a sea-green dodecahedron, and an amber spherical
-// cone - while crystals spin above the planks, a swarm of ten bright
+// a copper (2,5) torus knot, a sea-green (3,5) torus knot, and an amber
+// (4,5) torus knot - while crystals spin above the planks, a swarm of ten bright
 // icosahedrons wanders the sky, and a (2,3) torus knot turns on the
 // spur, lit by a magenta heart.
 private fun _ropeBridgePath(a: Vector3, b: Vector3, sag: Float, segments: Int = 24): ParametricPath {
@@ -77,9 +77,9 @@ fun m04(): List<Locale> {
     )
     val knotTubeMesh: Mesh = SeparatedArraysMesh(TorusKnotMesh(2, 3, 16, 96).toObjMesh("knotTube"))
     val knotAMesh: Mesh = SeparatedArraysMesh(TorusKnotMesh(3, 4, 12, 96).toObjMesh("knotA"))
-    val teapotMesh: Mesh = SeparatedArraysMesh(TeapotMesh(10).toObjMesh("teapot"))
-    val dodecaMesh: Mesh = SeparatedArraysMesh(DodecahedronMesh(1.0f, 2, 2).toObjMesh("dodeca"))
-    val spherConeMesh: Mesh = SeparatedArraysMesh(SphericalConeMesh(1.0f, 1.0f, 24, 8, 4).toObjMesh("spherCone"))
+    val knotBMesh: Mesh = SeparatedArraysMesh(TorusKnotMesh(2, 5, 12, 96).toObjMesh("knotB"))
+    val knotCMesh: Mesh = SeparatedArraysMesh(TorusKnotMesh(3, 5, 12, 96).toObjMesh("knotC"))
+    val knotDMesh: Mesh = SeparatedArraysMesh(TorusKnotMesh(4, 5, 12, 96).toObjMesh("knotD"))
     val riverMesh: Mesh = SeparatedArraysMesh(
         BezierMesh(
             arrayOf(
@@ -407,14 +407,14 @@ fun m04(): List<Locale> {
                 }
                 attachTransform {
                     offset {
-                        offset = Vector3(20.0f, 8.4f, -2.0f)
+                        offset = Vector3(20.0f, 9.0f, -2.0f)
                         attachDrawable {
                             spinableDrawable {
-                                mesh = teapotMesh
+                                mesh = knotBMesh
                                 color = Vector3(0.85f, 0.5f, 0.3f)
                                 origin = Vector3(0.0f, 0.0f, 0.0f)
                                 axis = Vector3(0.0f, 1.0f, 0.0f)
-                                scale = Vector3(0.7f, 0.7f, 0.7f)
+                                scale = Vector3(1.2f, 1.2f, 1.2f)
                                 anglSpeed = -0.25f
                             }
                         }
@@ -434,10 +434,10 @@ fun m04(): List<Locale> {
                 }
                 attachTransform {
                     offset {
-                        offset = Vector3(38.0f, 7.9f, 3.0f)
+                        offset = Vector3(38.0f, 9.0f, 3.0f)
                         attachDrawable {
                             spinableDrawable {
-                                mesh = dodecaMesh
+                                mesh = knotCMesh
                                 color = Vector3(0.3f, 0.85f, 0.6f)
                                 origin = Vector3(0.0f, 0.0f, 0.0f)
                                 axis = Vector3(0.0f, 1.0f, 0.0f)
@@ -461,10 +461,10 @@ fun m04(): List<Locale> {
                 }
                 attachTransform {
                     offset {
-                        offset = Vector3(56.0f, 9.1f, -2.0f)
+                        offset = Vector3(56.0f, 10.0f, -2.0f)
                         attachDrawable {
                             spinableDrawable {
-                                mesh = spherConeMesh
+                                mesh = knotDMesh
                                 color = Vector3(0.95f, 0.75f, 0.3f)
                                 origin = Vector3(0.0f, 0.0f, 0.0f)
                                 axis = Vector3(0.0f, 1.0f, 0.0f)

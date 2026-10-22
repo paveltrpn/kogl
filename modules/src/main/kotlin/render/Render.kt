@@ -39,6 +39,8 @@ class Render : WindowEventObserver {
 
     private var _effect = 2
 
+    private var _ssaoEnabled = true
+
     var mUi: UiDrawable? = null
 
     var scene: Scene
@@ -222,6 +224,12 @@ class Render : WindowEventObserver {
         _frameProgram.use()
         _frameProgram.set("effect" to _effect)
 
+        if (_ssaoEnabled) {
+            _frameProgram.set("ssaoEnabled" to 1)
+        } else {
+            _frameProgram.set("ssaoEnabled" to 0)
+        }
+
         _framebuffer.bindTexture(0)
         _ssaoBlurFramebuffer.bindTexture(1)
 
@@ -295,6 +303,18 @@ class Render : WindowEventObserver {
             textLineCount++
         }
 
+        val ssaoToggleLable = Label().apply {
+            text = "\"o\" - toggle ssao"
+
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            z = TEXT_PLANE_Z + 0.1f
+            letterSpace = TEXT_LETTER_SPACE
+            letterScale = TEXT_LETTER_SCALE
+            color = Color(255, 255, 255, 255)
+
+            textLineCount++
+        }
+
         val holdCameraToggleLable = Label().apply {
             text = "\"g\" - toggle hold camera"
 
@@ -314,7 +334,7 @@ class Render : WindowEventObserver {
             color = Color(255, 200, 128, 64)
         }
 
-        _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, postEffectLable, holdCameraToggleLable, b1))
+        _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, postEffectLable, ssaoToggleLable, holdCameraToggleLable, b1))
 
         _ui.flushAndDraw()
 
@@ -363,7 +383,12 @@ class Render : WindowEventObserver {
 
                     // p
                     80 -> {
-                        _effect = (_effect + 1) % 4
+                        _effect = (_effect + 1) % 3
+                    }
+
+                    // o
+                    79 -> {
+                        _ssaoEnabled = !_ssaoEnabled
                     }
                 }
             }

@@ -9,6 +9,8 @@ uniform vec2 mouseFocusPoint;
 
 uniform int effect;
 
+uniform int ssaoEnabled;
+
 vec4 chromaticAbberations() {
     float redOffset   =  0.009;
     float greenOffset =  0.006;
@@ -49,13 +51,19 @@ vec4 pixelization() {
 
 void main()
 {
+    vec4 color;
+
     if (effect == 1) {
-        FragColor = chromaticAbberations();
+        color = chromaticAbberations();
     } else if (effect == 2) {
-        FragColor = pixelization();
-    } else if (effect == 3) {
-        FragColor = vec4(texture(frameTexture, TexCoords).rgb * texture(ssaoTexture, TexCoords).r, 1.0);
+        color = pixelization();
     } else {
-        FragColor = texture(frameTexture, TexCoords);
+        color = texture(frameTexture, TexCoords);
     }
+
+    if (ssaoEnabled == 1) {
+        color = vec4(color.rgb * texture(ssaoTexture, TexCoords).r, 1.0);
+    }
+
+    FragColor = color;
 }

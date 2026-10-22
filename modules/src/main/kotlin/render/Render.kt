@@ -26,7 +26,7 @@ class Render : WindowEventObserver {
     private lateinit var _quadBuffer: QuadsBuffer
     private lateinit var _frameProgram: Program
 
-    private var _effect = 0
+    private var _effect = 2
 
     var mUi: UiDrawable? = null
 
@@ -104,7 +104,7 @@ class Render : WindowEventObserver {
 
         val TEXT_START_POS_X = 14.2f
         val TEXT_START_POS_Y = 31.0f
-        val TEXT_LINE_WIDTH = 1.6f
+        val TEXT_LINE_WIDTH = 1.4f
         val TEXT_LETTER_SPACE = 0.0f
         val TEXT_LETTER_SCALE = 1.0f
         var textLineCount = 0

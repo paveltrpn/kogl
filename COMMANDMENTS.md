@@ -9,7 +9,8 @@ Follow it and all will be ok.
 - If a plan is implemented, give a good middle-sized commit message in MD format.
 
 - Start all private class members with `_`.
-- Start all other class members with `m` in camelCase.
+- Start all protected class members with `m` in camelCase.
+- All "user facing" properties of class (that have explicit getters and setters) must have exact name (no underscore or "m")
 - No trailing semicolons.
 - No ternary operators, only explicit `if` statements.
 - No "short" if statements, always brace-enclosed.

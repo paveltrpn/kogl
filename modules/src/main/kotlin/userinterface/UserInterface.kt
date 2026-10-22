@@ -18,19 +18,19 @@ class Userinterface : WindowEventEmitter() {
 
     private var _holdMouse: Boolean = false
 
-    var mWindowWidth: Int
+    var windowWidth: Int
         get() = _windowWidth
         set(value) {
             _windowWidth = value
         }
 
-    var mWindowHeight: Int
+    var windowHeight: Int
         get() = _windowHeight
         set(value) {
             _windowHeight = value
         }
 
-    var mWindowPosX: Int
+    var windowPosX: Int
         get() = _windowPosX
         set(value) {
             _windowPosX = value

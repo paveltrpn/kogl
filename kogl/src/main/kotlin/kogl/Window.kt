@@ -8,13 +8,11 @@ import org.lwjgl.opengl.GL11.glClearColor
 import org.lwjgl.opengl.GL11.glViewport
 import org.lwjgl.system.MemoryUtil
 
-import algebra.*
 import config.*
 import render.*
 import events.*
 import userinterface.*
 import graph.*
-import graphdsl.*
 import image.*
 import map.*
 
@@ -137,8 +135,8 @@ class Window {
                 val mouseEvent = WindowMouseMoveEvent(xpos.toInt(), ypos.toInt())
                 mUserinterface.notify(mouseEvent)
             } else {
-                val offsetX = mUserinterface.mWindowWidth / 2 - xpos.toInt()
-                val offsetY = mUserinterface.mWindowHeight / 2 - ypos.toInt()
+                val offsetX = mUserinterface.windowWidth / 2 - xpos.toInt()
+                val offsetY = mUserinterface.windowHeight / 2 - ypos.toInt()
 
                 val mouseEvent = WindowMouseOffsetEvent(offsetX, offsetY)
                 mUserinterface.notify(mouseEvent)
@@ -149,7 +147,7 @@ class Window {
             val posEvent = WindowMoveEvent(xpos, ypos)
             mUserinterface.notify(posEvent)
 
-            mUserinterface.mWindowPosX = xpos
+            mUserinterface.windowPosX = xpos
             mUserinterface.mWindowPosY = ypos
 
             Config.instance().updatePosition(xpos, ypos)
@@ -162,8 +160,8 @@ class Window {
 
                 glViewport(0, 0, width, height)
 
-                mUserinterface.mWindowWidth = width
-                mUserinterface.mWindowHeight = height
+                mUserinterface.windowWidth = width
+                mUserinterface.windowHeight = height
 
                 Config.instance().updateSize(width, height)
             }
@@ -194,9 +192,9 @@ class Window {
 
         // Create userinterface object. GL context is current at this point.
         mUserinterface = Userinterface()
-        mUserinterface.mWindowWidth = Config.instance().konfig.window_width
-        mUserinterface.mWindowHeight = Config.instance().konfig.window_height
-        mUserinterface.mWindowPosX = Config.instance().konfig.window_pos_x
+        mUserinterface.windowWidth = Config.instance().konfig.window_width
+        mUserinterface.windowHeight = Config.instance().konfig.window_height
+        mUserinterface.windowPosX = Config.instance().konfig.window_pos_x
         mUserinterface.mWindowPosY = Config.instance().konfig.window_pos_y
 
         // Main scene init.
@@ -237,14 +235,14 @@ class Window {
     fun run() {
         val cc = Color(Config.instance().konfig.background_color)
 
-        glViewport(0, 0, mUserinterface.mWindowWidth, mUserinterface.mWindowHeight)
+        glViewport(0, 0, mUserinterface.windowWidth, mUserinterface.windowHeight)
         glClearColor(cc.rf, cc.gf, cc.bf, 1.0f)
 
         mRender.preLoop()
 
         while (!glfwWindowShouldClose(_window)) {
             if (mUserinterface.mHoldMouse) {
-                glfwSetCursorPos(_window, mUserinterface.mWindowWidth / 2.0, mUserinterface.mWindowHeight / 2.0)
+                glfwSetCursorPos(_window, mUserinterface.windowWidth / 2.0, mUserinterface.windowHeight / 2.0)
             }
 
             glfwPollEvents()

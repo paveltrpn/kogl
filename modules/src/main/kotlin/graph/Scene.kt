@@ -20,7 +20,7 @@ class Scene {
 
     private var _grid: StateGroup
     private var _gridSwitch: Switch
-    private var _gridEnabled: Boolean = true
+    private var _gridEnabled: Boolean = false
 
     private var _camera = Flycam()
 
@@ -46,7 +46,7 @@ class Scene {
         }
 
         _gridSwitch = Switch()
-        _gridSwitch.addChild(true, Grid())
+        _gridSwitch.addChild(_gridEnabled, Grid())
 
         _grid = buildState {
             stateGroup {

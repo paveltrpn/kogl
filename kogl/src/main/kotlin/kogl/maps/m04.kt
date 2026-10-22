@@ -84,16 +84,10 @@ fun m04(): List<Locale> {
         BezierMesh(
             arrayOf(
                 arrayOf(
-                    Vector3(-20.0f, -2.0f, -26.0f),
-                    Vector3(20.0f, -3.0f, -26.0f),
-                    Vector3(50.0f, -1.5f, -26.0f),
-                    Vector3(80.0f, -2.5f, -26.0f)
-                ),
-                arrayOf(
-                    Vector3(-20.0f, -2.5f, -9.0f),
-                    Vector3(20.0f, -1.5f, -9.0f),
-                    Vector3(50.0f, -3.0f, -9.0f),
-                    Vector3(80.0f, -2.0f, -9.0f)
+                    Vector3(-20.0f, -3.0f, 26.0f),
+                    Vector3(20.0f, -2.0f, 26.0f),
+                    Vector3(50.0f, -2.5f, 26.0f),
+                    Vector3(80.0f, -1.5f, 26.0f)
                 ),
                 arrayOf(
                     Vector3(-20.0f, -1.5f, 9.0f),
@@ -102,10 +96,16 @@ fun m04(): List<Locale> {
                     Vector3(80.0f, -3.0f, 9.0f)
                 ),
                 arrayOf(
-                    Vector3(-20.0f, -3.0f, 26.0f),
-                    Vector3(20.0f, -2.0f, 26.0f),
-                    Vector3(50.0f, -2.5f, 26.0f),
-                    Vector3(80.0f, -1.5f, 26.0f)
+                    Vector3(-20.0f, -2.5f, -9.0f),
+                    Vector3(20.0f, -1.5f, -9.0f),
+                    Vector3(50.0f, -3.0f, -9.0f),
+                    Vector3(80.0f, -2.0f, -9.0f)
+                ),
+                arrayOf(
+                    Vector3(-20.0f, -2.0f, -26.0f),
+                    Vector3(20.0f, -3.0f, -26.0f),
+                    Vector3(50.0f, -1.5f, -26.0f),
+                    Vector3(80.0f, -2.5f, -26.0f)
                 )
             ),
             IntPair(32, 16)

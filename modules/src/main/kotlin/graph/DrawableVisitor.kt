@@ -18,7 +18,7 @@ class DrawableVisitor(
     val lightDummiesVisible: Boolean = true
 ) : DrawCallVisitorBase(delta, viewMatrix) {
     companion object {
-        private const val MAX_LIGHTS = 8
+        private const val MAX_LIGHTS = 16
 
         private val _dummyDrawable: SpinableDrawable by lazy {
             SpinableDrawable().apply {

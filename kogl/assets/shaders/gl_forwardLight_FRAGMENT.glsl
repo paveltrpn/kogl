@@ -1,4 +1,4 @@
-const int MAX_LIGHTS = 8;
+const int MAX_LIGHTS = 16;
 
 struct OmniLight {
     vec3 pos;

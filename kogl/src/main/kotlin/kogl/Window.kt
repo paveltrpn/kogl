@@ -96,6 +96,11 @@ class Window {
             addLocales(m)
         }
 
+        with(mainScene) {
+            val m = kogl.maps.m04()
+            addLocales(m)
+        }
+
 //        with(mainScene) {
 //            camera = Flycam()
 //        }

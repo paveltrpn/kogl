@@ -11,26 +11,27 @@ import org.lwjgl.system.MemoryUtil
 import algebra.*
 import config.*
 import render.*
-import event.*
+import events.*
+import userinterface.*
 import graph.*
 import graphdsl.*
 import image.*
 import map.*
 
 class Window {
-    private var allocator: GLFWAllocator? = null
+    private var mAllocator: GLFWAllocator? = null
 
     private var _window: Long = 0
 
     private val _width: Int
     private val _height: Int
 
-    private val _render: Render
+    private val mRender: Render
+    private val mUserinterface: Userinterface
 
     init {
         // Place to init all singletons.
         Config.init()
-        GlobalEventEmitter.init()
 
         val basePath = Config.instance().basePath
         Storage.init(basePath)
@@ -52,6 +53,12 @@ class Window {
         glViewport(0, 0, _width, _height)
         glClearColor(cc.rf, cc.gf, cc.bf, 1.0f)
 
+        // Create userinterface object. GL context is current at this point.
+        mUserinterface = Userinterface()
+        mUserinterface.mWindowWidth = _width
+        mUserinterface.mWindowHeight = _height
+        mUserinterface.mWindowPosX = Config.instance().konfig.window_pos_x
+        mUserinterface.mWindowPosY = Config.instance().konfig.window_pos_y
 
         // Main scene init.
         val mainScene = Scene()
@@ -77,31 +84,40 @@ class Window {
 //        }
 
         // Render init.
-        _render = Render()
-        GlobalEventEmitter.instance().attach(_render)
+        mRender = Render()
 
-        with(_render) {
+        mUserinterface.attach(mRender)
+
+        mRender.mUi = mUserinterface.mUi
+
+        with(mRender) {
             scene = mainScene
         }
     }
 
     fun run() {
-        _render.preLoop()
+        mRender.preLoop()
 
-        while (_render.run) {
-            glfwSetCursorPos(_window, 500.0, 500.0)
+        while (!glfwWindowShouldClose(_window)) {
+            if (mUserinterface.mHoldMouse) {
+                glfwSetCursorPos(_window, _width / 2.0, _height / 2.0)
+            }
 
             glfwPollEvents()
 
-            _render.frame()
+            mUserinterface.update()
+
+            mRender.frame()
 
             glfwSwapBuffers(_window)
         }
 
-        _render.postLoop()
+        mRender.postLoop()
     }
 
     fun destroy() {
+        mUserinterface.free()
+
         if (_window != MemoryUtil.NULL) {
             glfwDestroyWindow(_window)
         }
@@ -113,7 +129,7 @@ class Window {
         // NOTE: set default stack size - 128 kb!!!
         Configuration.STACK_SIZE.set(128 * 1024)
 
-        allocator = GLFWAllocator.calloc()
+        mAllocator = GLFWAllocator.calloc()
             .allocate(GLFWAllocateCallbackI { size: Long, user: Long -> MemoryUtil.nmemAllocChecked(size) })
             .reallocate(GLFWReallocateCallbackI { block: Long, size: Long, user: Long ->
                 MemoryUtil.nmemReallocChecked(
@@ -123,7 +139,7 @@ class Window {
             })
             .deallocate(GLFWDeallocateCallbackI { block: Long, user: Long -> MemoryUtil.nmemFree(block) })
 
-        glfwInitAllocator(allocator)
+        glfwInitAllocator(mAllocator)
 
         GLFWErrorCallback.createPrint().set()
 
@@ -173,26 +189,57 @@ class Window {
             100, 100
         )
 
-        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN)
-
         glfwSetKeyCallback(_window, { window, key, scancode, action, mods ->
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+                glfwSetWindowShouldClose(window, true)
+            }
+
             if (action == GLFW_PRESS) {
-                val event = EventKey(KeyAction.PRESS, key)
-                GlobalEventEmitter.instance().notify(event)
+                val keyEvent = WindowKeyPressEvent(key)
+                mUserinterface.notify(keyEvent)
+
+                when (key) {
+                    GLFW_KEY_G -> {
+                        mUserinterface.mHoldMouse = !mUserinterface.mHoldMouse
+
+                        if (mUserinterface.mHoldMouse) {
+                            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN)
+                        } else {
+                            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL)
+                        }
+                    }
+                }
             }
 
             if (action == GLFW_RELEASE) {
-                val event = EventKey(KeyAction.RELEASE, key)
-                GlobalEventEmitter.instance().notify(event)
+                val keyEvent = WindowKeyReleaseEvent(key)
+                mUserinterface.notify(keyEvent)
             }
         })
 
         glfwSetCursorPosCallback(_window, { window, xpos, ypos ->
-            val xoffset = 500.0 - xpos
-            val yoffset = 500.0 - ypos
+            if (!mUserinterface.mHoldMouse) {
+                val mouseEvent = WindowMouseMoveEvent(xpos.toInt(), ypos.toInt())
+                mUserinterface.notify(mouseEvent)
+            } else {
+                val offsetX = _width / 2 - xpos.toInt()
+                val offsetY = _height / 2 - ypos.toInt()
 
-            val event = EventMouse(0.0, 0.0, xoffset, yoffset, KeyAction.RELEASE, 0)
-            GlobalEventEmitter.instance().notify(event)
+                val mouseEvent = WindowMouseOffsetEvent(offsetX, offsetY)
+                mUserinterface.notify(mouseEvent)
+            }
+        })
+
+        glfwSetMouseButtonCallback(_window, { window, button, action, mods ->
+            if (action == GLFW_PRESS) {
+                val mouseEvent = WindowMousePress(button)
+                mUserinterface.notify(mouseEvent)
+            }
+
+            if (action == GLFW_RELEASE) {
+                val mouseEvent = WindowMouseRelease(button)
+                mUserinterface.notify(mouseEvent)
+            }
         })
 
         glfwShowWindow(_window)

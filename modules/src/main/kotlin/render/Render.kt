@@ -6,16 +6,19 @@ import java.math.RoundingMode
 import org.lwjgl.opengl.GL46.*
 
 import algebra.*
-import event.*
+import events.*
 import graph.*
 import ui.*
 import image.*
 
-class Render : EventObserver {
-    private var _run: Boolean = true
+class Render : WindowEventObserver {
     private val _ui: UiGL = UiGL()
 
     private var _scene: Scene? = null
+
+    private val _mouseSensitivity = 0.005f
+
+    var mUi: UiDrawable? = null
 
     var scene: Scene
         get(): Scene {
@@ -23,14 +26,6 @@ class Render : EventObserver {
         }
         set(value) {
             _scene = value
-        }
-
-    var run: Boolean
-        get(): Boolean {
-            return _run
-        }
-        set(value) {
-            _run = value
         }
 
     fun preLoop(): Unit {
@@ -85,7 +80,7 @@ class Render : EventObserver {
         }
 
         val gridToggleLable = Label().apply {
-            text = "\"g\" - toggle grid visibility"
+            text = "\"t\" - toggle grid visibility"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - 4.4f)
             z = TEXT_PLANE_Z + 0.1f
@@ -104,21 +99,18 @@ class Render : EventObserver {
         _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, b1))
 
         _ui.flush()
+
+        mUi?.draw()
     }
 
     fun postLoop(): Unit {
 
     }
 
-    override fun handleEvent(event: EventBase) {
-        if (event is EventKey) {
-            if (event.keyAction == KeyAction.PRESS) {
-//                println("=== ${event.key}")
-                when (event.key) {
-                    256 -> {
-                        run = false
-                    }
-
+    override fun onWindowEvent(event: WindowEvent) {
+        when (event) {
+            is WindowKeyPressEvent -> {
+                when (event.keyCode) {
                     // w
                     87 -> {
                         scene.camera.setMoveBit(FlycamMoveBits.FORWARD)
@@ -139,20 +131,15 @@ class Render : EventObserver {
                         scene.camera.setMoveBit(FlycamMoveBits.RIGHT)
                     }
 
-                    // c
-                    67 -> {
-
-                    }
-
-                    // g
-                    71 -> {
+                    // t
+                    84 -> {
                         scene.toggleGridVisibility()
                     }
                 }
             }
 
-            if (event.keyAction == KeyAction.RELEASE) {
-                when (event.key) {
+            is WindowKeyReleaseEvent -> {
+                when (event.keyCode) {
                     87 -> {
                         scene.camera.unsetMoveBit(FlycamMoveBits.FORWARD)
                     }
@@ -170,11 +157,16 @@ class Render : EventObserver {
                     }
                 }
             }
-        }
 
-        if (event is EventMouse) {
-            val SENSIVITY = 0.005f
-            scene.camera.rotate(event.xoffst.toFloat() * SENSIVITY, event.yoffst.toFloat() * SENSIVITY)
+            is WindowMouseOffsetEvent -> {
+                scene.camera.rotate(
+                    event.offsetX.toFloat() * _mouseSensitivity,
+                    event.offsetY.toFloat() * _mouseSensitivity
+                )
+            }
+
+            else -> {
+            }
         }
     }
 }

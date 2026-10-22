@@ -23,4 +23,5 @@ Every frame performed several steps:
     Every step is a visitor.
 
 When you create or update a map - add artful description of what it is.
+Description must be full enought to every magical entity can reproduce it.
 

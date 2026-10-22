@@ -6,6 +6,11 @@ import graphdsl.*
 import map.*
 import render.*
 
+// m02 - "Twin Anvils of the Meridian".
+// Two mirrored foundries straddle the origin: twin diamonds spinning on their
+// axis while iron bars orbit them like compass needles gone mad. A warm
+// lantern glows high over the eastern anvil, a cold moon-lamp watches the west,
+// and between them the steel keeps turning, indifferent and bright.
 fun m02(): List<Locale> {
     val forwardLightProgram = Program().apply {
         source = ShaderSource("forwardLight")

@@ -8,6 +8,12 @@ import map.*
 import mesh.*
 import render.*
 
+// m03 - "The Clockwork Menagerie".
+// East of the world-origin, a carnival of primitives performs under carnival
+// lights: a sphere crowned at center stage, boxes waltzing around it, a torus
+// stood on end like a hoop for a tiger that never jumps, a capsule and a
+// torus knot tumbling in the rigging. Magenta and blue stage lamps throw
+// long shadows across the sawdust floor of the grid.
 fun m03(): List<Locale> {
     val forwardLightProgram = Program().apply {
         source = ShaderSource("forwardLight")

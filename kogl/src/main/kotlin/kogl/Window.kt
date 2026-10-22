@@ -21,18 +21,18 @@ class Window {
 
     private var _window: Long = 0
 
-    private val _fitSlackPx = 16
-
-    private fun _isMaximized(): Boolean {
-        return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE
-    }
-
-    private fun _isIconified(): Boolean {
-        return glfwGetWindowAttrib(_window, GLFW_ICONIFIED) == GLFW_TRUE
-    }
-
     private val mRender: Render
     private val mUserinterface: Userinterface
+
+    val isMaximized: Boolean
+        get() {
+            return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE
+        }
+
+    val isIconified: Boolean
+        get() {
+            return glfwGetWindowAttrib(_window, GLFW_ICONIFIED) == GLFW_TRUE
+        }
 
     init {
         // Place to init all singletons.
@@ -256,7 +256,7 @@ class Window {
 
         mRender.postLoop()
 
-        // === Destroy ===
+        // === Destroy === //
         if (_window != MemoryUtil.NULL) {
             Config.instance().updateMaximized(_isMaximized())
 
@@ -281,9 +281,7 @@ class Window {
 
         mUserinterface.free()
 
-        if (_window != MemoryUtil.NULL) {
-            glfwDestroyWindow(_window)
-        }
+        glfwDestroyWindow(_window)
 
         glfwTerminate()
     }

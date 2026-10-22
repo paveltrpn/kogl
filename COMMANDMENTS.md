@@ -13,8 +13,11 @@ Follow it and all will be ok.
 - All "user facing" properties of class (that have explicit getters and setters) must have exact name (no underscore or "m")
 - No trailing semicolons.
 - No ternary operators, only explicit `if` statements.
+- No expression-style `if (cond) a else b` only explicit `if` statements.
+- "No ternary operators, only explicit if statements" not ban Elvis operator.
 - No "short" if statements, always brace-enclosed.
 - Use maximum verbose lambda syntax.
+- Class declaration must preambule with three lines - commented quals sign lone, class name enclosed with equals signs line end enclosing equals signs line.
 
 - This is an application that renders a scene.
 - OpenGL is used as the rendering API.

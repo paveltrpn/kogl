@@ -10,6 +10,7 @@ Follow it and all will be ok.
 - Do not run an aplication, if you need check only build it, the one run code by himself.
 
 - If a plan is implemented, give a good middle-sized commit message in MD format.
+- Commit message must be "pastable", do not use extra characters or guard them or give full pastable git command.
 
 - Start all private class members with `_`.
 - Start all protected class members with `m` in camelCase.

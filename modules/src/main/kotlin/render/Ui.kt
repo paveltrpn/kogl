@@ -3,7 +3,7 @@ package render
 import algebra.Vector4
 import org.lwjgl.opengl.GL46.*
 
-import ui.*
+import userinterface.*
 import image.*
 import config.*
 import org.lwjgl.system.MemoryStack

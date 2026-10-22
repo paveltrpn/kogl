@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL46.*
 import algebra.*
 import events.*
 import graph.*
-import ui.*
+import userinterface.*
 import image.*
 
 class Render : WindowEventObserver {

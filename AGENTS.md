@@ -1,0 +1,1 @@
+- Read a COMMANDMENTS and all will be ok.

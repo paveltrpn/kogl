@@ -1,5 +1,5 @@
 # Rules  
-- Use DESIGNDOCUMENT.md to understand for what is for.
+- Use COMMANDMENTS.md to understand for what is for.
 
 # Code  
 - Start all private class members from "_".  

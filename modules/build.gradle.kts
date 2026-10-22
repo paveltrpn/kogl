@@ -27,6 +27,12 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
 
     // implementation("org.lwjgl", "lwjgl-unsafe")
+
+    testImplementation(kotlin("test"))
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 kotlin {

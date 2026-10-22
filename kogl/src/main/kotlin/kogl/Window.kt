@@ -93,6 +93,20 @@ class Window {
         with(mRender) {
             scene = mainScene
         }
+
+        val actualWidth = IntArray(1)
+        val actualHeight = IntArray(1)
+        glfwGetWindowSize(_window, actualWidth, actualHeight)
+
+        if (actualWidth[0] > 0 && actualHeight[0] > 0) {
+            _width = actualWidth[0]
+            _height = actualHeight[0]
+
+            mRender.scene.camera.aspect = _width.toFloat() / _height.toFloat()
+
+            mUserinterface.mWindowWidth = _width
+            mUserinterface.mWindowHeight = _height
+        }
     }
 
     fun run() {
@@ -116,6 +130,22 @@ class Window {
     }
 
     fun destroy() {
+        if (_window != MemoryUtil.NULL) {
+            val width = IntArray(1)
+            val height = IntArray(1)
+            glfwGetWindowSize(_window, width, height)
+
+            if (width[0] > 0 && height[0] > 0) {
+                Config.instance().updateSize(width[0], height[0])
+            }
+
+            val posX = IntArray(1)
+            val posY = IntArray(1)
+            glfwGetWindowPos(_window, posX, posY)
+
+            Config.instance().updatePosition(posX[0], posY[0])
+        }
+
         Config.instance().save()
 
         mUserinterface.free()

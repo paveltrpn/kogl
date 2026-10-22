@@ -3,6 +3,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform sampler2D frameTexture;
+uniform sampler2D ssaoTexture;
 
 uniform vec2 mouseFocusPoint;
 
@@ -52,6 +53,8 @@ void main()
         FragColor = chromaticAbberations();
     } else if (effect == 2) {
         FragColor = pixelization();
+    } else if (effect == 3) {
+        FragColor = vec4(texture(frameTexture, TexCoords).rgb * texture(ssaoTexture, TexCoords).r, 1.0);
     } else {
         FragColor = texture(frameTexture, TexCoords);
     }

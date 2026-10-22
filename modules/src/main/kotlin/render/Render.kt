@@ -4,6 +4,7 @@ import java.text.*
 import java.math.*
 
 import org.lwjgl.opengl.GL46.*
+import org.lwjgl.system.*
 
 import algebra.*
 import events.*
@@ -25,6 +26,16 @@ class Render : WindowEventObserver {
     private lateinit var _framebuffer: Framebuffer
     private lateinit var _quadBuffer: QuadsBuffer
     private lateinit var _frameProgram: Program
+
+    private lateinit var _ssaoFramebuffer: Framebuffer
+    private lateinit var _ssaoBlurFramebuffer: Framebuffer
+    private lateinit var _ssaoProgram: Program
+    private lateinit var _ssaoBlurProgram: Program
+    private var _ssaoNoiseTexture: Int = 0
+    private lateinit var _ssaoKernel: List<Vector3>
+
+    private var _viewportWidth: Int = 0
+    private var _viewportHeight: Int = 0
 
     private var _effect = 2
 
@@ -75,8 +86,85 @@ class Render : WindowEventObserver {
             build()
             use()
             set("frameTexture" to 0)
+            set("ssaoTexture" to 1)
             set("mouseFocusPoint" to Vector2(0.5f, 0.5f))
         }
+
+        _viewportWidth = viewport[2]
+        _viewportHeight = viewport[3]
+
+        _ssaoFramebuffer = Framebuffer(viewport[2], viewport[3], withDepth = false, colorFormat = GL_RED)
+        _ssaoBlurFramebuffer = Framebuffer(viewport[2], viewport[3], withDepth = false, colorFormat = GL_RED)
+
+        _ssaoKernel = _buildSsaoKernel()
+        _ssaoNoiseTexture = _buildSsaoNoiseTexture()
+
+        _ssaoProgram = Program().apply {
+            source = ShaderSource("ssao")
+            build()
+            use()
+            set("depthTexture" to 0)
+            set("noiseTexture" to 1)
+            set("radius" to 0.5f)
+            set("bias" to 0.025f)
+            set("kernelSize" to 64)
+        }
+
+        _ssaoBlurProgram = Program().apply {
+            source = ShaderSource("ssaoBlur")
+            build()
+            use()
+            set("ssaoInput" to 0)
+        }
+    }
+
+    private fun _buildSsaoKernel(): List<Vector3> {
+        val random = kotlin.random.Random(42)
+
+        return List(64) { index: Int ->
+            val sample = Vector3(
+                random.nextFloat() * 2.0f - 1.0f,
+                random.nextFloat() * 2.0f - 1.0f,
+                random.nextFloat()
+            )
+
+            sample.normalizeSelf()
+
+            var scale = index.toFloat() / 64.0f
+            scale = 0.1f + scale * scale * 0.9f
+
+            sample.scale(scale * random.nextFloat())
+        }
+    }
+
+    private fun _buildSsaoNoiseTexture(): Int {
+        val random = kotlin.random.Random(1337)
+        val noise = FloatArray(16 * 3)
+
+        for (i in 0 until 16) {
+            noise[i * 3 + 0] = random.nextFloat() * 2.0f - 1.0f
+            noise[i * 3 + 1] = random.nextFloat() * 2.0f - 1.0f
+            noise[i * 3 + 2] = 0.0f
+        }
+
+        val texture = glGenTextures()
+        glBindTexture(GL_TEXTURE_2D, texture)
+
+        MemoryStack.stackPush().use { stack: MemoryStack ->
+            val buffer = stack.mallocFloat(noise.size)
+            buffer.put(noise)
+            buffer.flip()
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, buffer)
+        }
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+
+        glBindTexture(GL_TEXTURE_2D, 0)
+
+        return texture
     }
 
     fun frame(): Unit {
@@ -93,12 +181,49 @@ class Render : WindowEventObserver {
 
         _framebuffer.unbind()
 
+        _ssaoFramebuffer.bind()
+
+        glClear(GL_COLOR_BUFFER_BIT)
+
+        _ssaoProgram.use()
+        _ssaoProgram.set("nearPlane" to scene.camera.ncp)
+        _ssaoProgram.set("farPlane" to scene.camera.fcp)
+        _ssaoProgram.set("fov" to scene.camera.fov)
+        _ssaoProgram.set("aspect" to scene.camera.aspect)
+        _ssaoProgram.set("noiseScale" to Vector2(_viewportWidth / 4.0f, _viewportHeight / 4.0f))
+
+        for (index in _ssaoKernel.indices) {
+            _ssaoProgram.set("samples[$index]" to _ssaoKernel[index])
+        }
+
+        _framebuffer.bindDepthTexture(0)
+
+        glActiveTexture(GL_TEXTURE1)
+        glBindTexture(GL_TEXTURE_2D, _ssaoNoiseTexture)
+
+        _quadBuffer.draw()
+
+        _ssaoFramebuffer.unbind()
+
+        _ssaoBlurFramebuffer.bind()
+
+        glClear(GL_COLOR_BUFFER_BIT)
+
+        _ssaoBlurProgram.use()
+
+        _ssaoFramebuffer.bindTexture(0)
+
+        _quadBuffer.draw()
+
+        _ssaoBlurFramebuffer.unbind()
+
         glClear(GL_COLOR_BUFFER_BIT)
 
         _frameProgram.use()
         _frameProgram.set("effect" to _effect)
 
-        _framebuffer.bindTexture()
+        _framebuffer.bindTexture(0)
+        _ssaoBlurFramebuffer.bindTexture(1)
 
         _quadBuffer.draw()
 
@@ -200,6 +325,11 @@ class Render : WindowEventObserver {
         _quadBuffer.clean()
         _framebuffer.clean()
         _frameProgram.clean()
+        _ssaoProgram.clean()
+        _ssaoBlurProgram.clean()
+        _ssaoFramebuffer.clean()
+        _ssaoBlurFramebuffer.clean()
+        glDeleteTextures(_ssaoNoiseTexture)
     }
 
     override fun onWindowEvent(event: WindowEvent) {
@@ -233,7 +363,7 @@ class Render : WindowEventObserver {
 
                     // p
                     80 -> {
-                        _effect = (_effect + 1) % 3
+                        _effect = (_effect + 1) % 4
                     }
                 }
             }
@@ -268,6 +398,10 @@ class Render : WindowEventObserver {
             is WindowResizeEvent -> {
                 scene.camera.aspect = event.width.toFloat() / event.height.toFloat()
                 _framebuffer.resize(event.width, event.height)
+                _ssaoFramebuffer.resize(event.width, event.height)
+                _ssaoBlurFramebuffer.resize(event.width, event.height)
+                _viewportWidth = event.width
+                _viewportHeight = event.height
             }
 
             else -> {

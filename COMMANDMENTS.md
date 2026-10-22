@@ -1,27 +1,44 @@
-COMMANDMENTS, follow it and all will be ok.
+# COMMANDMENTS
 
-What is this - it is application that renders a scene. 
-OpenGL is a as rendering api.
-Scenegraph is what we render here.
-A unit of scene graph - is a map.
-Place new maps alongside with others and name it "m{next number}.kt"
-A map is kt source file with DSL for scenegraph. 
-Good and human readable scenes is a good path.
+Follow it and all will be ok.
 
-Follow scenegraph rules:
-    Scene is a root.
-    Locale is origin of a subgraph.
-    StateGroup holds all OpenGL state related things - shaders, blend, depth, stencil and other parameters set here.
-    Drawable is draw call.
-    Light for lights.
-    Obstacles for viewer camera and other geometry collision detection.
+- Don not commit changes, the one do it by himself.
+- Do not run an aplication, if you need check only build it, the one do it by himself.
 
-Every frame performed several steps:
-    Traverse for collect a collision detection inforamtion.
-    Traverse for obtain light information.
-    Traverse to perform render.
-    Every step is a visitor.
+- Use COMMANDMENTS.md to understand what everything is for.
+- If a plan is implemented, give a good middle-sized commit message in MD format.
 
-When you create or update a map - add artful description of what it is.
-Description must be full enought to every magical entity can reproduce it.
+- Start all private class members with `_`.
+- Start all other class members with `m` in camelCase.
+- No trailing semicolons.
+- No ternary operators, only explicit `if` statements.
+- No "short" if statements, always brace-enclosed.
+- Use maximum verbose lambda syntax.
 
+- This is an application that renders a scene.
+- OpenGL is used as the rendering API.
+- A scenegraph is what we render here.
+
+- A unit of the scenegraph is a map.
+- Place new maps alongside the others and name them `m{next number}.kt`.
+- A map is a `.kt` source file with a DSL for the scenegraph.
+- Good and human-readable scenes are a good path.
+
+- **Scene** is the root.
+- **Locale** is the origin of a subgraph.
+- **StateGroup** holds all OpenGL state-related things — shaders, blend, depth, stencil, and other parameters are set
+  here.
+- **Drawable** is a draw call.
+- **Light** is for lights.
+- **Obstacles** are for viewer camera and other geometry collision detection.
+
+Every frame performs several steps:
+
+1. Traverse to collect collision detection information.
+2. Traverse to obtain light information.
+3. Traverse to perform rendering.
+
+Every step is a visitor.
+
+- When you create or update a map, add an artful description of what it is.
+- The description must be full enough that any magical entity can reproduce it.

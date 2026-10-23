@@ -5,7 +5,8 @@ in vec2 TexCoords;
 uniform sampler2D depthTexture;
 uniform sampler2D noiseTexture;
 
-uniform vec3 samples[64];
+// Corresponding to _KERNEL_SIZE
+uniform vec3 samples[128];
 
 uniform vec2 noiseScale;
 
@@ -38,19 +39,26 @@ void main()
 
     vec2 ndc = TexCoords * 2.0 - 1.0;
 
+    //      vec4 clipSpacePos = projectionMatrix * vec4(sample, 1.0); // from view to clip-space
+    //      vec3 ndcSpacePos = clipSpacePos.xyz /= clipSpacePos.w; // perspective divide
+    //      vec2 windowSpacePos = ((ndcSpacePos.xy + 1.0) / 2.0) * vec2(screenWidth, screenHeight);
+    //
+    //      if ((windowSpacePos.y > 0) && (windowSpacePos.y < screenHeight))
+    //          if ((windowSpacePos.x > 0) && (windowSpacePos.x < screenWidth))
+
     vec3 viewPos = vec3(
-        ndc.x * linearDepth * tanHalfFov * aspect,
-        ndc.y * linearDepth * tanHalfFov,
-        -linearDepth
+            ndc.x * linearDepth * tanHalfFov * aspect,
+            ndc.y * linearDepth * tanHalfFov,
+            -linearDepth
     );
 
     vec3 normal = normalize(cross(dFdx(viewPos), dFdy(viewPos)));
 
     vec3 randomVec = normalize(texture(noiseTexture, TexCoords * noiseScale).xyz);
 
-    vec3 tangent   = normalize(randomVec - normal * dot(randomVec, normal));
+    vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
     vec3 bitangent = cross(normal, tangent);
-    mat3 TBN       = mat3(tangent, bitangent, normal);
+    mat3 TBN = mat3(tangent, bitangent, normal);
 
     float occlusion = 0.0;
 
@@ -60,8 +68,8 @@ void main()
         float sampleLinearDepth = -samplePos.z;
 
         vec2 sampleNdc = vec2(
-            samplePos.x / (tanHalfFov * aspect * sampleLinearDepth),
-            samplePos.y / (tanHalfFov * sampleLinearDepth)
+                samplePos.x / (tanHalfFov * aspect * sampleLinearDepth),
+                samplePos.y / (tanHalfFov * sampleLinearDepth)
         );
 
         vec2 sampleUv = sampleNdc * 0.5 + 0.5;

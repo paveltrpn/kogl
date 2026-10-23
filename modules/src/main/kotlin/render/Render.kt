@@ -49,8 +49,6 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
     init {
-
-
         _quadBuffer = QuadsBuffer(1)
         _quadBuffer.fill(
             0,
@@ -88,9 +86,9 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             use()
             set("depthTexture" to 0)
             set("noiseTexture" to 1)
-            set("radius" to 0.5f)
+            set("radius" to 0.3f)
             set("bias" to 0.025f)
-            set("kernelSize" to 64)
+            set("kernelSize" to 128)
         }
 
         _ssaoBlurProgram = Program().apply {
@@ -117,7 +115,8 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
     private fun buildSsaoKernel(): List<Vector3> {
         val random = kotlin.random.Random(42)
 
-        return List(64) { index: Int ->
+        val _KERNEL_SIZE = 128
+        return List(_KERNEL_SIZE) { index: Int ->
             val sample = Vector3(
                 random.nextFloat() * 2.0f - 1.0f,
                 random.nextFloat() * 2.0f - 1.0f,
@@ -126,7 +125,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
             sample.normalizeSelf()
 
-            var scale = index.toFloat() / 64.0f
+            var scale = index.toFloat() / _KERNEL_SIZE.toFloat()
             scale = 0.1f + scale * scale * 0.9f
 
             sample.scale(scale * random.nextFloat())
@@ -134,10 +133,12 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
     }
 
     private fun buildSsaoNoiseTexture(): Int {
-        val random = kotlin.random.Random(1337)
-        val noise = FloatArray(16 * 3)
+        val _TEXTURE_SIZE = 8
 
-        for (i in 0 until 16) {
+        val random = kotlin.random.Random(1337)
+        val noise = FloatArray(_TEXTURE_SIZE * _TEXTURE_SIZE * 3)
+
+        for (i in 0 until _TEXTURE_SIZE * _TEXTURE_SIZE) {
             noise[i * 3 + 0] = random.nextFloat() * 2.0f - 1.0f
             noise[i * 3 + 1] = random.nextFloat() * 2.0f - 1.0f
             noise[i * 3 + 2] = 0.0f
@@ -150,7 +151,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             val buffer = stack.mallocFloat(noise.size)
             buffer.put(noise)
             buffer.flip()
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, buffer)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, _TEXTURE_SIZE, _TEXTURE_SIZE, 0, GL_RGB, GL_FLOAT, buffer)
         }
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
@@ -164,6 +165,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
     }
 
     fun frame(): Unit {
+        // === Render into framebuffer === //
         _framebuffer.bind()
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
@@ -176,7 +178,9 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         glDisable(GL_DEPTH_TEST)
 
         _framebuffer.unbind()
+        // === End === //
 
+        // === SSAO pass === //
         _ssaoFramebuffer.bind()
 
         glClear(GL_COLOR_BUFFER_BIT)
@@ -214,7 +218,9 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         _ssaoBlurFramebuffer.unbind()
 
         glClear(GL_COLOR_BUFFER_BIT)
+        // === End === //
 
+        // === Draw framebuffer into the screen quad === //
         _frameProgram.use()
         _frameProgram.set("effect" to _effect)
 
@@ -228,7 +234,9 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         _ssaoBlurFramebuffer.bindTexture(1)
 
         _quadBuffer.draw()
+        // === End === //
 
+        // === Draw screen ui === //
         val TEXT_START_POS_X = 19.0f
         val TEXT_START_POS_Y = 31.0f
         val TEXT_LINE_WIDTH = 0.8f
@@ -343,6 +351,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         _ui.flushAndDraw()
 
         mUi?.draw()
+        // === End === //
     }
 
     fun postLoop(): Unit {

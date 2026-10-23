@@ -22,6 +22,7 @@ class ObjTriangleIndices {
 
 abstract class Mesh(name: String) {
     protected val mName: String = name
+    protected var mAABB: AABB = AABB()
 
     val name: String
         get(): String {
@@ -30,7 +31,7 @@ abstract class Mesh(name: String) {
 
     abstract fun transform(tr: Matrix4): Unit
 
-    protected fun mTransformVertices(vertices: FloatArray, tr: Matrix4): Unit {
+    protected fun transformVertices(vertices: FloatArray, tr: Matrix4): Unit {
         var i: Int = 0
         while (i < vertices.size) {
             val vertex = Vector3(vertices[i + 0], vertices[i + 1], vertices[i + 2])
@@ -41,8 +42,40 @@ abstract class Mesh(name: String) {
             vertices[i + 1] = transformed.y
             vertices[i + 2] = transformed.z
 
+
+        }
+    }
+
+    protected fun updateAABB(vertices: FloatArray): Unit {
+        require(vertices.isNotEmpty()) { "Vertices array cannot be empty" }
+
+        var minX = Float.POSITIVE_INFINITY
+        var minY = Float.POSITIVE_INFINITY
+        var minZ = Float.POSITIVE_INFINITY
+        var maxX = Float.NEGATIVE_INFINITY
+        var maxY = Float.NEGATIVE_INFINITY
+        var maxZ = Float.NEGATIVE_INFINITY
+
+        var i: Int = 0
+        while (i < vertices.size) {
+            val vx = vertices[i + 0]
+            val vy = vertices[i + 1]
+            val vz = vertices[i + 2]
+
+            if (vx < minX) minX = vx
+            if (vy < minY) minY = vy
+            if (vz < minZ) minZ = vz
+            if (vx > maxX) maxX = vx
+            if (vy > maxY) maxY = vy
+            if (vz > maxZ) maxZ = vz
+
             i += 3
         }
+
+        mAABB = AABB(
+            min = Vector3(minX, minY, minZ),
+            max = Vector3(maxX, maxY, maxZ)
+        )
     }
 }
 
@@ -117,7 +150,8 @@ class OBJMesh(
     }
 
     override fun transform(tr: Matrix4): Unit {
-        mTransformVertices(_vertices, tr)
+        transformVertices(_vertices, tr)
+        updateAABB(_vertices)
     }
 }
 
@@ -191,6 +225,8 @@ class SeparatedArraysMesh : Mesh {
         _vertices = vertices.toFloatArray()
         _vnormals = vnormals.toFloatArray()
         _txcoords = txcoords.toFloatArray()
+
+        updateAABB(_vertices)
     }
 
     val vertices: FloatArray
@@ -209,7 +245,8 @@ class SeparatedArraysMesh : Mesh {
         }
 
     override fun transform(tr: Matrix4): Unit {
-        mTransformVertices(_vertices, tr)
+        transformVertices(_vertices, tr)
+        updateAABB(_vertices)
     }
 }
 
@@ -244,6 +281,8 @@ class IndexedMesh : Mesh {
         _vnormals = vnormals
         _txcoords = txcoords
         _indices = indices
+
+        updateAABB(_vertices)
     }
 
     val vertices: FloatArray
@@ -267,7 +306,8 @@ class IndexedMesh : Mesh {
         }
 
     override fun transform(tr: Matrix4): Unit {
-        mTransformVertices(_vertices, tr)
+        transformVertices(_vertices, tr)
+        updateAABB(_vertices)
     }
 }
 

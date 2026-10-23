@@ -29,6 +29,11 @@ abstract class Mesh(name: String) {
             return mName
         }
 
+    val boundingBox: AABB
+        get(): AABB {
+            return mAABB
+        }
+    
     abstract fun transform(tr: Matrix4): Unit
 
     protected fun transformVertices(vertices: FloatArray, tr: Matrix4): Unit {

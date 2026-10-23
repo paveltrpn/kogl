@@ -59,7 +59,7 @@ class Framebuffer(
         }
     }
 
-    private fun _destroy(): Unit {
+    private fun destroy(): Unit {
         if (_colorTexture != 0) {
             glDeleteTextures(_colorTexture)
             _colorTexture = 0
@@ -91,13 +91,13 @@ class Framebuffer(
 
     fun resize(width: Int, height: Int): Unit {
         glBindFramebuffer(GL_FRAMEBUFFER, _fbo)
-        _destroy()
+        destroy()
         _create(width, height)
         glBindFramebuffer(GL_FRAMEBUFFER, 0)
     }
 
     fun clean(): Unit {
-        _destroy()
+        destroy()
         glDeleteFramebuffers(_fbo)
     }
 }

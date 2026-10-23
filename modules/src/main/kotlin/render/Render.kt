@@ -101,11 +101,11 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         _framebuffer = Framebuffer(viewportWidth, viewportHeight)
-        _ssaoFramebuffer = Framebuffer(viewportWidth, viewportHeight,  withDepth = false, colorFormat = GL_RED)
-        _ssaoBlurFramebuffer = Framebuffer(viewportWidth,viewportHeight, withDepth = false, colorFormat = GL_RED)
+        _ssaoFramebuffer = Framebuffer(viewportWidth, viewportHeight, withDepth = false, colorFormat = GL_RED)
+        _ssaoBlurFramebuffer = Framebuffer(viewportWidth, viewportHeight, withDepth = false, colorFormat = GL_RED)
 
-        _ssaoKernel = _buildSsaoKernel()
-        _ssaoNoiseTexture = _buildSsaoNoiseTexture()
+        _ssaoKernel = buildSsaoKernel()
+        _ssaoNoiseTexture = buildSsaoNoiseTexture()
     }
 
     fun preLoop(): Unit {
@@ -114,7 +114,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
     }
 
-    private fun _buildSsaoKernel(): List<Vector3> {
+    private fun buildSsaoKernel(): List<Vector3> {
         val random = kotlin.random.Random(42)
 
         return List(64) { index: Int ->
@@ -133,7 +133,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
     }
 
-    private fun _buildSsaoNoiseTexture(): Int {
+    private fun buildSsaoNoiseTexture(): Int {
         val random = kotlin.random.Random(1337)
         val noise = FloatArray(16 * 3)
 
@@ -229,14 +229,14 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
         _quadBuffer.draw()
 
-        val TEXT_START_POS_X = 14.2f
+        val TEXT_START_POS_X = 19.0f
         val TEXT_START_POS_Y = 31.0f
-        val TEXT_LINE_WIDTH = 1.4f
+        val TEXT_LINE_WIDTH = 0.8f
         val TEXT_LETTER_SPACE = 0.0f
-        val TEXT_LETTER_SCALE = 1.0f
+        val TEXT_LETTER_SCALE = 0.6f
         var textLineCount = 0
         val TEXT_PLANE_Z = 0.4f
-        val TEXT_PADDING = 0.5f
+        val TEXT_PADDING = 0.4f
 
         val cameraPosLabel = Label().apply {
             val df = DecimalFormat("0.000").apply {
@@ -322,13 +322,23 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         val b1 = Billboard().apply {
-            size = Vector2(18.0f, TEXT_LINE_WIDTH * textLineCount + TEXT_PADDING * 2.0f)
+            size = Vector2(13.0f, TEXT_LINE_WIDTH * textLineCount + TEXT_PADDING * 2.0f)
             position = Vector2(TEXT_START_POS_X - TEXT_PADDING, TEXT_START_POS_Y + TEXT_PADDING)
             z = TEXT_PLANE_Z
             color = Color(255, 200, 128, 64)
         }
 
-        _ui.add(listOf(cameraPosLabel, drawCallsLabel, gridToggleLable, postEffectLable, ssaoToggleLable, holdCameraToggleLable, b1))
+        _ui.add(
+            listOf(
+                cameraPosLabel,
+                drawCallsLabel,
+                gridToggleLable,
+                postEffectLable,
+                ssaoToggleLable,
+                holdCameraToggleLable,
+                b1
+            )
+        )
 
         _ui.flushAndDraw()
 

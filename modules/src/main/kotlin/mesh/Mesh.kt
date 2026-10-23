@@ -42,7 +42,7 @@ abstract class Mesh(name: String) {
             vertices[i + 1] = transformed.y
             vertices[i + 2] = transformed.z
 
-
+            i += 3
         }
     }
 

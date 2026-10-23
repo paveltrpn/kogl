@@ -33,7 +33,7 @@ abstract class Mesh(name: String) {
         get(): AABB {
             return mAABB
         }
-    
+
     abstract fun transform(tr: Matrix4): Unit
 
     protected fun transformVertices(vertices: FloatArray, tr: Matrix4): Unit {
@@ -281,7 +281,6 @@ class IndexedMesh : Mesh {
         txcoords: FloatArray,
         indices: IntArray
     ) : super(name) {
-
         _vertices = vertices
         _vnormals = vnormals
         _txcoords = txcoords

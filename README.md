@@ -5,7 +5,3 @@ This is an kotlin opengl scene graph rendering app inspired by some ideas from v
 #### Run
 
 ```gradle kogl:run```
-
-#### How it looks by now
-
-![Application Screenshot](kogl/assets/shot_first.png)

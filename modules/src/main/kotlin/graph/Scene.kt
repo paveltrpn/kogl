@@ -80,12 +80,12 @@ class Scene {
         val g = GridDrawVisitor(1.0f, _camera.eye, _camera.viewMatrix)
         _grid.accept(g)
 
-        val c = LightCollectorVisitor()
+        val lightsData = LightCollectorVisitor()
         for (locale in _locales) {
-            locale.root.accept(c)
+            locale.root.accept(lightsData)
         }
 
-        val r = DrawableVisitor(1.0f, _camera.viewMatrix, c.omniLights, lightDummiesVisible)
+        val r = DrawableVisitor(1.0f, _camera.viewMatrix, lightsData.omniLights, lightDummiesVisible)
         for (locale in _locales) {
             locale.root.accept(r)
         }

@@ -17,6 +17,8 @@ class Scene {
     private var _gridSwitch: Switch
     private var _gridEnabled: Boolean = false
 
+    private var _aabbEnabled: Boolean = false
+
     private var _camera = Flycam()
 
     private var _drawCallsCount = 0
@@ -60,6 +62,10 @@ class Scene {
         _gridSwitch.setChild(_gridEnabled, 0)
     }
 
+    fun toggleAABBVisibility(): Unit {
+        _aabbEnabled = !_aabbEnabled
+    }
+
     var camera: Flycam
         get(): Flycam {
             return _camera
@@ -84,7 +90,18 @@ class Scene {
             locale.root.accept(r)
         }
 
-        _drawCallsCount = r.drawCallsCount + g.drawCallsCount
+        var aabbDrawCallsCount = 0
+
+        if (_aabbEnabled) {
+            val a = AABBDrawVisitor(1.0f, _camera.viewMatrix)
+            for (locale in _locales) {
+                locale.root.accept(a)
+            }
+
+            aabbDrawCallsCount = a.drawCallsCount
+        }
+
+        _drawCallsCount = r.drawCallsCount + g.drawCallsCount + aabbDrawCallsCount
     }
 
     fun addLocale(locale: Locale): Unit {

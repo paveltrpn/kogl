@@ -40,6 +40,11 @@ abstract class Drawable : Leaf {
         }
     }
 
+    val hasMesh: Boolean
+        get(): Boolean {
+            return _mesh != null
+        }
+
     var mesh: Mesh
         get(): Mesh {
             return _mesh!!

@@ -293,6 +293,18 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             textLineCount++
         }
 
+        val aabbToggleLable = Label().apply {
+            text = "\"b\" - toggle aabb boxes"
+
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            z = TEXT_PLANE_Z + 0.1f
+            letterSpace = TEXT_LETTER_SPACE
+            letterScale = TEXT_LETTER_SCALE
+            color = Color(255, 255, 255, 255)
+
+            textLineCount++
+        }
+
         val postEffectLable = Label().apply {
             text = "\"p\" - cycle post effect"
 
@@ -341,6 +353,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
                 cameraPosLabel,
                 drawCallsLabel,
                 gridToggleLable,
+                aabbToggleLable,
                 postEffectLable,
                 ssaoToggleLable,
                 holdCameraToggleLable,
@@ -395,6 +408,11 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
                     // t
                     84 -> {
                         scene.toggleGridVisibility()
+                    }
+
+                    // b
+                    66 -> {
+                        scene.toggleAABBVisibility()
                     }
 
                     // p

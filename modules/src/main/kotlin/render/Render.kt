@@ -293,7 +293,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             textLineCount++
         }
 
-        val aabbToggleLable = Label().apply {
+        val debugDrawToggleLable = Label().apply {
             text = "\"b\" - toggle debug draw"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
@@ -353,7 +353,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
                 cameraPosLabel,
                 drawCallsLabel,
                 gridToggleLable,
-                aabbToggleLable,
+                debugDrawToggleLable,
                 postEffectLable,
                 ssaoToggleLable,
                 holdCameraToggleLable,

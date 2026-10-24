@@ -40,6 +40,8 @@ abstract class Drawable : Leaf {
         }
     }
 
+    var isFrustumCulled: Boolean = false
+
     val hasMesh: Boolean
         get(): Boolean {
             return _mesh != null

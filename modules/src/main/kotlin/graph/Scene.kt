@@ -75,7 +75,9 @@ class Scene {
     fun walk(): Unit {
         _camera.traverse()
 
-        val g = GridDrawVisitor(1.0f, _camera.eye, _camera.viewMatrix)
+        val viewMatrix = _camera.viewMatrix
+
+        val g = GridDrawVisitor(1.0f, _camera.eye, viewMatrix)
         _grid.accept(g)
 
         val lightsData = LightCollectorVisitor()
@@ -83,7 +85,17 @@ class Scene {
             locale.root.accept(lightsData)
         }
 
-        val r = DrawableVisitor(1.0f, _camera.viewMatrix, lightsData.omniLights)
+        val a = AnimationVisitor(1.0f)
+        for (locale in _locales) {
+            locale.root.accept(a)
+        }
+
+        val c = FrustumCullingVisitor(viewMatrix)
+        for (locale in _locales) {
+            locale.root.accept(c)
+        }
+
+        val r = DrawableVisitor(1.0f, viewMatrix, lightsData.omniLights)
         for (locale in _locales) {
             locale.root.accept(r)
         }
@@ -91,7 +103,7 @@ class Scene {
         var debugDrawCallsCount = 0
 
         if (_debugDrawEnabled) {
-            val d = DebugDrawVisitor(1.0f, _camera.viewMatrix)
+            val d = DebugDrawVisitor(1.0f, viewMatrix)
             for (locale in _locales) {
                 locale.root.accept(d)
             }

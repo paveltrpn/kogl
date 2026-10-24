@@ -42,24 +42,8 @@ class DrawableVisitor(
     override fun apply(node: Leaf): Unit {
         when (node) {
             is Drawable -> {
-                when (node) {
-                    is SpinableDrawable -> {
-                        val local = node.updateLocal(mDelta)
-
-                        val top = mModelMatrixStack.top.copy()
-                        top.transpose()
-
-                        node.applyTransform(local.multiply(top))
-                    }
-
-                    is FlyaroundDrawable -> {
-                        val local = node.updateLocal(mDelta)
-
-                        val top = mModelMatrixStack.top.copy()
-                        top.transpose()
-
-                        node.applyTransform(local.multiply(top))
-                    }
+                if (node.isFrustumCulled) {
+                    return
                 }
 
                 // ...update shader uniform...

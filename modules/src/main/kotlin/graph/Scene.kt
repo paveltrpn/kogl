@@ -72,8 +72,8 @@ class Scene {
             _camera = value
         }
 
-    fun walk(): Unit {
-        _camera.traverse()
+    fun traverse(): Unit {
+        _camera.update()
 
         val viewMatrix = _camera.viewMatrix
 

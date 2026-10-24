@@ -173,7 +173,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         glEnable(GL_DEPTH_TEST)
         glDepthFunc(GL_LESS)
 
-        scene.walk()
+        scene.traverse()
 
         glDisable(GL_DEPTH_TEST)
 

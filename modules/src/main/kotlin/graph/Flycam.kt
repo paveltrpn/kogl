@@ -169,7 +169,7 @@ class Flycam {
         }
     }
 
-    fun traverse() {
+    fun update() {
         var velocity = Vector3(0.0f, 0.0f, 0.0f)
 
         if (((_moveMask shr FlycamMoveBits.FORWARD.ordinal) and 1) == 1) {

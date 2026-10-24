@@ -18,6 +18,7 @@ class Scene {
     private var _gridEnabled: Boolean = false
 
     private var _debugDrawEnabled: Boolean = false
+    private var _debugDrawStateGroup: StateGroup
 
     private var _camera = Flycam()
 
@@ -53,6 +54,15 @@ class Scene {
                 this attach _gridSwitch
             }
         }
+
+        val debugProgram = Program().apply {
+            source = ShaderSource("lightDummy")
+            build()
+        }
+
+        _debugDrawStateGroup = StateGroup(debugProgram)
+        _debugDrawStateGroup.addChild(DebugLightDrawable())
+        _debugDrawStateGroup.addChild(DebugAABBDrawable())
     }
 
     fun toggleGridVisibility(): Unit {
@@ -103,10 +113,13 @@ class Scene {
         var debugDrawCallsCount = 0
 
         if (_debugDrawEnabled) {
-            val d = DebugDrawVisitor(1.0f, viewMatrix)
+            val collector = DebugDrawInfoCollectorVisitor()
             for (locale in _locales) {
-                locale.root.accept(d)
+                locale.root.accept(collector)
             }
+
+            val d = DebugDrawVisitor(1.0f, viewMatrix, collector.info, _debugDrawStateGroup.program)
+            _debugDrawStateGroup.accept(d)
 
             debugDrawCallsCount = d.drawCallsCount
         }

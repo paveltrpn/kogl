@@ -7,10 +7,14 @@ import render.*
 // ======================= DrawCallVisitorBase ================================
 // ============================================================================
 
-abstract class DrawCallVisitorBase(delta: Float, viewMatrix: Matrix4) : TransformVisitor() {
+abstract class DrawCallVisitorBase(
+    delta: Float,
+    viewMatrix: Matrix4,
+    program: Program = Program()
+) : TransformVisitor() {
     protected val mDelta: Float
     protected var mViewMatrix: Matrix4
-    protected var mProgram: Program = Program()
+    protected var mProgram: Program = program
     protected var mDrawCallsCount = 0
 
     init {

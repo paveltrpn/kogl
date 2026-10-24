@@ -17,13 +17,11 @@ class Scene {
     private var _gridSwitch: Switch
     private var _gridEnabled: Boolean = false
 
-    private var _aabbEnabled: Boolean = false
+    private var _debugDrawEnabled: Boolean = false
 
     private var _camera = Flycam()
 
     private var _drawCallsCount = 0
-
-    var lightDummiesVisible = true
 
     val drawCallsCount: Int
         get(): Int {
@@ -63,7 +61,7 @@ class Scene {
     }
 
     fun toggleAABBVisibility(): Unit {
-        _aabbEnabled = !_aabbEnabled
+        _debugDrawEnabled = !_debugDrawEnabled
     }
 
     var camera: Flycam
@@ -85,23 +83,23 @@ class Scene {
             locale.root.accept(lightsData)
         }
 
-        val r = DrawableVisitor(1.0f, _camera.viewMatrix, lightsData.omniLights, lightDummiesVisible)
+        val r = DrawableVisitor(1.0f, _camera.viewMatrix, lightsData.omniLights)
         for (locale in _locales) {
             locale.root.accept(r)
         }
 
-        var aabbDrawCallsCount = 0
+        var debugDrawCallsCount = 0
 
-        if (_aabbEnabled) {
-            val a = AABBDrawVisitor(1.0f, _camera.viewMatrix)
+        if (_debugDrawEnabled) {
+            val d = DebugDrawVisitor(1.0f, _camera.viewMatrix)
             for (locale in _locales) {
-                locale.root.accept(a)
+                locale.root.accept(d)
             }
 
-            aabbDrawCallsCount = a.drawCallsCount
+            debugDrawCallsCount = d.drawCallsCount
         }
 
-        _drawCallsCount = r.drawCallsCount + g.drawCallsCount + aabbDrawCallsCount
+        _drawCallsCount = r.drawCallsCount + g.drawCallsCount + debugDrawCallsCount
     }
 
     fun addLocale(locale: Locale): Unit {

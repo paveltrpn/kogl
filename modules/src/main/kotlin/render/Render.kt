@@ -294,7 +294,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         val aabbToggleLable = Label().apply {
-            text = "\"b\" - toggle aabb boxes"
+            text = "\"b\" - toggle debug draw"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
             z = TEXT_PLANE_Z + 0.1f

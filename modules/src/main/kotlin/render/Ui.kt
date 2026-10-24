@@ -83,7 +83,7 @@ class UiGL : Ui() {
         val bbColor = Color(255, 200, 128, 64).asVec4.data
         glUniform4f(colorLoc, bbColor[0], bbColor[1], bbColor[2], bbColor[3])
 
-        _billboardBuffer.draw()
+        _billboardBuffer.draw(billboardBufOffset)
 
         // Render labels.
 
@@ -94,7 +94,7 @@ class UiGL : Ui() {
 
         _font.bind(0)
 
-        _labelBuffer.draw()
+        _labelBuffer.draw(labelBufOffset)
 
 //        NOTE: GL_INVALID_ENUM error generated in this place.
 //        glDisable(GL_TEXTURE_2D)

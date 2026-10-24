@@ -86,9 +86,15 @@ class QuadsBuffer(capacity: Int) {
         glBindVertexArray(0)
     }
 
-    fun draw() {
+    fun draw(): Unit {
+        draw(_vertexCount / 6)
+    }
+
+    fun draw(quadsCount: Int): Unit {
+        require(quadsCount in 0..(_vertexCount / 6))
+
         glBindVertexArray(_vao)
-        glDrawArrays(GL_TRIANGLES, 0, _vertexCount)
+        glDrawArrays(GL_TRIANGLES, 0, quadsCount * 6)
         glBindVertexArray(0)
     }
 }

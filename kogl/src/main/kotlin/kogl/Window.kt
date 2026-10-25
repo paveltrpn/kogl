@@ -182,11 +182,25 @@ class Window {
             if (action == GLFW_PRESS) {
                 val mouseEvent = WindowMousePress(button, xpos[0].toInt(), ypos[0].toInt())
                 _userinterface.notify(mouseEvent)
+
+                when (button) {
+                    GLFW_MOUSE_BUTTON_RIGHT -> {
+                        _userinterface.mHoldMouse = true
+                        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN)
+                    }
+                }
             }
 
             if (action == GLFW_RELEASE) {
                 val mouseEvent = WindowMouseRelease(button, xpos[0].toInt(), ypos[0].toInt())
                 _userinterface.notify(mouseEvent)
+
+                when (button) {
+                    GLFW_MOUSE_BUTTON_RIGHT -> {
+                        _userinterface.mHoldMouse = false
+                        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL)
+                    }
+                }
             }
         })
 

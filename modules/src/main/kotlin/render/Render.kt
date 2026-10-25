@@ -465,13 +465,39 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             }
 
             is WindowMousePress -> {
-                if (event.keyCode == GLFW_MOUSE_BUTTON_LEFT) {
-                    val ui = mUi
-                    val isOverUi = ui?.isMouseOver(event.posX, event.posY) ?: false
-                    println("mouse press (${event.posX}, ${event.posY}), over UI = $isOverUi")
+                when (event.keyCode) {
+                    GLFW_MOUSE_BUTTON_LEFT -> {
+                        val ui = mUi
+                        val isOverUi = ui?.isMouseOver(event.posX, event.posY) ?: false
+                        println("mouse press (${event.posX}, ${event.posY}), over UI = $isOverUi")
 
-                    if (!isOverUi) {
-                        _sceneClickQueue.addLast(event)
+                        if (!isOverUi) {
+                            _sceneClickQueue.addLast(event)
+                        }
+                    }
+
+                    GLFW_MOUSE_BUTTON_RIGHT -> {
+
+                    }
+
+                    GLFW_MOUSE_BUTTON_MIDDLE -> {
+
+                    }
+                }
+            }
+
+            is WindowMouseRelease -> {
+                when (event.keyCode) {
+                    GLFW_MOUSE_BUTTON_LEFT -> {
+                        
+                    }
+
+                    GLFW_MOUSE_BUTTON_RIGHT -> {
+
+                    }
+
+                    GLFW_MOUSE_BUTTON_MIDDLE -> {
+
                     }
                 }
             }

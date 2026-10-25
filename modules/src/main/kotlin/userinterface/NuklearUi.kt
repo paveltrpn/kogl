@@ -13,6 +13,7 @@ import render.*
 // ============================================================================
 // ======================= NuklearUi ==========================================
 // ============================================================================
+
 class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserver {
     private val _allocator: NkAllocator = NkAllocator.create()
         .alloc(NkPluginAllocI { handle: Long, old: Long, size: Long -> nmemAllocChecked(size) })
@@ -195,7 +196,7 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
 
         nk_input_end(_ctx)
 
-        _buildWidgets()
+        buildWidgets()
 
         mBackend.convert(_ctx, _cmds, _vbuf, _ebuf, _convertConfig)
 
@@ -227,17 +228,18 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
         _allocator.free()
     }
 
-    private fun _buildWidgets() {
+    private fun buildWidgets() {
         val panelVisible = nk_begin(
             _ctx,
             "panel",
             _panelRect,
             NK_WINDOW_BORDER or NK_WINDOW_TITLE or NK_WINDOW_MOVABLE
         )
+
         nk_window_get_bounds(_ctx, _panelRect)
 
         if (panelVisible) {
-            nk_layout_row_dynamic(_ctx, 30.0f, 1)
+            nk_layout_row_dynamic(_ctx, 28.0f, 1)
 
             if (nk_button_label(_ctx, "button")) {
                 println("nuklear button clicked")

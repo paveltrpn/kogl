@@ -165,10 +165,14 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
                 }
 
                 is WindowMousePress -> {
+                    _mouseX = event.posX
+                    _mouseY = event.posY
                     nk_input_button(_ctx, mapButton(event.keyCode), _mouseX, _mouseY, true)
                 }
 
                 is WindowMouseRelease -> {
+                    _mouseX = event.posX
+                    _mouseY = event.posY
                     nk_input_button(_ctx, mapButton(event.keyCode), _mouseX, _mouseY, false)
                 }
 

@@ -16,14 +16,16 @@ Follow it and all will be ok.
 - Start all private class data members with `_`.
 - Start all protected class data members with `m` in camelCase.
 - Obviously, not use this pattern for private and protected class methods!
-- All "user facing" properties of class (that have explicit getters and setters) must have exact name (no underscore or "m")
+- All "user facing" properties of class (that have explicit getters and setters) must have exact name (no underscore
+  or "m")
 - No trailing semicolons.
 - No ternary operators, only explicit `if` statements.
 - No expression-style `if (cond) a else b` only explicit `if` statements.
 - "No ternary operators, only explicit if statements" not ban Elvis operator.
 - No "short" if statements, always brace-enclosed.
 - Use maximum verbose lambda syntax.
-- Class declaration must preamble with 79-char three-line class preamble banners - commented quals sign line, class name enclosed with equals signs line end enclosing equals signs line.
+- Class declaration must preamble with 79-char three-line class preamble banners - commented quals sign line, class name
+  enclosed with equals signs line end enclosing equals signs line.
 - Always declare a function or method return type (even redudand `Unit`)
 
 - This is an application that renders a scene.
@@ -55,3 +57,4 @@ Every step is a visitor.
 - The description must be full enough that any magical entity can reproduce it.
 
 - When you import something use "star wildcard ended" import style, do not try to import entities by name.
+- Try to avoid companion objects.

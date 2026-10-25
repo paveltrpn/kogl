@@ -24,13 +24,13 @@ data class WindowResizeEvent(val width: Int, val height: Int) : WindowEvent {}
 // ======================= WindowMousePress ===================================
 // ============================================================================
 
-data class WindowMousePress(val keyCode: Int) : WindowEvent {}
+data class WindowMousePress(val keyCode: Int, val posX: Int, val posY: Int) : WindowEvent {}
 
 // ============================================================================
 // ======================= WindowMouseRelease =================================
 // ============================================================================
 
-data class WindowMouseRelease(val keyCode: Int) : WindowEvent {}
+data class WindowMouseRelease(val keyCode: Int, val posX: Int, val posY: Int) : WindowEvent {}
 
 // ============================================================================
 // ======================= WindowMouseMoveEvent ===============================

@@ -175,13 +175,17 @@ class Window {
         })
 
         glfwSetMouseButtonCallback(_window, { window: Long, button: Int, action: Int, mods: Int ->
+            val xpos = DoubleArray(1)
+            val ypos = DoubleArray(1)
+            glfwGetCursorPos(window, xpos, ypos)
+
             if (action == GLFW_PRESS) {
-                val mouseEvent = WindowMousePress(button)
+                val mouseEvent = WindowMousePress(button, xpos[0].toInt(), ypos[0].toInt())
                 _userinterface.notify(mouseEvent)
             }
 
             if (action == GLFW_RELEASE) {
-                val mouseEvent = WindowMouseRelease(button)
+                val mouseEvent = WindowMouseRelease(button, xpos[0].toInt(), ypos[0].toInt())
                 _userinterface.notify(mouseEvent)
             }
         })

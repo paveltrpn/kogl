@@ -5,6 +5,7 @@ import algebra.*
 // ============================================================================
 // ======================= DebugLightInfo =====================================
 // ============================================================================
+
 data class DebugLightInfo(
     val modelMatrix: Matrix4,
     val color: Vector3
@@ -13,6 +14,7 @@ data class DebugLightInfo(
 // ============================================================================
 // ======================= DebugAABBInfo ======================================
 // ============================================================================
+
 data class DebugAABBInfo(
     val modelMatrix: Matrix4
 )
@@ -20,6 +22,7 @@ data class DebugAABBInfo(
 // ============================================================================
 // ======================= DebugDrawInfo ======================================
 // ============================================================================
+
 data class DebugDrawInfo(
     val lights: List<DebugLightInfo>,
     val aabbs: List<DebugAABBInfo>
@@ -28,6 +31,7 @@ data class DebugDrawInfo(
 // ============================================================================
 // ======================= DebugDrawInfoCollectorVisitor ======================
 // ============================================================================
+
 class DebugDrawInfoCollectorVisitor : TransformVisitor() {
     private val _lights = mutableListOf<DebugLightInfo>()
     private val _aabbs = mutableListOf<DebugAABBInfo>()

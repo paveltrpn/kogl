@@ -6,15 +6,14 @@ import render.*
 // ============================================================================
 // ======================= DebugDrawVisitor ===================================
 // ============================================================================
+
 class DebugDrawVisitor(
     delta: Float,
     viewMatrix: Matrix4,
     private val _info: DebugDrawInfo,
     program: Program
 ) : DrawCallVisitorBase(delta, viewMatrix, program) {
-    companion object {
-        private val _boxColor = Vector3(1.0f, 1.0f, 0.0f)
-    }
+    private val _boxColor = Vector3(1.0f, 1.0f, 0.0f)
 
     override fun apply(node: Leaf): Unit {
         when (node) {
@@ -27,6 +26,7 @@ class DebugDrawVisitor(
                     }
 
                     node.draw()
+
                     mDrawCallsCount++
                 }
             }
@@ -40,6 +40,7 @@ class DebugDrawVisitor(
                     }
 
                     node.draw()
+
                     mDrawCallsCount++
                 }
             }

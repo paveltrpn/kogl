@@ -85,6 +85,14 @@ abstract class Mesh(name: String) {
 }
 
 // ============================================================================
+// ======================= TriangleSoupMesh ===================================
+// ============================================================================
+
+interface TriangleSoupMesh {
+    val positions: FloatArray
+}
+
+// ============================================================================
 // ======================= OBJMesh ============================================
 // ============================================================================
 
@@ -164,7 +172,7 @@ class OBJMesh(
 // ======================= SeparatedArraysMesh ================================
 // ============================================================================
 
-class SeparatedArraysMesh : Mesh {
+class SeparatedArraysMesh : Mesh, TriangleSoupMesh {
     private val _vertices: FloatArray
     private val _vnormals: FloatArray
     private val _txcoords: FloatArray
@@ -236,6 +244,11 @@ class SeparatedArraysMesh : Mesh {
 
     val vertices: FloatArray
         get() {
+            return _vertices
+        }
+
+    override val positions: FloatArray
+        get(): FloatArray {
             return _vertices
         }
 

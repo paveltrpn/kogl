@@ -30,6 +30,10 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
     private val _ebuf: NkBuffer = NkBuffer.create()
 
     private val _panelRect: NkRect = NkRect.create()
+        .x(10.0f)
+        .y(10.0f)
+        .w(200.0f)
+        .h(100.0f)
 
     private val _eventQueue: ArrayDeque<WindowEvent> = ArrayDeque()
 
@@ -129,6 +133,14 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
         }
     }
 
+    override fun isMouseOver(posX: Int, posY: Int): Boolean {
+        val x = posX.toFloat()
+        val y = posY.toFloat()
+
+        return x >= _panelRect.x() && x < _panelRect.x() + _panelRect.w() &&
+                y >= _panelRect.y() && y < _panelRect.y() + _panelRect.h()
+    }
+
     override fun update() {
         nk_buffer_clear(_cmds)
         nk_buffer_clear(_vbuf)
@@ -216,13 +228,15 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
     }
 
     private fun _buildWidgets() {
-        if (nk_begin(
-                _ctx,
-                "panel",
-                nk_rect(10.0f, 10.0f, 200.0f, 100.0f, _panelRect),
-                NK_WINDOW_BORDER or NK_WINDOW_TITLE or NK_WINDOW_MOVABLE
-            )
-        ) {
+        val panelVisible = nk_begin(
+            _ctx,
+            "panel",
+            _panelRect,
+            NK_WINDOW_BORDER or NK_WINDOW_TITLE or NK_WINDOW_MOVABLE
+        )
+        nk_window_get_bounds(_ctx, _panelRect)
+
+        if (panelVisible) {
             nk_layout_row_dynamic(_ctx, 30.0f, 1)
 
             if (nk_button_label(_ctx, "button")) {

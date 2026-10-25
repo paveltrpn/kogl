@@ -22,6 +22,84 @@ class Matrix4 {
         return Matrix4(this)
     }
 
+    fun inverted(): Matrix4? {
+        val augmented = Array(4) { row: Int -> DoubleArray(8) }
+
+        for (row in 0 until 4) {
+            for (column in 0 until 4) {
+                val value = _data[row * 4 + column]
+                if (!value.isFinite()) {
+                    return null
+                }
+                augmented[row][column] = value.toDouble()
+            }
+            augmented[row][row + 4] = 1.0
+        }
+
+        for (column in 0 until 4) {
+            var pivotRow = column
+            var pivotMagnitude = kotlin.math.abs(augmented[column][column])
+
+            for (row in column + 1 until 4) {
+                val magnitude = kotlin.math.abs(augmented[row][column])
+                if (magnitude > pivotMagnitude) {
+                    pivotMagnitude = magnitude
+                    pivotRow = row
+                }
+            }
+
+            if (!pivotMagnitude.isFinite() || pivotMagnitude <= 1e-12) {
+                return null
+            }
+
+            if (pivotRow != column) {
+                val pivot = augmented[pivotRow]
+                augmented[pivotRow] = augmented[column]
+                augmented[column] = pivot
+            }
+
+            val pivotValue = augmented[column][column]
+            for (index in column until 8) {
+                augmented[column][index] /= pivotValue
+            }
+            augmented[column][column] = 1.0
+
+            for (row in 0 until 4) {
+                if (row == column) {
+                    continue
+                }
+
+                val factor = augmented[row][column]
+                if (factor == 0.0) {
+                    continue
+                }
+
+                for (index in column until 8) {
+                    augmented[row][index] -= factor * augmented[column][index]
+                }
+                augmented[row][column] = 0.0
+            }
+        }
+
+        val result = Matrix4()
+        for (row in 0 until 4) {
+            for (column in 0 until 4) {
+                val value = augmented[row][column + 4]
+                if (!value.isFinite()) {
+                    return null
+                }
+
+                val floatValue = value.toFloat()
+                if (!floatValue.isFinite()) {
+                    return null
+                }
+                result._data[row * 4 + column] = floatValue
+            }
+        }
+
+        return result
+    }
+
     val data: FloatArray
         get(): FloatArray {
             return _data

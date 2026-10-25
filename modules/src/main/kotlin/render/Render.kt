@@ -3,6 +3,7 @@ package render
 import java.text.*
 import java.math.*
 
+import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.*
 
@@ -21,6 +22,14 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
     private var _scene: Scene? = null
 
+    private val _sceneClickQueue: ArrayDeque<WindowMousePress> = ArrayDeque()
+    private var _lastIntersection: IntersectionResult? = null
+
+    val lastIntersection: IntersectionResult?
+        get(): IntersectionResult? {
+            return _lastIntersection
+        }
+
     private val _mouseSensitivity = 0.005f
 
     private var _framebuffer: Framebuffer
@@ -34,7 +43,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
     private var _ssaoNoiseTexture: Int
     private var _ssaoKernel: List<Vector3>
 
-    private var _effect = 2
+    private var _effect = 0
 
     private var _ssaoEnabled = true
 
@@ -174,6 +183,11 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         glDepthFunc(GL_LESS)
 
         scene.traverse()
+
+        while (_sceneClickQueue.isNotEmpty()) {
+            val click = _sceneClickQueue.removeFirst()
+            _lastIntersection = scene.intersect(click.posX, click.posY, viewportWidth, viewportHeight)
+        }
 
         glDisable(GL_DEPTH_TEST)
 
@@ -443,6 +457,15 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
                     68 -> {
                         scene.camera.unsetMoveBit(FlycamMoveBits.RIGHT)
+                    }
+                }
+            }
+
+            is WindowMousePress -> {
+                if (event.keyCode == GLFW_MOUSE_BUTTON_LEFT) {
+                    val ui = mUi
+                    if (ui == null || !ui.isMouseOver(event.posX, event.posY)) {
+                        _sceneClickQueue.addLast(event)
                     }
                 }
             }

@@ -8,4 +8,5 @@ interface UiDrawable {
     fun update()
     fun draw()
     fun free()
+    fun isMouseOver(posX: Int, posY: Int): Boolean
 }

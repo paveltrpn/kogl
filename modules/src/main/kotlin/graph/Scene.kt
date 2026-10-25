@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL46.*
 import algebra.*
 import graphdsl.*
 import render.*
+import spatial.*
 
 // ============================================================================
 // ======================= Scene ==============================================
@@ -125,6 +126,22 @@ class Scene {
         }
 
         _drawCallsCount = r.drawCallsCount + g.drawCallsCount + debugDrawCallsCount
+    }
+
+    fun intersect(
+        posX: Int,
+        posY: Int,
+        viewportWidth: Int,
+        viewportHeight: Int
+    ): IntersectionResult? {
+        val ray = Ray.fromScreen(_camera, posX, posY, viewportWidth, viewportHeight) ?: return null
+        val visitor = IntersectionVisitor(ray)
+
+        for (locale in _locales) {
+            locale.root.accept(visitor)
+        }
+
+        return visitor.result
     }
 
     fun addLocale(locale: Locale): Unit {

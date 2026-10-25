@@ -83,16 +83,98 @@ class RayTest {
     }
 
     @Test
-    fun screenRayUsesACopiedCameraEye(): Unit {
+    fun screenRayUsesRenderedCameraEyeWithoutMutatingSource(): Unit {
         val camera = screenCamera()
         camera.eye = Vector3(2.0f, 3.0f, 4.0f)
         val ray = Ray.fromScreen(camera, 50, 50, 100, 100)
 
         assertNotNull(ray)
         camera.eye.set(7.0f, 8.0f, 9.0f)
-        assertRayClose(2.0f, ray.eye.x)
-        assertRayClose(3.0f, ray.eye.y)
-        assertRayClose(4.0f, ray.eye.z)
+        assertRayClose(-2.0f, ray.eye.x)
+        assertRayClose(-3.0f, ray.eye.y)
+        assertRayClose(-4.0f, ray.eye.z)
+    }
+
+    @Test
+    fun screenRayUsesRenderedCameraCenterForTranslatedRotatedView(): Unit {
+        val camera = screenCamera()
+        camera.eye = Vector3(2.0f, 3.0f, 4.0f)
+        camera.azimuth = -26.0f
+        camera.elevation = -22.0f
+
+        val azimuthRotation = Matrix4().rotate(camera.zenith, camera.azimuth)
+        val right = azimuthRotation.vecMultiply(Vector3(1.0f, 0.0f, 0.0f))
+        val elevationRotation = Matrix4().rotate(right, camera.elevation)
+        val worldRotation = elevationRotation.multiply(azimuthRotation)
+        val expectedDirection = worldRotation.vecMultiply(Vector3(0.0f, 0.0f, -1.0f)).normalize()
+        val ray = Ray.fromScreen(camera, 50, 50, 100, 100)
+
+        assertNotNull(ray)
+        assertRayClose(-2.0f, ray.eye.x)
+        assertRayClose(-3.0f, ray.eye.y)
+        assertRayClose(-4.0f, ray.eye.z)
+        assertRayClose(expectedDirection.x, ray.direction.x)
+        assertRayClose(expectedDirection.y, ray.direction.y)
+        assertRayClose(expectedDirection.z, ray.direction.z)
+    }
+
+    @Test
+    fun screenRayIntersectsProjectedTriangleWithTranslatedRotatedCamera(): Unit {
+        val camera = screenCamera()
+        camera.eye = Vector3(-17.0f, -13.5f, -29.5f)
+        camera.azimuth = -26.0f
+        camera.elevation = -22.0f
+        camera.aspect = 2560.0f / 1440.0f
+
+        val eye = camera.eye.inversed()
+        val azimuthRotation = Matrix4().rotate(camera.zenith, camera.azimuth)
+        val cameraRight = azimuthRotation.vecMultiply(Vector3(1.0f, 0.0f, 0.0f))
+        val elevationRotation = Matrix4().rotate(cameraRight, camera.elevation)
+        val worldRotation = elevationRotation.multiply(azimuthRotation)
+        val forward = worldRotation.vecMultiply(Vector3(0.0f, 0.0f, -1.0f)).normalize()
+        val right = worldRotation.vecMultiply(Vector3(1.0f, 0.0f, 0.0f)).normalize()
+        val up = worldRotation.vecMultiply(Vector3(0.0f, 1.0f, 0.0f)).normalize()
+        val target = Vector3(eye.x, eye.y, eye.z)
+        target.plus(forward.scale(30.0f))
+        target.plus(right.scale(5.0f))
+        target.plus(up.scale(2.0f))
+
+        val a = Vector3(target.x, target.y, target.z)
+        a.minus(right)
+        a.minus(up)
+        val b = Vector3(target.x, target.y, target.z)
+        b.plus(right)
+        b.minus(up)
+        val c = Vector3(target.x, target.y, target.z)
+        c.plus(up)
+
+        val renderedView = camera.viewMatrix.copy()
+        renderedView.transpose()
+        val clip = renderedView.vecMultiply(Vector4(target.x, target.y, target.z, 1.0f))
+        assertTrue(kotlin.math.abs(clip.w) > RAY_TEST_EPSILON)
+        val ndcX = clip.x / clip.w
+        val ndcY = clip.y / clip.w
+        assertTrue(ndcX >= -1.0f && ndcX <= 1.0f)
+        assertTrue(ndcY >= -1.0f && ndcY <= 1.0f)
+
+        val viewportWidth = 2560
+        val viewportHeight = 1440
+        val posX = ((ndcX + 1.0f) * 0.5f * viewportWidth.toFloat()).toInt()
+        val posY = ((1.0f - ndcY) * 0.5f * viewportHeight.toFloat()).toInt()
+        val ray = Ray.fromScreen(camera, posX, posY, viewportWidth, viewportHeight)
+
+        assertNotNull(ray)
+        val distance = ray.intersectTriangle(a, b, c)
+        assertNotNull(distance)
+        val expectedDistance = Vector3(
+            target.x - eye.x,
+            target.y - eye.y,
+            target.z - eye.z
+        ).length()
+        assertTrue(
+            kotlin.math.abs(expectedDistance - distance) <= 0.05f,
+            "expected distance near $expectedDistance but was $distance"
+        )
     }
 
     @Test

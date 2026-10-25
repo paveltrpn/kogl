@@ -56,7 +56,7 @@ class Ray(
                 return null
             }
 
-            val eye = camera.eye
+            val eye = camera.eye.inversed()
             if (!isFiniteVector(eye)) {
                 return null
             }

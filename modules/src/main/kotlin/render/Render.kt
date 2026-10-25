@@ -189,7 +189,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
             _lastIntersection = scene.intersect(click.posX, click.posY, viewportWidth, viewportHeight)
 
-            println("distance = ${_lastIntersection?.distance}")
+            println("intersection (${click.posX}, ${click.posY}) = $_lastIntersection")
         }
 
         glDisable(GL_DEPTH_TEST)
@@ -467,7 +467,10 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             is WindowMousePress -> {
                 if (event.keyCode == GLFW_MOUSE_BUTTON_LEFT) {
                     val ui = mUi
-                    if (ui == null || !ui.isMouseOver(event.posX, event.posY)) {
+                    val isOverUi = ui?.isMouseOver(event.posX, event.posY) ?: false
+                    println("mouse press (${event.posX}, ${event.posY}), over UI = $isOverUi")
+
+                    if (!isOverUi) {
                         _sceneClickQueue.addLast(event)
                     }
                 }

@@ -135,6 +135,7 @@ class Scene {
         viewportHeight: Int
     ): IntersectionResult? {
         val ray = Ray.fromScreen(_camera, posX, posY, viewportWidth, viewportHeight) ?: return null
+
         val visitor = IntersectionVisitor(ray)
 
         for (locale in _locales) {

@@ -186,7 +186,10 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
         while (_sceneClickQueue.isNotEmpty()) {
             val click = _sceneClickQueue.removeFirst()
+
             _lastIntersection = scene.intersect(click.posX, click.posY, viewportWidth, viewportHeight)
+
+            println("distance = ${_lastIntersection?.distance}")
         }
 
         glDisable(GL_DEPTH_TEST)

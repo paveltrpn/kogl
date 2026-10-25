@@ -51,6 +51,7 @@ class IntersectionVisitor(private val _ray: Ray) : TransformVisitor() {
 
         val model = node.modelMatrix.copy()
         model.transpose()
+        
         val worldBounds = transformBounds(mesh.boundingBox, model) ?: return
         if (!_ray.intersects(worldBounds)) {
             return
@@ -58,20 +59,24 @@ class IntersectionVisitor(private val _ray: Ray) : TransformVisitor() {
 
         val positions = mesh.positions
         val triangleCount = positions.size / 9
+
         for (triangleIndex in 0 until triangleCount) {
             val offset = triangleIndex * 9
+
             val a = transformPoint(
                 model,
                 positions[offset],
                 positions[offset + 1],
                 positions[offset + 2]
             ) ?: continue
+
             val b = transformPoint(
                 model,
                 positions[offset + 3],
                 positions[offset + 4],
                 positions[offset + 5]
             ) ?: continue
+
             val c = transformPoint(
                 model,
                 positions[offset + 6],
@@ -81,9 +86,11 @@ class IntersectionVisitor(private val _ray: Ray) : TransformVisitor() {
 
             val distance = _ray.intersectTriangle(a, b, c) ?: continue
             val current = _result
+
             if (!distance.isFinite() || distance < 0.0f) {
                 continue
             }
+
             if (current != null && distance >= current.distance) {
                 continue
             }
@@ -117,14 +124,17 @@ class IntersectionVisitor(private val _ray: Ray) : TransformVisitor() {
             if ((cornerIndex and 1) != 0) {
                 x = bounds.max.x
             }
+
             if ((cornerIndex and 2) != 0) {
                 y = bounds.max.y
             }
+
             if ((cornerIndex and 4) != 0) {
                 z = bounds.max.z
             }
 
             val point = transformPoint(model, x, y, z) ?: return null
+
             minX = minOf(minX, point.x)
             minY = minOf(minY, point.y)
             minZ = minOf(minZ, point.z)

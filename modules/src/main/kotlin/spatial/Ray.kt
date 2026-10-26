@@ -152,6 +152,7 @@ class Ray(
 
             var first = (minimum - origin) / directionComponent
             var second = (maximum - origin) / directionComponent
+            
             if (first > second) {
                 val temporary = first
                 first = second
@@ -185,9 +186,11 @@ class Ray(
         val directionX = direction.x.toDouble()
         val directionY = direction.y.toDouble()
         val directionZ = direction.z.toDouble()
+
         val pX = directionY * edge2Z - directionZ * edge2Y
         val pY = directionZ * edge2X - directionX * edge2Z
         val pZ = directionX * edge2Y - directionY * edge2X
+
         val determinant = edge1X * pX + edge1Y * pY + edge1Z * pZ
 
         if (!determinant.isFinite() || abs(determinant) <= RAY_EPSILON) {

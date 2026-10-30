@@ -24,7 +24,7 @@ class Vector2 {
             return _data
         }
 
-    fun set(x: Float, y: Float) {
+    fun set(x: Float, y: Float): Unit {
         _data[0] = x
         _data[1] = y
     }
@@ -50,7 +50,31 @@ class Vector2 {
         return _data[id]
     }
 
+    fun added(other: Vector2): Vector2 {
+        return Vector2(x + other.x, y + other.y)
+    }
+
+    fun subtracted(other: Vector2): Vector2 {
+        return Vector2(x - other.x, y - other.y)
+    }
+
+    fun scale(s: Float): Vector2 {
+        return Vector2(x * s, y * s)
+    }
+
+    fun dot(other: Vector2): Float {
+        return _data[0] * other._data[0] + _data[1] * other._data[1]
+    }
+
     fun dot(other: Vector4): Float {
         return _data[0] * other[0] + _data[1] * other[1]
+    }
+
+    fun lengthSquared(): Float {
+        return dot(this)
+    }
+
+    fun length(): Float {
+        return kotlin.math.sqrt(lengthSquared())
     }
 }

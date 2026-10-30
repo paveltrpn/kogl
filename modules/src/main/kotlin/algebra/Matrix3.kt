@@ -14,6 +14,12 @@ class Matrix3 {
         _data = other._data.copyOf()
     }
 
+    constructor(column0: Vector3, column1: Vector3, column2: Vector3) {
+        this.column0 = column0
+        this.column1 = column1
+        this.column2 = column2
+    }
+
     fun copy(): Matrix3 {
         return Matrix3(this)
     }
@@ -106,7 +112,7 @@ class Matrix3 {
     }
 
     fun multiply(other: Matrix3): Matrix3 {
-        val result = Matrix3()
+        val result = Matrix3().zero()
         for (i in 0..2) {
             for (j in 0..2) {
                 for (k in 0..2) {
@@ -123,5 +129,13 @@ class Matrix3 {
             _data[3] * other.x + _data[4] * other.y + _data[5] * other.z,
             _data[6] * other.x + _data[7] * other.y + _data[8] * other.z
         )
+    }
+
+    fun transposed(): Matrix3 {
+        return Matrix3(row0, row1, row2)
+    }
+
+    fun vecMultiplyTransposed(other: Vector3): Vector3 {
+        return Vector3(column0.dot(other), column1.dot(other), column2.dot(other))
     }
 }

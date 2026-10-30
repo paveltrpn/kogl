@@ -20,12 +20,16 @@ class Vector3 {
         _data[2] = z
     }
 
+    fun copy(): Vector3 {
+        return Vector3(x, y, z)
+    }
+
     val data: FloatArray
         get(): FloatArray {
             return _data
         }
 
-    fun set(x: Float, y: Float, z: Float) {
+    fun set(x: Float, y: Float, z: Float): Unit {
         _data[0] = x
         _data[1] = y
         _data[2] = z
@@ -91,6 +95,14 @@ class Vector3 {
         return _data[id]
     }
 
+    fun added(other: Vector3): Vector3 {
+        return Vector3(x + other.x, y + other.y, z + other.z)
+    }
+
+    fun subtracted(other: Vector3): Vector3 {
+        return Vector3(x - other.x, y - other.y, z - other.z)
+    }
+
     operator fun plus(other: Vector3): Vector3 {
         x += other.x
         y += other.y
@@ -123,6 +135,11 @@ class Vector3 {
         return this
     }
 
+    fun dot(other: Vector3): Float {
+        return _data[0] * other._data[0] + _data[1] * other._data[1] +
+                _data[2] * other._data[2]
+    }
+
     fun dot(other: Vector4): Float {
         return _data[0] * other[0] + _data[1] * other[1] +
                 _data[2] * other[2]
@@ -140,24 +157,27 @@ class Vector3 {
         return Vector3(_data[0] * s, _data[1] * s, _data[2] * s)
     }
 
+    fun lengthSquared(): Float {
+        return dot(this)
+    }
+
     fun length(): Float {
-        return kotlin.math.sqrt(_data[0] * _data[0] + _data[1] * _data[1] + _data[2] * _data[2])
+        return kotlin.math.sqrt(lengthSquared())
     }
 
     fun normalize(): Vector3 {
         val len = length()
-        return if (len > 0) {
-            Vector3(_data[0] / len, _data[1] / len, _data[2] / len)
-        } else {
-            Vector3()
+        if (len > 0) {
+            return Vector3(_data[0] / len, _data[1] / len, _data[2] / len)
         }
+        return Vector3()
     }
 
     fun inversed(): Vector3 {
         return Vector3(-x, -y, -z)
     }
 
-    fun normalizeSelf() {
+    fun normalizeSelf(): Unit {
         val len = length()
         if (len > 0) {
             _data[0] /= len

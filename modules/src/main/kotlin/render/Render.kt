@@ -113,8 +113,61 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         _ssaoFramebuffer = Framebuffer(viewportWidth, viewportHeight, withDepth = false, colorFormat = GL_RED)
         _ssaoBlurFramebuffer = Framebuffer(viewportWidth, viewportHeight, withDepth = false, colorFormat = GL_RED)
 
-        _ssaoKernel = buildSsaoKernel()
-        _ssaoNoiseTexture = buildSsaoNoiseTexture()
+        val ssaoKernel: () -> List<Vector3> = {
+            val random = kotlin.random.Random(42)
+
+            val _KERNEL_SIZE = 128
+
+            List(_KERNEL_SIZE) { index: Int ->
+                val sample = Vector3(
+                    random.nextFloat() * 2.0f - 1.0f,
+                    random.nextFloat() * 2.0f - 1.0f,
+                    random.nextFloat()
+                )
+
+                sample.normalizeSelf()
+
+                var scale = index.toFloat() / _KERNEL_SIZE.toFloat()
+                scale = 0.1f + scale * scale * 0.9f
+
+                sample.scale(scale * random.nextFloat())
+            }
+        }
+
+        val ssaoNoiseTexture: () -> Int = {
+            val _TEXTURE_SIZE = 8
+
+            val random = kotlin.random.Random(1337)
+            val noise = FloatArray(_TEXTURE_SIZE * _TEXTURE_SIZE * 3)
+
+            for (i in 0 until _TEXTURE_SIZE * _TEXTURE_SIZE) {
+                noise[i * 3 + 0] = random.nextFloat() * 2.0f - 1.0f
+                noise[i * 3 + 1] = random.nextFloat() * 2.0f - 1.0f
+                noise[i * 3 + 2] = 0.0f
+            }
+
+            val texture = glGenTextures()
+            glBindTexture(GL_TEXTURE_2D, texture)
+
+            MemoryStack.stackPush().use { stack: MemoryStack ->
+                val buffer = stack.mallocFloat(noise.size)
+                buffer.put(noise)
+                buffer.flip()
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, _TEXTURE_SIZE, _TEXTURE_SIZE, 0, GL_RGB, GL_FLOAT, buffer)
+            }
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+
+            glBindTexture(GL_TEXTURE_2D, 0)
+
+            texture
+        }
+
+        _ssaoKernel = ssaoKernel()
+        _ssaoNoiseTexture = ssaoNoiseTexture()
     }
 
     fun preLoop(): Unit {
@@ -123,58 +176,6 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         _frameTime.reset()
-    }
-
-    private fun buildSsaoKernel(): List<Vector3> {
-        val random = kotlin.random.Random(42)
-
-        val _KERNEL_SIZE = 128
-        return List(_KERNEL_SIZE) { index: Int ->
-            val sample = Vector3(
-                random.nextFloat() * 2.0f - 1.0f,
-                random.nextFloat() * 2.0f - 1.0f,
-                random.nextFloat()
-            )
-
-            sample.normalizeSelf()
-
-            var scale = index.toFloat() / _KERNEL_SIZE.toFloat()
-            scale = 0.1f + scale * scale * 0.9f
-
-            sample.scale(scale * random.nextFloat())
-        }
-    }
-
-    private fun buildSsaoNoiseTexture(): Int {
-        val _TEXTURE_SIZE = 8
-
-        val random = kotlin.random.Random(1337)
-        val noise = FloatArray(_TEXTURE_SIZE * _TEXTURE_SIZE * 3)
-
-        for (i in 0 until _TEXTURE_SIZE * _TEXTURE_SIZE) {
-            noise[i * 3 + 0] = random.nextFloat() * 2.0f - 1.0f
-            noise[i * 3 + 1] = random.nextFloat() * 2.0f - 1.0f
-            noise[i * 3 + 2] = 0.0f
-        }
-
-        val texture = glGenTextures()
-        glBindTexture(GL_TEXTURE_2D, texture)
-
-        MemoryStack.stackPush().use { stack: MemoryStack ->
-            val buffer = stack.mallocFloat(noise.size)
-            buffer.put(noise)
-            buffer.flip()
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, _TEXTURE_SIZE, _TEXTURE_SIZE, 0, GL_RGB, GL_FLOAT, buffer)
-        }
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-
-        glBindTexture(GL_TEXTURE_2D, 0)
-
-        return texture
     }
 
     fun frame(): Unit {

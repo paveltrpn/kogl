@@ -22,6 +22,9 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
     private var _scene: Scene? = null
 
+    private var _appStartNanos: Long = 0L
+    private var _previousFrameStartNanos: Long = 0L
+
     private val _sceneClickQueue: ArrayDeque<WindowMousePress> = ArrayDeque()
     private var _lastIntersection: IntersectionResult? = null
 
@@ -119,6 +122,10 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         if (_scene == null) {
             throw RuntimeException("Scene is null! Nothing to render!")
         }
+
+        val loopStartNanos = System.nanoTime()
+        _appStartNanos = loopStartNanos
+        _previousFrameStartNanos = loopStartNanos
     }
 
     private fun buildSsaoKernel(): List<Vector3> {
@@ -174,6 +181,12 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
     }
 
     fun frame(): Unit {
+        val frameStartNanos = System.nanoTime()
+        val deltaSeconds = ((frameStartNanos - _previousFrameStartNanos) / 1_000_000_000.0).toFloat()
+        val elapsedSeconds = (frameStartNanos - _appStartNanos) / 1_000_000_000.0
+        _previousFrameStartNanos = frameStartNanos
+        val frameTime = FrameTime(deltaSeconds, elapsedSeconds)
+
         // === Render into framebuffer === //
         _framebuffer.bind()
 
@@ -182,7 +195,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         glEnable(GL_DEPTH_TEST)
         glDepthFunc(GL_LESS)
 
-        scene.traverse()
+        scene.traverse(frameTime)
 
         while (_sceneClickQueue.isNotEmpty()) {
             val click = _sceneClickQueue.removeFirst()

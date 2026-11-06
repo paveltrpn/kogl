@@ -64,7 +64,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
                         color = randomVector3(0.1f, 0.9f)
                         origin = randomVector3(-4.0f, 4.0f)
                         axis = randomVector3(-0.6f, 0.6f).normalize()
-                        anglSpeed = randomFloat(-1.0f, 1.0f)
+                        anglSpeed = randomFloat(-60.0f, 60.0f)
                     }
                 }
             }
@@ -76,7 +76,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
             color = randomVector3(0.1f, 0.9f)
             origin = Vector3(0.0f, 0.0f, 0.0f)
             axis = randomVector3(-0.6f, 0.6f).normalize()
-            anglSpeed = randomFloat(0.4f, 1.2f)
+            anglSpeed = randomFloat(24.0f, 72.0f)
         }
 
         val transform = buildTransform {
@@ -105,7 +105,7 @@ fun sparseObjectsGraph(): Triple<StateGroup, StateGroup, StateGroup> {
             color = randomVector3(0.1f, 0.9f)
             origin = Vector3(0.0f, 0.0f, 0.0f)
             axis = randomVector3(-0.6f, 0.6f).normalize()
-            anglSpeed = randomFloat(0.4f, 1.2f)
+            anglSpeed = randomFloat(24.0f, 72.0f)
         }
 
         val scale = TransformGroup()

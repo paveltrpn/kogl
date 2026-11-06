@@ -176,7 +176,7 @@ class IntersectionVisitorTest {
         drawable.origin = Vector3(1.0f, 2.0f, 3.0f)
         drawable.scale = Vector3(2.0f, 3.0f, 4.0f)
         root.addChild(drawable)
-        root.accept(AnimationVisitor(1.0f))
+        root.accept(AnimationVisitor(FrameTime(1.0f, 0.0)))
         val visitor = IntersectionVisitor(
             intersectionRay(Vector3(7.0f, 0.5f, 0.0f))
         )

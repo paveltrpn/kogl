@@ -35,7 +35,7 @@ class AnimationVisitorTest {
         root.addChild(spinable)
         root.addChild(flyaround)
 
-        val visitor = AnimationVisitor(0.5f)
+        val visitor = AnimationVisitor(FrameTime(0.5f, 12.0))
         root.accept(visitor)
 
         _assertAnimationClose(4.0f, spinable.angl)
@@ -69,7 +69,7 @@ class AnimationVisitorTest {
         group.addChild(nested)
         root.addChild(group)
 
-        root.accept(AnimationVisitor(1.0f))
+        root.accept(AnimationVisitor(FrameTime(1.0f, 0.0)))
 
         val position = _shaderPosition(visible.modelMatrix)
         _assertAnimationClose(11.0f, position.x)

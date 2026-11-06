@@ -14,7 +14,8 @@ Follow it and all will be ok.
 
 - Try to avoid `lateinit` marked definitions, place initialization in `init` section or construcors.
 - Start all private class data members with `_`.
-- Start all protected class data members with `m` in camelCase.
+- Start all protected class data members with `m` in camelCase (only for data members! not for methods! (i.e. "class
+  functions)).
 - Obviously, not use this pattern for private and protected class methods!
 - All "user facing" properties of class (that have explicit getters and setters) must have exact name (no underscore
   or "m")
@@ -58,3 +59,5 @@ Every step is a visitor.
 
 - When you import something use "star wildcard ended" import style, do not try to import entities by name.
 - Try to avoid companion objects.
+
+- Use only basic RuntimeException type when throw, i do not need that shitty mess with exception types.

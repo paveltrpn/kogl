@@ -8,10 +8,10 @@ import render.*
 // ============================================================================
 
 class DrawableVisitor(
-    delta: Float,
+    frameTime: FrameTime,
     viewMatrix: Matrix4,
     val lights: List<OmniLightData> = emptyList()
-) : DrawCallVisitorBase(delta, viewMatrix) {
+) : DrawCallVisitorBase(frameTime, viewMatrix) {
     companion object {
         private const val MAX_LIGHTS = 16
     }

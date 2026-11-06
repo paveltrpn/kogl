@@ -8,11 +8,11 @@ import render.*
 // ============================================================================
 
 class DebugDrawVisitor(
-    delta: Float,
+    frameTime: FrameTime,
     viewMatrix: Matrix4,
     private val _info: DebugDrawInfo,
     program: Program
-) : DrawCallVisitorBase(delta, viewMatrix, program) {
+) : DrawCallVisitorBase(frameTime, viewMatrix, program) {
     private val _boxColor = Vector3(1.0f, 1.0f, 0.0f)
 
     override fun apply(node: Leaf): Unit {

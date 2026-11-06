@@ -59,7 +59,7 @@ fun m02(): List<Locale> {
                                 origin = Vector3(0.0f, 0.0f, 0.0f)
                                 axis = Vector3(0.0f, 1.0f, 0.0f)
                                 scale = Vector3(3.0f, 3.0f, 3.0f)
-                                anglSpeed = 0.5f
+                                anglSpeed = 30.0f
                             }
                         }
                         attachDrawable {
@@ -69,7 +69,7 @@ fun m02(): List<Locale> {
                                 origin = Vector3(0.0f, 0.0f, 3.0f)
                                 scale = Vector3(8.0f, 1.0f, 1.0f)
                                 axis = Vector3(1.0f, 0.0f, 0.0f)
-                                anglSpeed = 0.5f
+                                anglSpeed = 30.0f
                             }
                         }
                         attachDrawable {
@@ -79,7 +79,7 @@ fun m02(): List<Locale> {
                                 origin = Vector3(0.0f, 0.0f, -3.0f)
                                 scale = Vector3(8.0f, 1.0f, 1.0f)
                                 axis = Vector3(1.0f, 0.0f, 0.0f)
-                                anglSpeed = 0.5f
+                                anglSpeed = 30.0f
                             }
                         }
                     }
@@ -94,7 +94,7 @@ fun m02(): List<Locale> {
                                 origin = Vector3(0.0f, 0.0f, 0.0f)
                                 axis = Vector3(0.0f, 1.0f, 0.0f)
                                 scale = Vector3(3.0f, 3.0f, 3.0f)
-                                anglSpeed = 0.5f
+                                anglSpeed = 30.0f
                             }
                         }
                         attachDrawable {
@@ -104,7 +104,7 @@ fun m02(): List<Locale> {
                                 origin = Vector3(0.0f, 0.0f, 3.0f)
                                 scale = Vector3(8.0f, 1.0f, 1.0f)
                                 axis = Vector3(1.0f, 0.0f, 0.0f)
-                                anglSpeed = 0.7f
+                                anglSpeed = 42.0f
                             }
                         }
                         attachDrawable {
@@ -114,7 +114,7 @@ fun m02(): List<Locale> {
                                 origin = Vector3(0.0f, 0.0f, -4.0f)
                                 scale = Vector3(8.0f, 1.0f, 1.0f)
                                 axis = Vector3(1.0f, 0.0f, 0.0f)
-                                anglSpeed = -0.5f
+                                anglSpeed = -30.0f
                             }
                         }
                         attachDrawable {
@@ -124,7 +124,7 @@ fun m02(): List<Locale> {
                                 origin = Vector3(0.0f, 5.0f, 0.0f)
                                 scale = Vector3(8.0f, 1.0f, 1.0f)
                                 axis = Vector3(1.0f, 0.0f, 0.0f)
-                                anglSpeed = -0.3f
+                                anglSpeed = -18.0f
                             }
                         }
                         attachDrawable {
@@ -134,7 +134,7 @@ fun m02(): List<Locale> {
                                 origin = Vector3(0.0f, -6.0f, 0.0f)
                                 scale = Vector3(8.0f, 1.0f, 1.0f)
                                 axis = Vector3(1.0f, 0.0f, 0.0f)
-                                anglSpeed = -0.8f
+                                anglSpeed = -48.0f
                             }
                         }
                     }
@@ -153,7 +153,7 @@ fun m02(): List<Locale> {
                                         origin = Vector3(0.0f, 0.0f, 0.0f)
                                         axis = Vector3(0.0f, 1.0f, 0.0f)
                                         scale = Vector3(3.0f, 3.0f, 3.0f)
-                                        anglSpeed = 0.5f
+                                        anglSpeed = 30.0f
                                     }
                                 }
                                 attachDrawable {
@@ -163,7 +163,7 @@ fun m02(): List<Locale> {
                                         origin = Vector3(0.0f, 0.0f, 3.0f)
                                         scale = Vector3(8.0f, 1.0f, 1.0f)
                                         axis = Vector3(1.0f, 0.0f, 0.0f)
-                                        anglSpeed = 0.5f
+                                        anglSpeed = 30.0f
                                     }
                                 }
                                 attachDrawable {
@@ -173,7 +173,7 @@ fun m02(): List<Locale> {
                                         origin = Vector3(0.0f, 0.0f, -3.0f)
                                         scale = Vector3(8.0f, 1.0f, 1.0f)
                                         axis = Vector3(1.0f, 0.0f, 0.0f)
-                                        anglSpeed = 0.5f
+                                        anglSpeed = 30.0f
                                     }
                                 }
                             }
@@ -194,7 +194,7 @@ fun m02(): List<Locale> {
                                         origin = Vector3(0.0f, 0.0f, 0.0f)
                                         axis = Vector3(0.0f, 1.0f, 0.0f)
                                         scale = Vector3(3.0f, 3.0f, 3.0f)
-                                        anglSpeed = 0.5f
+                                        anglSpeed = 30.0f
                                     }
                                 }
                                 attachDrawable {
@@ -204,7 +204,7 @@ fun m02(): List<Locale> {
                                         origin = Vector3(0.0f, 0.0f, 3.0f)
                                         scale = Vector3(8.0f, 1.0f, 1.0f)
                                         axis = Vector3(1.0f, 0.0f, 0.0f)
-                                        anglSpeed = 0.5f
+                                        anglSpeed = 30.0f
                                     }
                                 }
                                 attachDrawable {
@@ -214,7 +214,7 @@ fun m02(): List<Locale> {
                                         origin = Vector3(0.0f, 0.0f, -3.0f)
                                         scale = Vector3(8.0f, 1.0f, 1.0f)
                                         axis = Vector3(1.0f, 0.0f, 0.0f)
-                                        anglSpeed = 0.5f
+                                        anglSpeed = 30.0f
                                     }
                                 }
                             }

@@ -146,8 +146,8 @@ abstract class Drawable : Leaf {
             return algebra.scale(mScale)
         }
 
-    protected fun mUpdateAnglAndGetSpinMatrix(dt: Float): Matrix4 {
-        mAngl += anglSpeed * dt
+    protected fun updateAnglAndGetSpinMatrix(deltaSeconds: Float): Matrix4 {
+        mAngl += anglSpeed * deltaSeconds
 
         if (mAngl > 360.0f || mAngl < -360.0f) {
             mAngl = 0.0f
@@ -166,8 +166,8 @@ class SpinableDrawable : Drawable {
 
     constructor(mesh: Mesh) : super(mesh) {}
 
-    fun updateLocal(dt: Float): Matrix4 {
-        val spinMatrix = mUpdateAnglAndGetSpinMatrix(dt)
+    fun updateLocal(deltaSeconds: Float): Matrix4 {
+        val spinMatrix = updateAnglAndGetSpinMatrix(deltaSeconds)
         val t = mScaleMatrix.multiply(spinMatrix)
         return t.multiply(mOffsetMatrix)
     }
@@ -182,8 +182,8 @@ class FlyaroundDrawable : Drawable {
 
     constructor(mesh: Mesh) : super(mesh) {}
 
-    fun updateLocal(dt: Float): Matrix4 {
-        val spinMatrix = mUpdateAnglAndGetSpinMatrix(dt)
+    fun updateLocal(deltaSeconds: Float): Matrix4 {
+        val spinMatrix = updateAnglAndGetSpinMatrix(deltaSeconds)
         val t = mOffsetMatrix.multiply(mScaleMatrix)
         return t.multiply(spinMatrix)
     }

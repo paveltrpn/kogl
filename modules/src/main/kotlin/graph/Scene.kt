@@ -83,12 +83,12 @@ class Scene {
             _camera = value
         }
 
-    fun traverse(): Unit {
+    fun traverse(frameTime: FrameTime): Unit {
         _camera.update()
 
         val viewMatrix = _camera.viewMatrix
 
-        val g = GridDrawVisitor(1.0f, _camera.eye, viewMatrix)
+        val g = GridDrawVisitor(frameTime, _camera.eye, viewMatrix)
         _grid.accept(g)
 
         val lightsData = LightCollectorVisitor()
@@ -96,7 +96,7 @@ class Scene {
             locale.root.accept(lightsData)
         }
 
-        val a = AnimationVisitor(1.0f)
+        val a = AnimationVisitor(frameTime)
         for (locale in _locales) {
             locale.root.accept(a)
         }
@@ -106,7 +106,7 @@ class Scene {
             locale.root.accept(c)
         }
 
-        val r = DrawableVisitor(1.0f, viewMatrix, lightsData.omniLights)
+        val r = DrawableVisitor(frameTime, viewMatrix, lightsData.omniLights)
         for (locale in _locales) {
             locale.root.accept(r)
         }
@@ -119,7 +119,7 @@ class Scene {
                 locale.root.accept(collector)
             }
 
-            val d = DebugDrawVisitor(1.0f, viewMatrix, collector.info, _debugDrawStateGroup.program)
+            val d = DebugDrawVisitor(frameTime, viewMatrix, collector.info, _debugDrawStateGroup.program)
             _debugDrawStateGroup.accept(d)
 
             debugDrawCallsCount = d.drawCallsCount

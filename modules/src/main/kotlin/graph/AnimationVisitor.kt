@@ -4,8 +4,8 @@ package graph
 // ======================= AnimationVisitor ===================================
 // ============================================================================
 
-class AnimationVisitor(delta: Float) : TransformVisitor() {
-    private val _delta = delta
+class AnimationVisitor(frameTime: FrameTime) : TransformVisitor() {
+    private val _frameTime = frameTime
 
     override fun apply(node: Group): Unit {
         node.traverse(this)
@@ -22,7 +22,7 @@ class AnimationVisitor(delta: Float) : TransformVisitor() {
     override fun apply(node: Leaf): Unit {
         when (node) {
             is SpinableDrawable -> {
-                val local = node.updateLocal(_delta)
+                val local = node.updateLocal(_frameTime.deltaSeconds)
 
                 val top = mModelMatrixStack.top.copy()
                 top.transpose()
@@ -31,7 +31,7 @@ class AnimationVisitor(delta: Float) : TransformVisitor() {
             }
 
             is FlyaroundDrawable -> {
-                val local = node.updateLocal(_delta)
+                val local = node.updateLocal(_frameTime.deltaSeconds)
 
                 val top = mModelMatrixStack.top.copy()
                 top.transpose()

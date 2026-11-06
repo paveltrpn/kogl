@@ -18,10 +18,12 @@ import map.*
 // ======================= Window =============================================
 // ============================================================================
 
-class Window {
+class Window(private val _eventBus: EventBus) : EventBusNode {
     private var _allocator: GLFWAllocator? = null
 
     private var _window: Long = 0
+
+    private var _vsyncEnabled: Boolean = false
 
     private val _render: Render
     private val _userinterface: Userinterface
@@ -39,6 +41,7 @@ class Window {
     init {
         // Place to init all singletons.
         Config.init()
+        _vsyncEnabled = Config.instance().konfig.enable_vsync
 
         val inititalWindowWidth = Config.instance().konfig.window_width
         val inititalWindowHeight = Config.instance().konfig.window_height
@@ -94,6 +97,14 @@ class Window {
 
         glfwMakeContextCurrent(_window)
 
+        _eventBus.subscribe<AppCommand.SetVsync>(this)
+
+        if (_vsyncEnabled) {
+            glfwSwapInterval(1)
+        } else {
+            glfwSwapInterval(0)
+        }
+
         createCapabilities()
 
         //glfwSetWindowAspectRatio(window, 1, 1)
@@ -113,7 +124,7 @@ class Window {
         glfwSetKeyCallback(_window, { window: Long, key: Int, scancode: Int, action: Int, mods: Int ->
             if (action == GLFW_PRESS) {
                 val keyEvent = WindowKeyPressEvent(key)
-                _userinterface.notify(keyEvent)
+                _eventBus.publish(keyEvent)
 
                 when (key) {
                     GLFW_KEY_G -> {
@@ -134,26 +145,26 @@ class Window {
 
             if (action == GLFW_RELEASE) {
                 val keyEvent = WindowKeyReleaseEvent(key)
-                _userinterface.notify(keyEvent)
+                _eventBus.publish(keyEvent)
             }
         })
 
         glfwSetCursorPosCallback(_window, { window: Long, xpos: Double, ypos: Double ->
             if (!_userinterface.mHoldMouse) {
                 val mouseEvent = WindowMouseMoveEvent(xpos.toInt(), ypos.toInt())
-                _userinterface.notify(mouseEvent)
+                _eventBus.publish(mouseEvent)
             } else {
                 val offsetX = _userinterface.windowWidth / 2 - xpos.toInt()
                 val offsetY = _userinterface.windowHeight / 2 - ypos.toInt()
 
                 val mouseEvent = WindowMouseOffsetEvent(offsetX, offsetY)
-                _userinterface.notify(mouseEvent)
+                _eventBus.publish(mouseEvent)
             }
         })
 
         glfwSetWindowPosCallback(_window, { window: Long, xpos: Int, ypos: Int ->
             val posEvent = WindowMoveEvent(xpos, ypos)
-            _userinterface.notify(posEvent)
+            _eventBus.publish(posEvent)
 
             _userinterface.windowPosX = xpos
             _userinterface.mWindowPosY = ypos
@@ -164,7 +175,7 @@ class Window {
         glfwSetWindowSizeCallback(_window, { window: Long, width: Int, height: Int ->
             if (width > 0 && height > 0) {
                 val sizeEvent = WindowResizeEvent(width, height)
-                _userinterface.notify(sizeEvent)
+                _eventBus.publish(sizeEvent)
 
                 glViewport(0, 0, width, height)
 
@@ -182,7 +193,7 @@ class Window {
 
             if (action == GLFW_PRESS) {
                 val mouseEvent = WindowMousePress(button, xpos[0].toInt(), ypos[0].toInt())
-                _userinterface.notify(mouseEvent)
+                _eventBus.publish(mouseEvent)
 
                 when (button) {
                     GLFW_MOUSE_BUTTON_RIGHT -> {
@@ -194,7 +205,7 @@ class Window {
 
             if (action == GLFW_RELEASE) {
                 val mouseEvent = WindowMouseRelease(button, xpos[0].toInt(), ypos[0].toInt())
-                _userinterface.notify(mouseEvent)
+                _eventBus.publish(mouseEvent)
 
                 when (button) {
                     GLFW_MOUSE_BUTTON_RIGHT -> {
@@ -216,16 +227,15 @@ class Window {
         gldebug.enableDebugContext(gldebug.GLDebugDiscardNotification())
 
         // Create userinterface object. GL context is current at this point.
-        _userinterface = Userinterface()
+        _userinterface = Userinterface(_eventBus)
+        _eventBus.publish(UiNotification.VsyncStateChanged(_vsyncEnabled))
         _userinterface.windowWidth = inititalWindowWidth
         _userinterface.windowHeight = inititalWindowHeight
         _userinterface.windowPosX = Config.instance().konfig.window_pos_x
         _userinterface.mWindowPosY = Config.instance().konfig.window_pos_y
 
         // Render init.
-        _render = Render(_userinterface.windowWidth, _userinterface.windowHeight)
-
-        _userinterface.attach(_render)
+        _render = Render(_userinterface.windowWidth, _userinterface.windowHeight, _eventBus)
 
         with(_render) {
             mUi = _userinterface.mUi
@@ -240,7 +250,26 @@ class Window {
         }
     }
 
-    fun run() {
+    override fun onEvent(event: Event): Unit {
+        when (event) {
+            is AppCommand.SetVsync -> {
+                _vsyncEnabled = event.enabled
+
+                if (_vsyncEnabled) {
+                    glfwSwapInterval(1)
+                } else {
+                    glfwSwapInterval(0)
+                }
+
+                _eventBus.publish(UiNotification.VsyncStateChanged(_vsyncEnabled))
+            }
+
+            else -> {
+            }
+        }
+    }
+
+    fun run(): Unit {
         val cc = Color(Config.instance().konfig.background_color)
 
         glViewport(0, 0, _userinterface.windowWidth, _userinterface.windowHeight)
@@ -255,7 +284,11 @@ class Window {
 
             glfwPollEvents()
 
+            _eventBus.dispatch()
+
             _userinterface.update()
+
+            _eventBus.dispatch()
 
             _render.frame()
 

@@ -14,7 +14,10 @@ import render.*
 // ======================= NuklearUi ==========================================
 // ============================================================================
 
-class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserver {
+class NuklearUi(
+    val mBackend: NuklearGlBackend,
+    private val _eventBus: EventBus
+) : UiDrawable, EventBusNode {
     private val _allocator: NkAllocator = NkAllocator.create()
         .alloc(NkPluginAllocI { handle: Long, old: Long, size: Long -> nmemAllocChecked(size) })
         .mfree(NkPluginFreeI { handle: Long, ptr: Long -> nmemFree(ptr) })
@@ -34,9 +37,12 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
         .x(10.0f)
         .y(10.0f)
         .w(200.0f)
-        .h(100.0f)
+        .h(160.0f)
 
     private val _eventQueue: ArrayDeque<WindowEvent> = ArrayDeque()
+
+    private var _vsyncEnabled: Boolean = false
+    private var _frameDurationText: String = "frame duration: --"
 
     private var _mouseX: Int = 0
     private var _mouseY: Int = 0
@@ -113,9 +119,12 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
         nk_buffer_init(_cmds, _allocator, 4L * 1024L)
         nk_buffer_init(_vbuf, _allocator, 512L * 1024L)
         nk_buffer_init(_ebuf, _allocator, 128L * 1024L)
+
+        _eventBus.subscribe<WindowEvent>(this)
+        _eventBus.subscribe<UiNotification>(this)
     }
 
-    override fun onWindowEvent(event: WindowEvent) {
+    override fun onEvent(event: Event): Unit {
         when (event) {
             is WindowMouseMoveEvent -> {
                 _eventQueue.addLast(event)
@@ -127,6 +136,14 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
 
             is WindowMouseRelease -> {
                 _eventQueue.addLast(event)
+            }
+
+            is UiNotification.VsyncStateChanged -> {
+                _vsyncEnabled = event.enabled
+            }
+
+            is UiNotification.FrameDuration -> {
+                _frameDurationText = "frame duration: ${event.milliseconds} ms"
             }
 
             else -> {
@@ -142,7 +159,7 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
                 y >= _panelRect.y() && y < _panelRect.y() + _panelRect.h()
     }
 
-    override fun update() {
+    override fun update(): Unit {
         nk_buffer_clear(_cmds)
         nk_buffer_clear(_vbuf)
         nk_buffer_clear(_ebuf)
@@ -228,7 +245,7 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
         _allocator.free()
     }
 
-    private fun buildWidgets() {
+    private fun buildWidgets(): Unit {
         val panelVisible = nk_begin(
             _ctx,
             "panel",
@@ -244,6 +261,29 @@ class NuklearUi(val mBackend: NuklearGlBackend) : UiDrawable, WindowEventObserve
             if (nk_button_label(_ctx, "button")) {
                 println("nuklear button clicked")
             }
+
+            nk_layout_row_dynamic(_ctx, 28.0f, 1)
+
+            MemoryStack.stackPush().use { stack: MemoryStack ->
+                val vsyncState = stack.malloc(4)
+
+                if (_vsyncEnabled) {
+                    vsyncState.putInt(0, 1)
+                } else {
+                    vsyncState.putInt(0, 0)
+                }
+
+                nk_checkbox_label(_ctx, "VSync", vsyncState)
+
+                val requestedVsyncEnabled = vsyncState.getInt(0) != 0
+
+                if (requestedVsyncEnabled != _vsyncEnabled) {
+                    _eventBus.publish(AppCommand.SetVsync(requestedVsyncEnabled))
+                }
+            }
+
+            nk_layout_row_dynamic(_ctx, 28.0f, 1)
+            nk_label(_ctx, _frameDurationText, NK_TEXT_LEFT)
         }
 
         nk_end(_ctx)

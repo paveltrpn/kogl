@@ -6,9 +6,9 @@ import render.*
 // ============================================================================
 // ======================= Userinterface ======================================
 // ============================================================================
-class Userinterface : WindowEventEmitter() {
+class Userinterface(eventBus: EventBus) {
     private val _nuklearBackend: NuklearGlBackend = NuklearGlBackend()
-    private val _nuklearInterface: NuklearUi = NuklearUi(_nuklearBackend)
+    private val _nuklearInterface: NuklearUi = NuklearUi(_nuklearBackend, eventBus)
 
     private var _windowWidth: Int = 0
     private var _windowHeight: Int = 0
@@ -67,10 +67,6 @@ class Userinterface : WindowEventEmitter() {
         get(): UiDrawable {
             return _nuklearInterface
         }
-
-    init {
-        attach(_nuklearInterface)
-    }
 
     fun update() {
         _nuklearInterface.update()

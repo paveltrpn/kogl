@@ -1,7 +1,10 @@
 package kogl
 
-fun main(args: Array<String>) {
+import events.*
+
+fun main(args: Array<String>): Unit {
     println("kogl start...")
-    val window: Window = Window()
+    val eventBus = EventBus()
+    val window: Window = Window(eventBus)
     window.run()
 }

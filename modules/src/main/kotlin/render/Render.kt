@@ -17,12 +17,17 @@ import image.*
 // ======================= Render =============================================
 // ============================================================================
 
-class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObserver {
+class Render(
+    var viewportWidth: Int,
+    var viewportHeight: Int,
+    private val _eventBus: EventBus
+) : EventBusNode {
     private val _ui: UiGL = UiGL()
 
     private var _scene: Scene? = null
 
     private val _frameTime: FrameTime = FrameTime()
+    private var _nextFrameDurationReportSeconds: Double = 1.0
 
     private val _sceneClickQueue: ArrayDeque<WindowMousePress> = ArrayDeque()
     private var _lastIntersection: IntersectionResult? = null
@@ -164,6 +169,8 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
         _ssaoKernel = ssaoKernel(128)
         _ssaoNoiseTexture = ssaoNoiseTexture(8)
+
+        _eventBus.subscribe<WindowEvent>(this)
     }
 
     fun preLoop(): Unit {
@@ -172,10 +179,16 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         _frameTime.reset()
+        _nextFrameDurationReportSeconds = 1.0
     }
 
     fun frame(): Unit {
         val frameTime = _frameTime.nextFrame()
+
+        if (frameTime.elapsedSeconds >= _nextFrameDurationReportSeconds) {
+            _eventBus.publish(UiNotification.FrameDuration(frameTime.deltaSeconds * 1000.0f))
+            _nextFrameDurationReportSeconds = frameTime.elapsedSeconds + 1.0
+        }
 
         // === Render into framebuffer === //
         _framebuffer.bind()
@@ -405,7 +418,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         glDeleteTextures(_ssaoNoiseTexture)
     }
 
-    override fun onWindowEvent(event: WindowEvent) {
+    override fun onEvent(event: Event): Unit {
         when (event) {
             is WindowKeyPressEvent -> {
                 when (event.keyCode) {

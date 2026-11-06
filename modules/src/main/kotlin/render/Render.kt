@@ -300,7 +300,11 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         val drawCallsLabel = Label().apply {
-            text = "draw calls: ${scene.drawCallsCount} frame time: {}"
+            val df = DecimalFormat("0.000").apply {
+                roundingMode = RoundingMode.DOWN
+            }
+
+            text = "draw calls: ${scene.drawCallsCount} frame time: ${df.format(frameTime.deltaSeconds * 1000.0f)} ms"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
             z = TEXT_PLANE_Z + 0.1f

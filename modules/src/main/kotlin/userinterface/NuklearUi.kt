@@ -1,5 +1,7 @@
 package userinterface
 
+import java.nio.*
+
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.system.*
 import org.lwjgl.system.MemoryUtil.*
@@ -41,7 +43,8 @@ class NuklearUi(
 
     private val _eventQueue: ArrayDeque<WindowEvent> = ArrayDeque()
 
-    private var _vsyncEnabled: Boolean = false
+    private var _vsyncEnabled: Boolean
+
     private var _frameDurationText: String = "frame duration: --"
 
     private var _mouseX: Int = 0
@@ -122,6 +125,10 @@ class NuklearUi(
 
         _eventBus.subscribe<WindowEvent>(this)
         _eventBus.subscribe<UiNotification>(this)
+
+        _vsyncEnabled = Config.instance().konfig.enable_vsync
+
+
     }
 
     override fun onEvent(event: Event): Unit {
@@ -267,11 +274,11 @@ class NuklearUi(
                     vsyncState.putInt(0, 0)
                 }
 
-                nk_checkbox_label(_ctx, "VSync", vsyncState)
+                val vsyncChanged = nk_checkbox_label(_ctx, "VSync", vsyncState)
 
-                val requestedVsyncEnabled = vsyncState.getInt(0) != 0
 
-                if (requestedVsyncEnabled != _vsyncEnabled) {
+                if (vsyncChanged) {
+                    val requestedVsyncEnabled = vsyncState.getInt(0) != 0
                     _eventBus.publish(AppCommand.SetVsync(requestedVsyncEnabled))
                 }
             }
@@ -282,7 +289,7 @@ class NuklearUi(
             nk_spacing(_ctx, 0)
 
             nk_layout_row_dynamic(_ctx, 28.0f, 3)
-            
+
             nk_spacing(_ctx, 1)
 
             if (nk_button_label(_ctx, "Exit")) {

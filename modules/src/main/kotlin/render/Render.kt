@@ -267,11 +267,11 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         // === End === //
 
         // === Draw screen ui === //
-        val TEXT_START_POS_X = 19.0f
+        val TEXT_START_POS_X = 16.0f
         val TEXT_START_POS_Y = 31.0f
-        val TEXT_LINE_WIDTH = 0.8f
+        val TEXT_LINE_HEIGHT = 0.9f
         val TEXT_LETTER_SPACE = 0.0f
-        val TEXT_LETTER_SCALE = 0.6f
+        val TEXT_LETTER_SCALE = 0.7f
         var textLineCount = 0
         val TEXT_PLANE_Z = 0.4f
         val TEXT_PADDING = 0.4f
@@ -290,7 +290,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
             text = "pos: ${cx} ${cy} ${cz} ${az} ${el}"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
             z = TEXT_PLANE_Z - 0.1f
             letterSpace = TEXT_LETTER_SPACE
             letterScale = TEXT_LETTER_SCALE
@@ -300,9 +300,9 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         val drawCallsLabel = Label().apply {
-            text = "draw calls: ${scene.drawCallsCount}"
+            text = "draw calls: ${scene.drawCallsCount} frame time: {}"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
             z = TEXT_PLANE_Z + 0.1f
             letterSpace = TEXT_LETTER_SPACE
             letterScale = TEXT_LETTER_SCALE
@@ -312,9 +312,9 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         val gridToggleLable = Label().apply {
-            text = "\"t\" - toggle grid visibility"
+            text = "\"t\" - grid visibility"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
             z = TEXT_PLANE_Z + 0.1f
             letterSpace = TEXT_LETTER_SPACE
             letterScale = TEXT_LETTER_SCALE
@@ -324,9 +324,9 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         val debugDrawToggleLable = Label().apply {
-            text = "\"b\" - toggle debug draw"
+            text = "\"b\" - debug draw"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
             z = TEXT_PLANE_Z + 0.1f
             letterSpace = TEXT_LETTER_SPACE
             letterScale = TEXT_LETTER_SCALE
@@ -338,7 +338,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         val postEffectLable = Label().apply {
             text = "\"p\" - cycle post effect"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
             z = TEXT_PLANE_Z + 0.1f
             letterSpace = TEXT_LETTER_SPACE
             letterScale = TEXT_LETTER_SCALE
@@ -350,7 +350,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         val ssaoToggleLable = Label().apply {
             text = "\"o\" - toggle ssao"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
             z = TEXT_PLANE_Z + 0.1f
             letterSpace = TEXT_LETTER_SPACE
             letterScale = TEXT_LETTER_SCALE
@@ -362,7 +362,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         val holdCameraToggleLable = Label().apply {
             text = "\"g\" - toggle hold camera"
 
-            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_WIDTH * textLineCount)
+            position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
             z = TEXT_PLANE_Z + 0.1f
             letterSpace = TEXT_LETTER_SPACE
             letterScale = TEXT_LETTER_SCALE
@@ -372,7 +372,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         }
 
         val b1 = Billboard().apply {
-            size = Vector2(13.0f, TEXT_LINE_WIDTH * textLineCount + TEXT_PADDING * 2.0f)
+            size = Vector2(16.0f, TEXT_LINE_HEIGHT * textLineCount + TEXT_PADDING * 2.0f)
             position = Vector2(TEXT_START_POS_X - TEXT_PADDING, TEXT_START_POS_Y + TEXT_PADDING)
             z = TEXT_PLANE_Z
             color = Color(255, 200, 128, 64)
@@ -502,7 +502,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             is WindowMouseRelease -> {
                 when (event.keyCode) {
                     GLFW_MOUSE_BUTTON_LEFT -> {
-                        
+
                     }
 
                     GLFW_MOUSE_BUTTON_RIGHT -> {

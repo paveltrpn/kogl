@@ -14,6 +14,9 @@ class Label : UiComponent() {
     private val _VERTICIES_PER_QUAD = 6
     private val _MAX_LETTERS_COUNT = 64
 
+    private val GLYPH_WIDTH = 0.49f
+    private val GLYPH_HEIGHT = 1.55f
+
     private val _letterQuadsVertices = FloatArray(_MAX_LETTERS_COUNT * _VERTICIES_PER_QUAD * 3) { 0.0f }
     private val _letterQuadsTxcoords = FloatArray(_MAX_LETTERS_COUNT * _VERTICIES_PER_QUAD * 2) { 0.0f }
 
@@ -85,9 +88,6 @@ class Label : UiComponent() {
         }
 
     override fun draw(): Unit {
-        val GLYPH_WIDTH = 0.4f
-        val GLYPH_HEIGHT = 1.55f
-
         val letterWidth = GLYPH_WIDTH * _letterScale
         val letterHeight = GLYPH_HEIGHT * _letterScale
 

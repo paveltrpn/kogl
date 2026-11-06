@@ -1,10 +1,12 @@
 package graph
 
+import render.*
+
 // ============================================================================
 // ======================= AnimationVisitor ===================================
 // ============================================================================
 
-class AnimationVisitor(frameTime: FrameTime) : TransformVisitor() {
+class AnimationVisitor(frameTime: FrameTimeData) : TransformVisitor() {
     private val _frameTime = frameTime
 
     override fun apply(node: Group): Unit {

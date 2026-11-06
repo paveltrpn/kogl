@@ -8,7 +8,7 @@ import render.*
 // ============================================================================
 
 class DebugDrawVisitor(
-    frameTime: FrameTime,
+    frameTime: FrameTimeData,
     viewMatrix: Matrix4,
     private val _info: DebugDrawInfo,
     program: Program

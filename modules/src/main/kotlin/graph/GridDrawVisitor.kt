@@ -9,7 +9,7 @@ import render.*
 // ======================= GridDrawVisitor ====================================
 // ============================================================================
 
-class GridDrawVisitor(frameTime: FrameTime, val cameraPos: Vector3, viewMatrix: Matrix4) :
+class GridDrawVisitor(frameTime: FrameTimeData, val cameraPos: Vector3, viewMatrix: Matrix4) :
     DrawCallVisitorBase(frameTime, viewMatrix) {
     override fun apply(node: Leaf): Unit {
         when (node) {

@@ -8,11 +8,11 @@ import render.*
 // ============================================================================
 
 abstract class DrawCallVisitorBase(
-    frameTime: FrameTime,
+    frameTime: FrameTimeData,
     viewMatrix: Matrix4,
     program: Program = Program()
 ) : TransformVisitor() {
-    protected val mFrameTime: FrameTime
+    protected val mFrameTime: FrameTimeData
     protected var mViewMatrix: Matrix4
     protected var mProgram: Program = program
     protected var mDrawCallsCount = 0

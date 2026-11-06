@@ -83,7 +83,7 @@ class Scene {
             _camera = value
         }
 
-    fun traverse(frameTime: FrameTime): Unit {
+    fun traverse(frameTime: FrameTimeData): Unit {
         _camera.update()
 
         val viewMatrix = _camera.viewMatrix

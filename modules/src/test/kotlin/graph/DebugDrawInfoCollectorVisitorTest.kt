@@ -2,6 +2,7 @@ package graph
 
 import algebra.*
 import mesh.*
+import render.*
 import kotlin.test.*
 
 private const val _DEBUG_EPS = 1e-5f
@@ -141,7 +142,7 @@ class DebugDrawInfoCollectorVisitorTest {
         drawable.scale = Vector3(2.0f, 3.0f, 4.0f)
         root.addChild(drawable)
 
-        root.accept(AnimationVisitor(FrameTime(1.0f, 0.0)))
+        root.accept(AnimationVisitor(FrameTimeData(1.0f, 0.0)))
 
         val collector = DebugDrawInfoCollectorVisitor()
         root.accept(collector)

@@ -1,6 +1,7 @@
 package graph
 
 import algebra.*
+import render.*
 import kotlin.test.*
 
 // ============================================================================
@@ -26,7 +27,7 @@ class DrawableVisitorTest {
     @Test
     fun skipsPreCulledDrawableBeforeUniformsAndDrawing(): Unit {
         val drawable = CountingDrawable()
-        val visitor = DrawableVisitor(FrameTime(1.0f, 0.0), Matrix4())
+        val visitor = DrawableVisitor(FrameTimeData(1.0f, 0.0), Matrix4())
 
         drawable.isFrustumCulled = true
         drawable.accept(visitor)

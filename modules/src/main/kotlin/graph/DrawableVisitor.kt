@@ -8,7 +8,7 @@ import render.*
 // ============================================================================
 
 class DrawableVisitor(
-    frameTime: FrameTime,
+    frameTime: FrameTimeData,
     viewMatrix: Matrix4,
     val lights: List<OmniLightData> = emptyList()
 ) : DrawCallVisitorBase(frameTime, viewMatrix) {

@@ -98,6 +98,7 @@ class Window(private val _eventBus: EventBus) : EventBusNode {
         glfwMakeContextCurrent(_window)
 
         _eventBus.subscribe<AppCommand.SetVsync>(this)
+        _eventBus.subscribe<AppCommand.Exit>(this)
 
         if (_vsyncEnabled) {
             glfwSwapInterval(1)
@@ -262,6 +263,10 @@ class Window(private val _eventBus: EventBus) : EventBusNode {
                 }
 
                 _eventBus.publish(UiNotification.VsyncStateChanged(_vsyncEnabled))
+            }
+
+            is AppCommand.Exit -> {
+                glfwSetWindowShouldClose(_window, true)
             }
 
             else -> {

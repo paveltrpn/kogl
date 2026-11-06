@@ -36,7 +36,7 @@ class NuklearUi(
     private val _panelRect: NkRect = NkRect.create()
         .x(10.0f)
         .y(10.0f)
-        .w(200.0f)
+        .w(220.0f)
         .h(160.0f)
 
     private val _eventQueue: ArrayDeque<WindowEvent> = ArrayDeque()
@@ -250,18 +250,12 @@ class NuklearUi(
             _ctx,
             "panel",
             _panelRect,
-            NK_WINDOW_BORDER or NK_WINDOW_TITLE or NK_WINDOW_MOVABLE
+            NK_WINDOW_BORDER or NK_WINDOW_MOVABLE
         )
 
         nk_window_get_bounds(_ctx, _panelRect)
 
         if (panelVisible) {
-            nk_layout_row_dynamic(_ctx, 28.0f, 1)
-
-            if (nk_button_label(_ctx, "button")) {
-                println("nuklear button clicked")
-            }
-
             nk_layout_row_dynamic(_ctx, 28.0f, 1)
 
             MemoryStack.stackPush().use { stack: MemoryStack ->
@@ -283,7 +277,17 @@ class NuklearUi(
             }
 
             nk_layout_row_dynamic(_ctx, 28.0f, 1)
-            nk_label(_ctx, _frameDurationText, NK_TEXT_LEFT)
+            nk_label(_ctx, _frameDurationText, NK_TEXT_CENTERED)
+
+            nk_spacing(_ctx, 0)
+
+            nk_layout_row_dynamic(_ctx, 28.0f, 3)
+            
+            nk_spacing(_ctx, 1)
+
+            if (nk_button_label(_ctx, "Exit")) {
+                _eventBus.publish(AppCommand.Exit)
+            }
         }
 
         nk_end(_ctx)

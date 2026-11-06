@@ -6,6 +6,7 @@ package events
 
 sealed class AppCommand : Event {
     data class SetVsync(val enabled: Boolean) : AppCommand()
+    data object Exit : AppCommand()
 }
 
 // ============================================================================

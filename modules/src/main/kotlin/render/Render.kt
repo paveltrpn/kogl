@@ -113,12 +113,10 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
         _ssaoFramebuffer = Framebuffer(viewportWidth, viewportHeight, withDepth = false, colorFormat = GL_RED)
         _ssaoBlurFramebuffer = Framebuffer(viewportWidth, viewportHeight, withDepth = false, colorFormat = GL_RED)
 
-        val ssaoKernel: () -> List<Vector3> = {
+        val ssaoKernel: (Int) -> List<Vector3> = { kernelSize: Int ->
             val random = kotlin.random.Random(42)
 
-            val _KERNEL_SIZE = 128
-
-            List(_KERNEL_SIZE) { index: Int ->
+            List(kernelSize) { index: Int ->
                 val sample = Vector3(
                     random.nextFloat() * 2.0f - 1.0f,
                     random.nextFloat() * 2.0f - 1.0f,
@@ -127,20 +125,18 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
 
                 sample.normalizeSelf()
 
-                var scale = index.toFloat() / _KERNEL_SIZE.toFloat()
+                var scale = index.toFloat() / kernelSize.toFloat()
                 scale = 0.1f + scale * scale * 0.9f
 
                 sample.scale(scale * random.nextFloat())
             }
         }
 
-        val ssaoNoiseTexture: () -> Int = {
-            val _TEXTURE_SIZE = 8
-
+        val ssaoNoiseTexture: (Int) -> Int = { textureSize: Int ->
             val random = kotlin.random.Random(1337)
-            val noise = FloatArray(_TEXTURE_SIZE * _TEXTURE_SIZE * 3)
+            val noise = FloatArray(textureSize * textureSize * 3)
 
-            for (i in 0 until _TEXTURE_SIZE * _TEXTURE_SIZE) {
+            for (i in 0 until textureSize * textureSize) {
                 noise[i * 3 + 0] = random.nextFloat() * 2.0f - 1.0f
                 noise[i * 3 + 1] = random.nextFloat() * 2.0f - 1.0f
                 noise[i * 3 + 2] = 0.0f
@@ -153,7 +149,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
                 val buffer = stack.mallocFloat(noise.size)
                 buffer.put(noise)
                 buffer.flip()
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, _TEXTURE_SIZE, _TEXTURE_SIZE, 0, GL_RGB, GL_FLOAT, buffer)
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, textureSize, textureSize, 0, GL_RGB, GL_FLOAT, buffer)
             }
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
@@ -166,8 +162,8 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             texture
         }
 
-        _ssaoKernel = ssaoKernel()
-        _ssaoNoiseTexture = ssaoNoiseTexture()
+        _ssaoKernel = ssaoKernel(128)
+        _ssaoNoiseTexture = ssaoNoiseTexture(8)
     }
 
     fun preLoop(): Unit {
@@ -309,7 +305,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             textLineCount++
         }
 
-        val gridToggleLable = Label().apply {
+        val gridToggleLabel = Label().apply {
             text = "\"t\" - grid visibility"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
@@ -321,7 +317,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             textLineCount++
         }
 
-        val debugDrawToggleLable = Label().apply {
+        val debugDrawToggleLabel = Label().apply {
             text = "\"b\" - debug draw"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
@@ -333,7 +329,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             textLineCount++
         }
 
-        val postEffectLable = Label().apply {
+        val postEffectLabel = Label().apply {
             text = "\"p\" - cycle post effect"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
@@ -345,7 +341,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             textLineCount++
         }
 
-        val ssaoToggleLable = Label().apply {
+        val ssaoToggleLabel = Label().apply {
             text = "\"o\" - toggle ssao"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
@@ -357,7 +353,7 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             textLineCount++
         }
 
-        val holdCameraToggleLable = Label().apply {
+        val holdCameraToggleLabel = Label().apply {
             text = "\"g\" - toggle hold camera"
 
             position = Vector2(TEXT_START_POS_X + 0.0f, TEXT_START_POS_Y - TEXT_LINE_HEIGHT * textLineCount)
@@ -380,11 +376,11 @@ class Render(var viewportWidth: Int, var viewportHeight: Int) : WindowEventObser
             listOf(
                 cameraPosLabel,
                 drawCallsLabel,
-                gridToggleLable,
-                debugDrawToggleLable,
-                postEffectLable,
-                ssaoToggleLable,
-                holdCameraToggleLable,
+                gridToggleLabel,
+                debugDrawToggleLabel,
+                postEffectLabel,
+                ssaoToggleLabel,
+                holdCameraToggleLabel,
                 b1
             )
         )

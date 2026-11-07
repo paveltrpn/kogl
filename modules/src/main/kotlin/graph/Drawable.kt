@@ -21,6 +21,8 @@ abstract class Drawable : Leaf {
     protected var mAngl = 0.0f
     protected var mAnglSpeed = 0.0f
 
+    var isFrustumCulled: Boolean = false
+
     constructor() : super() {}
 
     constructor(mesh: Mesh) : super() {
@@ -39,8 +41,6 @@ abstract class Drawable : Leaf {
             }
         }
     }
-
-    var isFrustumCulled: Boolean = false
 
     val hasMesh: Boolean
         get(): Boolean {

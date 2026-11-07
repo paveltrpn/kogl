@@ -61,3 +61,8 @@ Every step is a visitor.
 - Try to avoid companion objects.
 
 - Use only basic RuntimeException type when throw, i do not need that shitty mess with exception types.
+- In class definition place a data members, special methods and plain metods in this order - 
+1) public protected private data members.  
+2) init section and constructors.  
+3) getters and setters properties (i mean special with syntax `get` and `set`)  
+4) public protected and private class members (i.e. functions), include overloaded operators.
